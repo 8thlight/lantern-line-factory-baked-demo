@@ -1,0 +1,10 @@
+{
+  "name": "lantern-line",
+  "version": "0.1.0",
+  "description": "A small browser tower-defence game in plain JavaScript.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
