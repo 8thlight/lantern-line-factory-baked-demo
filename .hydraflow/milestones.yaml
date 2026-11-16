@@ -1,4 +1,10 @@
-# Where this line's milestones are named: one heading per milestone in ROADMAP.md.
+# Where this line's milestones are named: one heading per milestone in ROADMAP.md,
+# and each milestone's plan under docs/plans/, titled by the milestone it plans.
 roadmap:
   path: ROADMAP.md
   ledger: none
+joins:
+  plan:
+    files: docs/plans/*.md
+    milestone:
+      - title: "# {milestone}"
