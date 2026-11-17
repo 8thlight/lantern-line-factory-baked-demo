@@ -1,8 +1,8 @@
 # Lantern Line
 
-A small browser tower-defence game. Shades drift down a garden path; you hang
-lanterns beside it, and each lantern throws a beam at the nearest shade in reach.
-Every shade that reaches the far end costs a life.
+A small browser tower-defence game. Ghosts drift down a garden path; you hang
+lanterns beside it, and each lantern throws a beam at the nearest ghost in reach.
+Every ghost that reaches the far end costs a life.
 
 Plain HTML, CSS and JavaScript modules on a canvas. No build step, no dependencies.
 
@@ -29,8 +29,8 @@ npm test        # runs node --test, Node 18 or later, nothing to install
 | File | What it holds |
 | --- | --- |
 | `src/path.js` | The grid, the fixed path, and moving a point along it |
-| `src/enemy.js` | Creating a shade and advancing it along the path |
-| `src/targeting.js` | Range checks and choosing the nearest shade in range |
+| `src/enemy.js` | Creating a ghost and advancing it along the path |
+| `src/targeting.js` | Range checks and choosing the nearest ghost in range |
 | `src/tower.js` | The lantern tower, placement rules and its reload |
 | `src/game.js` | Game state and the per-frame `step` |
 | `src/render.js` | Canvas drawing only |
@@ -44,8 +44,8 @@ be tested directly in Node.
 
 ## What is not built yet
 
-The game today is deliberately minimal: one lantern kills a shade in one hit,
-shades arrive forever at a fixed interval, and nothing happens at zero lives.
+The game today is deliberately minimal: one lantern kills a ghost in one hit,
+ghosts arrive forever at a fixed interval, and nothing happens at zero lives.
 The `work/` folder holds the next milestones:
 
 - **M1 Core loop**: enemy health, waves, win and lose with restart.

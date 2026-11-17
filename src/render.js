@@ -9,8 +9,8 @@ export const PALETTE = {
   pathEdge: '#a8854f',
   lantern: '#f2c14e',
   lanternCore: '#fff4c9',
-  shade: '#8e6bd8',
-  shadeEdge: '#4d3586',
+  ghost: '#8e6bd8',
+  ghostEdge: '#4d3586',
   beam: '#fff4c9',
   hover: 'rgba(255, 244, 201, 0.25)',
   hoverBad: 'rgba(230, 90, 90, 0.35)',
@@ -21,7 +21,7 @@ export function draw(ctx, state, hover) {
   drawMap(ctx, state);
   if (hover) drawHover(ctx, state, hover);
   for (const tower of state.towers) drawTower(ctx, tower);
-  for (const enemy of state.enemies) drawShade(ctx, enemy);
+  for (const enemy of state.enemies) drawGhost(ctx, enemy);
   drawShots(ctx, state.shots);
   drawLives(ctx, state.lives);
 }
@@ -56,10 +56,10 @@ function drawTower(ctx, { x, y }) {
   ctx.fill();
 }
 
-function drawShade(ctx, { x, y }) {
+function drawGhost(ctx, { x, y }) {
   const r = TILE * 0.3;
-  ctx.fillStyle = PALETTE.shade;
-  ctx.strokeStyle = PALETTE.shadeEdge;
+  ctx.fillStyle = PALETTE.ghost;
+  ctx.strokeStyle = PALETTE.ghostEdge;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(x, y - r);

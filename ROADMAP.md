@@ -5,7 +5,7 @@ every task in it has merged with its tests passing.
 
 ## M1 · Core loop
 
-Shades have health, arrive in waves, and the game can be won, lost and restarted.
+Ghosts have health, arrive in waves, and the game can be won, lost and restarted.
 
 ## M2 · Towers and targeting
 
@@ -13,7 +13,7 @@ A second tower with splash damage, a visible range, and a choice of first or nea
 
 ## M3 · Waves and economy
 
-Gold for each shade defeated, towers that cost gold, and waves that grow from a table.
+Gold for each ghost defeated, towers that cost gold, and waves that grow from a table.
 
 ## M4 · HUD and polish
 

@@ -23,6 +23,6 @@ Follows the design board in `design/hud.md` (the Start screen section).
 Each is proven by a test under `test/`, run with `node --test`.
 
 - [ ] A new game's status is `'ready'`, and stepping it spawns nothing.
-- [ ] `start` moves status to `'playing'`, and the next step spawns the first shade.
+- [ ] `start` moves status to `'playing'`, and the next step spawns the first ghost.
 - [ ] `start` on a game already playing changes nothing.
 - [ ] `npm test` passes.

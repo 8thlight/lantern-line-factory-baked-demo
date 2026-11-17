@@ -5,7 +5,7 @@ import { advanceEnemy, createEnemy } from './enemy.js';
 import { canPlace, createTower, updateTower } from './tower.js';
 
 export const START_LIVES = 10;
-export const SPAWN_INTERVAL = 1.5; // seconds between shades
+export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
 const SHOT_TTL = 0.1; // how long a beam stays drawn
 
 export function createGame({ waypoints = WAYPOINTS, spawnInterval = SPAWN_INTERVAL, lives = START_LIVES } = {}) {
@@ -60,7 +60,7 @@ export function step(state, dt) {
   for (const tower of state.towers) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
-    // Today one hit removes a shade. Enemy health is milestone work (work/m1-01).
+    // Today one hit removes a ghost. Enemy health is milestone work (work/m1-01).
     state.enemies = state.enemies.filter((e) => e !== target);
     state.kills += 1;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });

@@ -12,7 +12,7 @@ Claude Design exports; until then this file is the board the M4 tasks follow.
 | `--hud-muted` | `#b8c4b0` | Labels |
 | `--hud-accent` | `#f2c14e` | Gold value, active buttons, title |
 | `--hud-danger` | `#e65a5a` | Lives at 3 or fewer |
-| `--hud-shade` | `#8e6bd8` | Wave counter |
+| `--hud-ghost` | `#8e6bd8` | Wave counter |
 | `--hud-height` | `32px` | Height of the HUD bar |
 | `--hud-pad` | `8px` | Inner padding |
 | `--hud-gap` | `16px` | Gap between HUD items |
@@ -30,7 +30,7 @@ Left to right, separated by `--hud-gap`:
 1. **Lives**: label "Lives" in `--hud-muted`, value in `--hud-ink`; value turns
    `--hud-danger` at 3 or fewer.
 2. **Gold**: label "Gold", value in `--hud-accent`.
-3. **Wave**: label "Wave", value `current / total` in `--hud-shade`.
+3. **Wave**: label "Wave", value `current / total` in `--hud-ghost`.
 
 Right-aligned:
 
@@ -49,7 +49,7 @@ Shown before the first wave and again after a restart.
 
 - Full-canvas overlay in `--hud-bg` over the map, so the path shows faintly behind.
 - Title "Lantern Line" centred, `--title-font`, `--hud-accent`, at 35% height.
-- One line under it in `--hud-muted`: "Hang lanterns. Keep the shades off the path's end."
+- One line under it in `--hud-muted`: "Light the lanterns. Stop the ghosts before they reach the gate."
 - A **Start** button centred at 60% height, 160 by 44px, `--hud-accent` fill,
   dark text (`#12241c`), `--button-radius`.
 - Clicking Start, or pressing Enter or Space, begins wave 1.

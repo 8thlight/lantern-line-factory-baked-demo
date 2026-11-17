@@ -23,5 +23,5 @@ Each is proven by a test under `test/`, run with `node --test`.
 
 - [ ] `togglePause` flips `paused`; `toggleSpeed` moves between 1 and 2.
 - [ ] A paused `step` leaves enemy positions, spawn timers and tower reloads unchanged.
-- [ ] At speed 2, one `step(state, 0.5)` moves a shade as far as two `step(state, 0.5)` calls at speed 1.
+- [ ] At speed 2, one `step(state, 0.5)` moves a ghost as far as two `step(state, 0.5)` calls at speed 1.
 - [ ] `npm test` passes.

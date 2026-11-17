@@ -1,4 +1,4 @@
-// Enemies ("shades") drift along the path at a fixed speed.
+// Enemies ("ghosts") drift along the path at a fixed speed.
 
 import { pathLength, pointAlong } from './path.js';
 

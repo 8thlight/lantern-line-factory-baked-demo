@@ -1,13 +1,13 @@
 ---
 milestone: M2
 ---
-# Let a tower target the first shade or the nearest
+# Let a tower target the first ghost or the nearest
 
 **Milestone:** M2, Towers and targeting
 
 ## Why
 
-Nearest is not always best: the shade furthest along the path is the one about to cost a life.
+Nearest is not always best: the ghost furthest along the path is the one about to cost a life.
 
 ## What
 
@@ -20,8 +20,8 @@ Nearest is not always best: the shade furthest along the path is the one about t
 
 Each is proven by a test under `test/`, run with `node --test`.
 
-- [ ] With two shades in range, `firstInRange` picks the one further along the path even when the other is closer to the tower.
-- [ ] `firstInRange` ignores shades out of range and returns `null` when none qualify.
+- [ ] With two ghosts in range, `firstInRange` picks the one further along the path even when the other is closer to the tower.
+- [ ] `firstInRange` ignores ghosts out of range and returns `null` when none qualify.
 - [ ] `pickTarget` returns the nearest for mode `'nearest'` and the first for mode `'first'`, on the same enemies.
 - [ ] A new tower's mode is `'nearest'`.
 - [ ] `npm test` passes.
