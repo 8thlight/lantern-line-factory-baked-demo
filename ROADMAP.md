@@ -5,7 +5,8 @@ every task in it has merged with its tests passing.
 
 ## M1 · Core loop
 
-Ghosts have health, arrive in waves, and the game can be won, lost and restarted.
+Ghosts have health, arrive in waves, and the game can be won, lost and restarted, on a
+board drawn to match its Claude Design board.
 
 ## M2 · Towers and targeting
 

@@ -1,4 +1,5 @@
 ---
+labels: [hydraflow]
 milestone: M4
 ---
 # Add a simple start screen

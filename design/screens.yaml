@@ -13,7 +13,7 @@ screens:
     screen: the game in play, with the HUD, the build tray and a lantern's range on hover
     reach: start a game and point at a placed lantern
     must: show lives, gold and the wave with its pips in the HUD; show the Lantern and Firefly jar in the build tray with their costs; draw the hovered lantern's range ring and its stats
-    tasks: [work/m4-01-hud.md, work/m2-01-splash-tower.md, work/m2-02-range-on-hover.md]
+    tasks: [work/m1-04-board-art.md, work/m4-01-hud.md, work/m2-01-splash-tower.md, work/m2-02-range-on-hover.md]
   - artboard: HudStates
     screen: the HUD's other states, paused at 2x with low lives, and a refused placement
     reach: pause a game at 2x with 3 lives left, then pick a tower you cannot afford
@@ -33,4 +33,4 @@ screens:
     screen: the board every screen sits on, the map, lanterns, ghosts with health bars, and a beam
     reach: any screen
     must: draw ghosts with a health bar that shortens and reddens as they take hits, and a lantern's beam to its target
-    tasks: [work/m1-01-enemy-health.md]
+    tasks: [work/m1-01-enemy-health.md, work/m1-04-board-art.md]

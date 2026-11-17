@@ -1,4 +1,5 @@
 ---
+labels: [hydraflow]
 milestone: M4
 ---
 # Draw a HUD showing lives, gold and wave
