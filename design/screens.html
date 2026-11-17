@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern Line screens</title>
+<style>
+:root{--bg:#0b1510;--panel:#122019;--ink:#f4efe1;--muted:#b8c4b0;--accent:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+main{max-width:1400px;margin:0 auto;padding:40px 24px 64px}
+h1{margin:0 0 6px;font-size:30px;letter-spacing:-.01em}
+.lede{margin:0 0 32px;color:var(--muted);max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(660px,1fr));gap:28px}
+.card{background:var(--panel);border:1px solid rgba(244,239,225,.08);border-radius:14px;padding:16px}
+.card header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.card h2{margin:0;font-size:17px}
+.tasks{font-size:12px;color:var(--accent);white-space:nowrap}
+.frame{width:640px;height:400px;border-radius:8px;overflow:hidden;margin:0 auto}
+.card p{margin:12px 2px 0;color:var(--muted);font-size:13.5px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.frame{transform:scale(.52);transform-origin:top left;height:208px;width:333px}}
+</style></head>
+<body><main>
+<h1>Lantern Line screens</h1>
+<p class="lede">The design inputs the factory builds Lantern Line to: six screens from the Claude Design canvas, each mapped to the tasks in work/ that build it (design/screens.yaml). Self-contained: this file needs no network and no runtime.</p>
+<div class="grid">
+<section class="card"><header><h2>Start screen</h2><span class="tasks">M4-03</span></header><div class="frame"><div class="sc-host" data-sc-name="StartScreen"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: rgb(244, 239, 225);">
+  <div class="sc-host" data-sc-name="Board" data-dc-tpl="3"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="StartScreen-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="StartScreen-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="StartScreen-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="StartScreen-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="StartScreen-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="StartScreen-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#StartScreen-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#StartScreen-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#StartScreen-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#StartScreen-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#StartScreen-pool)"></circle>
+    </g>
+
+    
+
+    
+
+    <use data-dc-tpl="51" href="#StartScreen-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#StartScreen-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#StartScreen-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#StartScreen-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#StartScreen-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#StartScreen-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#StartScreen-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#StartScreen-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0.62"></rect>
+  </svg></div></div>
+
+  <div data-dc-tpl="4" style="position: absolute; left: 0px; right: 0px; top: 34px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+    <svg data-dc-tpl="5" width="64" height="88" viewBox="-40 -48 80 96" aria-hidden="true" style="overflow: visible;">
+      <circle data-dc-tpl="6" cx="0" cy="-2" r="46" fill="#ffd27a" fill-opacity="0.16"></circle>
+      <circle data-dc-tpl="7" cx="0" cy="-2" r="30" fill="#ffd27a" fill-opacity="0.18"></circle>
+      <path data-dc-tpl="8" d="M0 -48 V-34" stroke="#7a5b31" stroke-width="2.5"></path>
+      <rect data-dc-tpl="9" x="-14" y="-35" width="28" height="7" rx="3.5" fill="#4a3720"></rect>
+      <rect data-dc-tpl="10" x="-20" y="-29" width="40" height="44" rx="17" fill="#e8a83a"></rect>
+      <rect data-dc-tpl="11" x="-15" y="-24" width="30" height="34" rx="13" fill="#f6c95c"></rect>
+      <ellipse data-dc-tpl="12" cx="0" cy="-7" rx="8" ry="11" fill="#fff4c9"></ellipse>
+      <path data-dc-tpl="13" d="M-8 -28 V14 M8 -28 V14" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.6"></path>
+      <rect data-dc-tpl="14" x="-12" y="14" width="24" height="7" rx="3.5" fill="#4a3720"></rect>
+      <path data-dc-tpl="15" d="M0 21 V33" stroke="#d9534f" stroke-width="3" stroke-linecap="round"></path>
+    </svg>
+    <h1 data-dc-tpl="16" style="margin: 4px 0px 0px; font-size: 46px; font-weight: 800; letter-spacing: -0.02em; color: rgb(246, 201, 92); text-shadow: rgba(242, 193, 78, 0.45) 0px 0px 24px;">Lantern Line</h1>
+    <p data-dc-tpl="17" style="margin: 0px; font-size: 15px; color: rgb(216, 210, 194);">Light the lanterns. Stop the ghosts before they reach the gate.</p>
+  </div>
+
+  <div data-dc-tpl="18" style="position: absolute; left: 0px; right: 0px; top: 236px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+    <button data-dc-tpl="19" type="button" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 184px; height: 48px; border: 0px; border-radius: 10px; background: rgb(242, 193, 78); color: rgb(18, 36, 28); font: 800 17px Inter, system-ui, sans-serif; box-shadow: rgba(242, 193, 78, 0.35) 0px 6px 20px;">
+      <svg data-dc-tpl="20" width="14" height="14" viewBox="0 0 12 12" aria-hidden="true"><path data-dc-tpl="21" d="M3 1.6 L10.4 6 L3 10.4 Z" fill="#12241c"></path></svg>
+      Start
+    </button>
+    <span data-dc-tpl="22" style="font-size: 12px; color: rgb(184, 196, 176);">or press Enter or Space</span>
+  </div>
+
+  <div data-dc-tpl="23" style="position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 10px;">
+    <div data-dc-tpl="24" style="display: flex; align-items: center; gap: 8px; width: 170px; padding: 8px 10px; border-radius: 10px; background: rgba(10, 22, 16, 0.72); border: 1px solid rgba(244, 239, 225, 0.08); font-size: 11.5px; line-height: 1.35; color: rgb(216, 210, 194);">
+      <span data-dc-tpl="25" style="flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(242, 193, 78, 0.18); color: rgb(242, 193, 78); font-weight: 800;">1</span>
+      <span data-dc-tpl="26">Hang lanterns on the grass beside the path</span>
+    </div>
+    <div data-dc-tpl="27" style="display: flex; align-items: center; gap: 8px; width: 170px; padding: 8px 10px; border-radius: 10px; background: rgba(10, 22, 16, 0.72); border: 1px solid rgba(244, 239, 225, 0.08); font-size: 11.5px; line-height: 1.35; color: rgb(216, 210, 194);">
+      <span data-dc-tpl="28" style="flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(195, 168, 255, 0.18); color: rgb(195, 168, 255); font-weight: 800;">2</span>
+      <span data-dc-tpl="29">Each one shines on the nearest ghost in range</span>
+    </div>
+    <div data-dc-tpl="30" style="display: flex; align-items: center; gap: 8px; width: 170px; padding: 8px 10px; border-radius: 10px; background: rgba(10, 22, 16, 0.72); border: 1px solid rgba(244, 239, 225, 0.08); font-size: 11.5px; line-height: 1.35; color: rgb(216, 210, 194);">
+      <span data-dc-tpl="31" style="flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(230, 90, 90, 0.18); color: rgb(255, 143, 143); font-weight: 800;">3</span>
+      <span data-dc-tpl="32">A ghost that reaches the gate costs a life</span>
+    </div>
+  </div></div></div></div><p>The title, the one-line goal, Start (or Enter or Space), and three how-to-play steps.</p></section>
+<section class="card"><header><h2>In play</h2><span class="tasks">M4-01 · M2-01 · M2-02</span></header><div class="frame"><div class="sc-host" data-sc-name="Main"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: rgb(244, 239, 225);">
+  <div class="sc-host" data-sc-name="Board" data-dc-tpl="3"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="Main-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="Main-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="Main-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="Main-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="Main-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="Main-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#Main-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#Main-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#Main-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#Main-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#Main-pool)"></circle>
+    </g>
+
+    
+      <circle data-dc-tpl="46" cx="340" cy="226" r="120" fill="#f2c14e" fill-opacity="0.07" stroke="#f2c14e" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+    
+
+    
+      <line data-dc-tpl="48" x1="340" y1="222" x2="414" y2="244" stroke="#ffe7a3" stroke-width="9" stroke-opacity="0.35" stroke-linecap="round" filter="url(#Main-soft)"></line>
+      <line data-dc-tpl="49" x1="340" y1="222" x2="414" y2="244" stroke="#fff4c9" stroke-width="2.5" stroke-linecap="round"></line>
+      <circle data-dc-tpl="50" cx="414" cy="244" r="9" fill="#fff4c9" fill-opacity="0.45" filter="url(#Main-soft)"></circle>
+    
+
+    <use data-dc-tpl="51" href="#Main-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#Main-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#Main-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#Main-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#Main-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#Main-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#Main-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#Main-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0"></rect>
+  </svg></div></div>
+
+  <div data-dc-tpl="4" style="position: absolute; left: 0px; top: 0px; right: 0px; height: 40px; box-sizing: border-box; padding: 0px 10px; display: flex; align-items: center; gap: 8px; background: rgba(10, 22, 16, 0.78); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(244, 239, 225, 0.08);">
+    <div data-dc-tpl="5" style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0px 10px 0px 8px; border-radius: 13px; background: rgba(244, 239, 225, 0.06);">
+      <svg data-dc-tpl="6" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path data-dc-tpl="7" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.5 1.1 5.3 3.1 1.8-2 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="#e65a5a"></path></svg>
+      <span data-dc-tpl="8" style="font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums;">7</span>
+      <span data-dc-tpl="9" style="font-size: 11px; color: rgb(184, 196, 176);">lives</span>
+    </div>
+    <div data-dc-tpl="10" style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0px 10px 0px 8px; border-radius: 13px; background: rgba(244, 239, 225, 0.06);">
+      <svg data-dc-tpl="11" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><circle data-dc-tpl="12" cx="12" cy="12" r="9.5" fill="#f2c14e"></circle><circle data-dc-tpl="13" cx="12" cy="12" r="6.5" fill="none" stroke="#b9861f" stroke-width="1.6"></circle><path data-dc-tpl="14" d="M12 8.5v7" stroke="#b9861f" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      <span data-dc-tpl="15" style="font-weight: 700; font-size: 15px; color: rgb(242, 193, 78); font-variant-numeric: tabular-nums;">120</span>
+      <span data-dc-tpl="16" style="font-size: 11px; color: rgb(184, 196, 176);">gold</span>
+    </div>
+    <div data-dc-tpl="17" style="display: flex; align-items: center; gap: 8px; height: 26px; padding: 0px 10px; border-radius: 13px; background: rgba(244, 239, 225, 0.06);">
+      <span data-dc-tpl="18" style="font-size: 11px; color: rgb(184, 196, 176);">Wave</span>
+      <span data-dc-tpl="19" style="font-weight: 700; font-size: 15px; color: rgb(195, 168, 255); font-variant-numeric: tabular-nums;">3 / 10</span>
+      <div data-dc-tpl="20" aria-hidden="true" style="display: flex; gap: 2px;">
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+      </div>
+    </div>
+    <div data-dc-tpl="23" style="flex-grow: 1;"></div>
+    <span data-dc-tpl="24" style="font-size: 11px; color: rgb(184, 196, 176);">Next wave in 0:08</span>
+    <button data-dc-tpl="25" type="button" aria-label="Pause" style="width: 32px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid rgba(184, 196, 176, 0.45); background: rgba(244, 239, 225, 0.04); color: rgb(244, 239, 225);">
+      <svg data-dc-tpl="26" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect data-dc-tpl="27" x="2" y="1.5" width="2.8" height="9" rx="1" fill="#f4efe1"></rect><rect data-dc-tpl="28" x="7.2" y="1.5" width="2.8" height="9" rx="1" fill="#f4efe1"></rect></svg>
+    </button>
+    <div data-dc-tpl="29" role="group" aria-label="Speed" style="display: flex; height: 28px; border-radius: 7px; border: 1px solid rgba(184, 196, 176, 0.45); overflow: hidden;">
+      <button data-dc-tpl="30" type="button" aria-pressed="true" style="width: 34px; border: 0px; background: rgba(244, 239, 225, 0.16); color: rgb(244, 239, 225); font: 600 12px Inter, system-ui, sans-serif;">1x</button>
+      <button data-dc-tpl="31" type="button" aria-pressed="false" style="width: 34px; border: 0px; background: transparent; color: rgb(184, 196, 176); font: 600 12px Inter, system-ui, sans-serif;">2x</button>
+    </div>
+  </div>
+
+  <div data-dc-tpl="32" style="position: absolute; left: 345px; top: 92px; display: flex; flex-direction: column; gap: 2px; padding: 6px 9px; border-radius: 8px; background: rgba(10, 22, 16, 0.86); border: 1px solid rgba(242, 193, 78, 0.45); font-size: 11px;">
+    <span data-dc-tpl="33" style="font-weight: 700; color: rgb(242, 193, 78);">Lantern · level 1</span>
+    <span data-dc-tpl="34" style="color: rgb(216, 210, 194);">Range 3 tiles · 1 damage · 0.6 s</span>
+  </div>
+
+  <div data-dc-tpl="35" style="position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 8px; padding: 6px; border-radius: 12px; background: rgba(10, 22, 16, 0.82); backdrop-filter: blur(6px); border: 1px solid rgba(244, 239, 225, 0.08);">
+    <button data-dc-tpl="36" type="button" aria-pressed="true" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0px 12px 0px 8px; border-radius: 8px; border: 1.5px solid rgb(242, 193, 78); background: rgba(242, 193, 78, 0.12); color: rgb(244, 239, 225); font: 13px Inter, system-ui, sans-serif;">
+      <svg data-dc-tpl="37" width="22" height="30" viewBox="-20 -28 40 56" aria-hidden="true"><path data-dc-tpl="38" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path><rect data-dc-tpl="39" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect><rect data-dc-tpl="40" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect><ellipse data-dc-tpl="41" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse><rect data-dc-tpl="42" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect></svg>
+      <span data-dc-tpl="43" style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px;"><span data-dc-tpl="44" style="font-weight: 700;">Lantern</span><span data-dc-tpl="45" style="font-size: 11px; color: rgb(242, 193, 78);">50 gold</span></span>
+    </button>
+    <button data-dc-tpl="46" type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0px 12px 0px 8px; border-radius: 8px; border: 1.5px solid rgba(184, 196, 176, 0.35); background: transparent; color: rgb(244, 239, 225); font: 13px Inter, system-ui, sans-serif;">
+      <svg data-dc-tpl="47" width="24" height="30" viewBox="0 0 24 30" aria-hidden="true"><rect data-dc-tpl="48" x="6" y="2" width="12" height="4" rx="1.5" fill="#6b5a3a"></rect><path data-dc-tpl="49" d="M5 7h14v16a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5z" fill="#cfe9f2" fill-opacity="0.22" stroke="#cfe9f2" stroke-opacity="0.7" stroke-width="1.4"></path><circle data-dc-tpl="50" cx="10" cy="15" r="2.2" fill="#d6ff7a"></circle><circle data-dc-tpl="51" cx="15" cy="20" r="1.8" fill="#d6ff7a"></circle><circle data-dc-tpl="52" cx="11" cy="22" r="1.4" fill="#d6ff7a"></circle></svg>
+      <span data-dc-tpl="53" style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px;"><span data-dc-tpl="54" style="font-weight: 700;">Firefly jar</span><span data-dc-tpl="55" style="font-size: 11px; color: rgb(242, 193, 78);">120 gold · splash</span></span>
+    </button>
+  </div></div></div></div><p>Lives, gold and the wave with its pips; the build tray with costs; the hovered lantern's range ring and stats.</p></section>
+<section class="card"><header><h2>Paused, 2x, low lives, not enough gold</h2><span class="tasks">M4-02 · M3-02</span></header><div class="frame"><div class="sc-host" data-sc-name="HudStates"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: rgb(244, 239, 225);">
+  <div class="sc-host" data-sc-name="Board" data-dc-tpl="3"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="HudStates-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="HudStates-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="HudStates-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="HudStates-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="HudStates-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="HudStates-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#HudStates-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#HudStates-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#HudStates-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#HudStates-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#HudStates-pool)"></circle>
+    </g>
+
+    
+
+    
+
+    <use data-dc-tpl="51" href="#HudStates-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#HudStates-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#HudStates-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#HudStates-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#HudStates-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#HudStates-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#HudStates-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#HudStates-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0.45"></rect>
+  </svg></div></div>
+
+  <div data-dc-tpl="4" style="position: absolute; left: 0px; top: 0px; right: 0px; height: 40px; box-sizing: border-box; padding: 0px 10px; display: flex; align-items: center; gap: 8px; background: rgba(10, 22, 16, 0.78); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(244, 239, 225, 0.08);">
+    <div data-dc-tpl="5" style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0px 10px 0px 8px; border-radius: 13px; background: rgba(230, 90, 90, 0.16); box-shadow: rgba(230, 90, 90, 0.6) 0px 0px 0px 1px inset;">
+      <svg data-dc-tpl="6" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path data-dc-tpl="7" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.5 1.1 5.3 3.1 1.8-2 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="#ff7a7a"></path></svg>
+      <span data-dc-tpl="8" style="font-weight: 700; font-size: 15px; color: rgb(255, 143, 143); font-variant-numeric: tabular-nums;">3</span>
+      <span data-dc-tpl="9" style="font-size: 11px; color: rgb(255, 179, 179);">lives</span>
+    </div>
+    <div data-dc-tpl="10" style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0px 10px 0px 8px; border-radius: 13px; background: rgba(244, 239, 225, 0.06);">
+      <svg data-dc-tpl="11" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><circle data-dc-tpl="12" cx="12" cy="12" r="9.5" fill="#f2c14e"></circle><circle data-dc-tpl="13" cx="12" cy="12" r="6.5" fill="none" stroke="#b9861f" stroke-width="1.6"></circle><path data-dc-tpl="14" d="M12 8.5v7" stroke="#b9861f" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      <span data-dc-tpl="15" style="font-weight: 700; font-size: 15px; color: rgb(242, 193, 78); font-variant-numeric: tabular-nums;">45</span>
+      <span data-dc-tpl="16" style="font-size: 11px; color: rgb(184, 196, 176);">gold</span>
+    </div>
+    <div data-dc-tpl="17" style="display: flex; align-items: center; gap: 8px; height: 26px; padding: 0px 10px; border-radius: 13px; background: rgba(244, 239, 225, 0.06);">
+      <span data-dc-tpl="18" style="font-size: 11px; color: rgb(184, 196, 176);">Wave</span>
+      <span data-dc-tpl="19" style="font-weight: 700; font-size: 15px; color: rgb(195, 168, 255); font-variant-numeric: tabular-nums;">8 / 10</span>
+      <div data-dc-tpl="20" aria-hidden="true" style="display: flex; gap: 2px;">
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgb(195, 168, 255);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+          <div data-dc-tpl="22" style="width: 4px; height: 12px; border-radius: 2px; background: rgba(195, 168, 255, 0.22);"></div>
+        
+      </div>
+    </div>
+    <div data-dc-tpl="23" style="flex-grow: 1;"></div>
+    <button data-dc-tpl="24" type="button" aria-label="Resume" style="width: 32px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid rgb(242, 193, 78); background: rgba(242, 193, 78, 0.14);">
+      <svg data-dc-tpl="25" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path data-dc-tpl="26" d="M3 1.6 L10.4 6 L3 10.4 Z" fill="#f2c14e"></path></svg>
+    </button>
+    <div data-dc-tpl="27" role="group" aria-label="Speed" style="display: flex; height: 28px; border-radius: 7px; border: 1px solid rgba(184, 196, 176, 0.45); overflow: hidden;">
+      <button data-dc-tpl="28" type="button" aria-pressed="false" style="width: 34px; border: 0px; background: transparent; color: rgb(184, 196, 176); font: 600 12px Inter, system-ui, sans-serif;">1x</button>
+      <button data-dc-tpl="29" type="button" aria-pressed="true" style="width: 34px; border: 0px; background: rgb(242, 193, 78); color: rgb(18, 36, 28); font: 700 12px Inter, system-ui, sans-serif;">2x</button>
+    </div>
+  </div>
+
+  <div data-dc-tpl="30" style="position: absolute; left: 50%; top: 150px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 34px; border-radius: 14px; background: rgba(10, 22, 16, 0.86); border: 1px solid rgba(244, 239, 225, 0.1); backdrop-filter: blur(6px);">
+    <span data-dc-tpl="31" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgb(184, 196, 176);">Wave 8 of 10</span>
+    <span data-dc-tpl="32" style="font-size: 30px; font-weight: 800; letter-spacing: -0.01em;">Paused</span>
+    <span data-dc-tpl="33" style="font-size: 12px; color: rgb(184, 196, 176);">Press Space or the play button to resume</span>
+  </div>
+
+  <div data-dc-tpl="34" style="position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 8px; background: rgba(60, 16, 16, 0.9); border: 1px solid rgba(230, 90, 90, 0.7); font-size: 12px; white-space: nowrap;">
+    <svg data-dc-tpl="35" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle data-dc-tpl="36" cx="12" cy="12" r="10" fill="none" stroke="#ff8f8f" stroke-width="2"></circle><path data-dc-tpl="37" d="M12 7v6M12 16.5v.5" stroke="#ff8f8f" stroke-width="2.2" stroke-linecap="round"></path></svg>
+    <span data-dc-tpl="38"><b data-dc-tpl="39" style="color: rgb(255, 179, 179);">Not enough gold.</b> <span data-dc-tpl="40" style="color: rgb(244, 239, 225);">Firefly jar costs 120; you have 45.</span></span>
+  </div>
+
+  <div data-dc-tpl="41" style="position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 8px; padding: 6px; border-radius: 12px; background: rgba(10, 22, 16, 0.82); backdrop-filter: blur(6px); border: 1px solid rgba(244, 239, 225, 0.08);">
+    <button data-dc-tpl="42" type="button" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0px 12px 0px 8px; border-radius: 8px; border: 1.5px solid rgba(184, 196, 176, 0.35); background: transparent; color: rgb(244, 239, 225); font: 13px Inter, system-ui, sans-serif;">
+      <svg data-dc-tpl="43" width="22" height="30" viewBox="-20 -28 40 56" aria-hidden="true"><path data-dc-tpl="44" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path><rect data-dc-tpl="45" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect><rect data-dc-tpl="46" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect><ellipse data-dc-tpl="47" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse><rect data-dc-tpl="48" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect></svg>
+      <span data-dc-tpl="49" style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px;"><span data-dc-tpl="50" style="font-weight: 700;">Lantern</span><span data-dc-tpl="51" style="font-size: 11px; color: rgb(184, 196, 176);">50 gold · short 5</span></span>
+    </button>
+    <button data-dc-tpl="52" type="button" aria-disabled="true" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0px 12px 0px 8px; border-radius: 8px; border: 1.5px solid rgb(230, 90, 90); background: rgba(230, 90, 90, 0.1); color: rgb(244, 239, 225); font: 13px Inter, system-ui, sans-serif;">
+      <svg data-dc-tpl="53" width="24" height="30" viewBox="0 0 24 30" aria-hidden="true" style="opacity: 0.55;"><rect data-dc-tpl="54" x="6" y="2" width="12" height="4" rx="1.5" fill="#6b5a3a"></rect><path data-dc-tpl="55" d="M5 7h14v16a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5z" fill="#cfe9f2" fill-opacity="0.22" stroke="#cfe9f2" stroke-opacity="0.7" stroke-width="1.4"></path><circle data-dc-tpl="56" cx="10" cy="15" r="2.2" fill="#d6ff7a"></circle><circle data-dc-tpl="57" cx="15" cy="20" r="1.8" fill="#d6ff7a"></circle></svg>
+      <span data-dc-tpl="58" style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px;"><span data-dc-tpl="59" style="font-weight: 700;">Firefly jar</span><span data-dc-tpl="60" style="font-size: 11px; color: rgb(255, 155, 155);">120 gold</span></span>
+    </button>
+  </div></div></div></div><p>Lives turn red at 3 or fewer, Resume while paused, 2x fills gold, and a refused placement says why.</p></section>
+<section class="card"><header><h2>Win</h2><span class="tasks">M1-03</span></header><div class="frame"><div class="sc-host" data-sc-name="Win"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: rgb(244, 239, 225);">
+  <div class="sc-host" data-sc-name="Board" data-dc-tpl="3"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="Win-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="Win-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="Win-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="Win-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="Win-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="Win-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#Win-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#Win-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#Win-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#Win-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#Win-pool)"></circle>
+    </g>
+
+    
+
+    
+
+    <use data-dc-tpl="51" href="#Win-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#Win-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#Win-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#Win-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#Win-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#Win-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#Win-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#Win-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0.55"></rect>
+  </svg></div></div>
+  <div data-dc-tpl="4" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 420px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 24px 26px 22px; border-radius: 16px; background: rgba(10, 22, 16, 0.9); border: 1px solid rgba(242, 193, 78, 0.5); box-shadow: rgba(242, 193, 78, 0.18) 0px 0px 60px;">
+    <span data-dc-tpl="5" style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(242, 193, 78);">All 10 waves held</span>
+    <h2 data-dc-tpl="6" style="margin: 0px; font-size: 30px; font-weight: 800; letter-spacing: -0.01em;">The garden is safe</h2>
+    <div data-dc-tpl="7" style="display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); gap: 8px; width: 100%;">
+      <div data-dc-tpl="8" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="9" style="font-size: 20px; font-weight: 800; color: rgb(255, 143, 143);">6</span><span data-dc-tpl="10" style="font-size: 11px; color: rgb(184, 196, 176);">lives left</span>
+      </div>
+      <div data-dc-tpl="11" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="12" style="font-size: 20px; font-weight: 800; color: rgb(195, 168, 255);">84</span><span data-dc-tpl="13" style="font-size: 11px; color: rgb(184, 196, 176);">ghosts turned back</span>
+      </div>
+      <div data-dc-tpl="14" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="15" style="font-size: 20px; font-weight: 800; color: rgb(242, 193, 78);">340</span><span data-dc-tpl="16" style="font-size: 11px; color: rgb(184, 196, 176);">gold banked</span>
+      </div>
+    </div>
+    <div data-dc-tpl="17" style="display: flex; gap: 10px;">
+      <button data-dc-tpl="18" type="button" style="height: 44px; padding: 0px 22px; border: 0px; border-radius: 10px; background: rgb(242, 193, 78); color: rgb(18, 36, 28); font: 800 15px Inter, system-ui, sans-serif;">Play again</button>
+      <button data-dc-tpl="19" type="button" style="height: 44px; padding: 0px 18px; border-radius: 10px; border: 1px solid rgba(184, 196, 176, 0.5); background: transparent; color: rgb(244, 239, 225); font: 600 15px Inter, system-ui, sans-serif;">Menu</button>
+    </div>
+  </div></div></div></div><p>The garden is safe: lives left, ghosts turned back, gold banked; Play again or Menu.</p></section>
+<section class="card"><header><h2>Lose and restart</h2><span class="tasks">M1-03</span></header><div class="frame"><div class="sc-host" data-sc-name="Lose"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: rgb(244, 239, 225);">
+  <div class="sc-host" data-sc-name="Board" data-dc-tpl="3"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="Lose-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="Lose-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="Lose-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="Lose-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="Lose-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="Lose-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#Lose-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#Lose-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#Lose-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#Lose-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#Lose-pool)"></circle>
+    </g>
+
+    
+
+    
+
+    <use data-dc-tpl="51" href="#Lose-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#Lose-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#Lose-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#Lose-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#Lose-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#Lose-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#Lose-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#Lose-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0.68"></rect>
+  </svg></div></div>
+  <div data-dc-tpl="4" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 420px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 24px 26px 22px; border-radius: 16px; background: rgba(16, 10, 20, 0.9); border: 1px solid rgba(195, 168, 255, 0.45); box-shadow: rgba(142, 107, 216, 0.22) 0px 0px 60px;">
+    <span data-dc-tpl="5" style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(195, 168, 255);">Wave 7 of 10</span>
+    <h2 data-dc-tpl="6" style="margin: 0px; font-size: 30px; font-weight: 800; letter-spacing: -0.01em;">The ghosts got through</h2>
+    <p data-dc-tpl="7" style="margin: 0px; font-size: 13px; line-height: 1.45; color: rgb(216, 210, 194); text-align: center;">The last life went at the gate. Lanterns near the final bend catch the ghosts that slip past the first.</p>
+    <div data-dc-tpl="8" style="display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); gap: 8px; width: 100%;">
+      <div data-dc-tpl="9" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="10" style="font-size: 20px; font-weight: 800; color: rgb(195, 168, 255);">7</span><span data-dc-tpl="11" style="font-size: 11px; color: rgb(184, 196, 176);">waves held</span>
+      </div>
+      <div data-dc-tpl="12" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="13" style="font-size: 20px; font-weight: 800; color: rgb(242, 193, 78);">9</span><span data-dc-tpl="14" style="font-size: 11px; color: rgb(184, 196, 176);">lanterns hung</span>
+      </div>
+      <div data-dc-tpl="15" style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06);">
+        <span data-dc-tpl="16" style="font-size: 20px; font-weight: 800; color: rgb(244, 239, 225);">51</span><span data-dc-tpl="17" style="font-size: 11px; color: rgb(184, 196, 176);">ghosts turned back</span>
+      </div>
+    </div>
+    <div data-dc-tpl="18" style="display: flex; gap: 10px;">
+      <button data-dc-tpl="19" type="button" style="height: 44px; padding: 0px 22px; border: 0px; border-radius: 10px; background: rgb(242, 193, 78); color: rgb(18, 36, 28); font: 800 15px Inter, system-ui, sans-serif;">Try again</button>
+      <button data-dc-tpl="20" type="button" style="height: 44px; padding: 0px 18px; border-radius: 10px; border: 1px solid rgba(184, 196, 176, 0.5); background: transparent; color: rgb(244, 239, 225); font: 600 15px Inter, system-ui, sans-serif;">Menu</button>
+    </div>
+  </div></div></div></div><p>The ghosts got through: waves held, lanterns hung, ghosts turned back; Try again restarts at wave 1.</p></section>
+<section class="card"><header><h2>The board</h2><span class="tasks">M1-01</span></header><div class="frame"><div class="sc-host" data-sc-name="Board"><div data-dc-tpl="2" style="position: relative; width: 640px; height: 400px; overflow: hidden; background: rgb(16, 36, 27);">
+  <svg data-dc-tpl="3" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block;">
+    <defs data-dc-tpl="4">
+      <pattern data-dc-tpl="5" id="Board-lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect data-dc-tpl="6" width="80" height="80" fill="#17311f"></rect>
+        <rect data-dc-tpl="7" x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect data-dc-tpl="8" y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path data-dc-tpl="9" d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient data-dc-tpl="10" id="Board-pool" cx="50%" cy="50%" r="50%">
+        <stop data-dc-tpl="11" offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop data-dc-tpl="12" offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop data-dc-tpl="13" offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient data-dc-tpl="14" id="Board-dusk" cx="50%" cy="45%" r="75%">
+        <stop data-dc-tpl="15" offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop data-dc-tpl="16" offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter data-dc-tpl="17" id="Board-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur data-dc-tpl="18" stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol data-dc-tpl="19" id="Board-lantern" viewBox="-20 -28 40 56">
+        <path data-dc-tpl="20" d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect data-dc-tpl="21" x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect data-dc-tpl="22" x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect data-dc-tpl="23" x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse data-dc-tpl="24" cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path data-dc-tpl="25" d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect data-dc-tpl="26" x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path data-dc-tpl="27" d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol data-dc-tpl="28" id="Board-ghost" viewBox="-16 -18 32 36">
+        <path data-dc-tpl="29" d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path data-dc-tpl="30" d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse data-dc-tpl="31" cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse data-dc-tpl="32" cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle data-dc-tpl="33" cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle data-dc-tpl="34" cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect data-dc-tpl="35" width="640" height="400" fill="url(#Board-lawn)"></rect>
+
+    <polyline data-dc-tpl="36" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline data-dc-tpl="37" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="38" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline data-dc-tpl="39" points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g data-dc-tpl="40" style="mix-blend-mode: screen;">
+      <circle data-dc-tpl="41" cx="140" cy="186" r="125" fill="url(#Board-pool)"></circle>
+      <circle data-dc-tpl="42" cx="340" cy="226" r="125" fill="url(#Board-pool)"></circle>
+      <circle data-dc-tpl="43" cx="500" cy="226" r="125" fill="url(#Board-pool)"></circle>
+      <circle data-dc-tpl="44" cx="580" cy="322" r="110" fill="url(#Board-pool)"></circle>
+    </g>
+
+    
+      <circle data-dc-tpl="46" cx="340" cy="226" r="120" fill="#f2c14e" fill-opacity="0.07" stroke="#f2c14e" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+    
+
+    
+      <line data-dc-tpl="48" x1="340" y1="222" x2="414" y2="244" stroke="#ffe7a3" stroke-width="9" stroke-opacity="0.35" stroke-linecap="round" filter="url(#Board-soft)"></line>
+      <line data-dc-tpl="49" x1="340" y1="222" x2="414" y2="244" stroke="#fff4c9" stroke-width="2.5" stroke-linecap="round"></line>
+      <circle data-dc-tpl="50" cx="414" cy="244" r="9" fill="#fff4c9" fill-opacity="0.45" filter="url(#Board-soft)"></circle>
+    
+
+    <use data-dc-tpl="51" href="#Board-lantern" x="122" y="160" width="36" height="52"></use>
+    <use data-dc-tpl="52" href="#Board-lantern" x="322" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="53" href="#Board-lantern" x="482" y="200" width="36" height="52"></use>
+    <use data-dc-tpl="54" href="#Board-lantern" x="562" y="296" width="36" height="52"></use>
+
+    
+      <use data-dc-tpl="56" href="#Board-ghost" x="62" y="82" width="30" height="34"></use>
+      <rect data-dc-tpl="57" x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="58" x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use data-dc-tpl="59" href="#Board-ghost" x="205" y="196" width="30" height="34"></use>
+      <rect data-dc-tpl="60" x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="61" x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use data-dc-tpl="62" href="#Board-ghost" x="405" y="228" width="30" height="34"></use>
+      <rect data-dc-tpl="63" x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect data-dc-tpl="64" x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    
+
+    <g data-dc-tpl="65" aria-hidden="true">
+      <circle data-dc-tpl="66" cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path data-dc-tpl="67" d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect data-dc-tpl="68" width="640" height="400" fill="url(#Board-dusk)"></rect>
+    <rect data-dc-tpl="69" width="640" height="400" fill="#07130d" fill-opacity="0"></rect>
+  </svg></div></div></div><p>The map every screen sits on: lit lanterns, ghosts with health bars that shorten and redden, and a beam.</p></section>
+</div></main></body></html>
