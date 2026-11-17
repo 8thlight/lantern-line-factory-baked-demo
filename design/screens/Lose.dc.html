@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lantern Line lose</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: #f4efe1">
+  <dc-import name="Board" scene="quiet" dim="0.68" hint-size="640px,400px"></dc-import>
+  <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 420px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 24px 26px 22px; border-radius: 16px; background: rgba(16, 10, 20, 0.9); border: 1px solid rgba(195, 168, 255, 0.45); box-shadow: 0 0 60px rgba(142, 107, 216, 0.22)">
+    <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #c3a8ff">Wave 7 of 10</span>
+    <h2 style="margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.01em">The ghosts got through</h2>
+    <p style="margin: 0; font-size: 13px; line-height: 1.45; color: #d8d2c2; text-align: center">The last life went at the gate. Lanterns near the final bend catch the ghosts that slip past the first.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06)">
+        <span style="font-size: 20px; font-weight: 800; color: #c3a8ff">7</span><span style="font-size: 11px; color: #b8c4b0">waves held</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06)">
+        <span style="font-size: 20px; font-weight: 800; color: #f2c14e">9</span><span style="font-size: 11px; color: #b8c4b0">lanterns hung</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: rgba(244, 239, 225, 0.06)">
+        <span style="font-size: 20px; font-weight: 800; color: #f4efe1">51</span><span style="font-size: 11px; color: #b8c4b0">ghosts turned back</span>
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px">
+      <button type="button" style="height: 44px; padding: 0 22px; border: 0; border-radius: 10px; background: #f2c14e; color: #12241c; font: 800 15px Inter, system-ui, sans-serif">Try again</button>
+      <button type="button" style="height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid rgba(184, 196, 176, 0.5); background: transparent; color: #f4efe1; font: 600 15px Inter, system-ui, sans-serif">Menu</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lantern Line board</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 640px; height: 400px; overflow: hidden; background: #10241b">
+  <svg width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="The garden: a stone path winds from the left edge to the right, lanterns beside it, ghosts walking it" style="display: block">
+    <defs>
+      <pattern id="lawn" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect width="80" height="80" fill="#17311f"></rect>
+        <rect x="40" width="40" height="40" fill="#1a3623"></rect>
+        <rect y="40" width="40" height="40" fill="#1a3623"></rect>
+        <path d="M12 30 l2 -6 l2 6 M54 66 l2 -5 l2 5 M62 18 l1.5 -4 l1.5 4 M24 58 l1.5 -4 l1.5 4" stroke="#2c5236" stroke-width="1.4" fill="none" stroke-linecap="round"></path>
+      </pattern>
+      <radialGradient id="pool" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#ffd27a" stop-opacity="0.42"></stop>
+        <stop offset="0.35" stop-color="#f2b84e" stop-opacity="0.18"></stop>
+        <stop offset="1" stop-color="#f2b84e" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="dusk" cx="50%" cy="45%" r="75%">
+        <stop offset="0.55" stop-color="#000" stop-opacity="0"></stop>
+        <stop offset="1" stop-color="#050d09" stop-opacity="0.6"></stop>
+      </radialGradient>
+      <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"></feGaussianBlur></filter>
+      <symbol id="lantern" viewBox="-20 -28 40 56">
+        <path d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path>
+        <rect x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect>
+        <rect x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect>
+        <rect x="-10" y="-14" width="20" height="22" rx="9" fill="#f6c95c"></rect>
+        <ellipse cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse>
+        <path d="M-5 -16 V10 M5 -16 V10" stroke="#b97a22" stroke-opacity="0.45" stroke-width="1.2"></path>
+        <rect x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect>
+        <path d="M0 14.5 V22" stroke="#d9534f" stroke-width="2" stroke-linecap="round"></path>
+      </symbol>
+      <symbol id="ghost" viewBox="-16 -18 32 36">
+        <path d="M-12 12 V-2 A12 12 0 0 1 12 -2 V12 L8 8 L4 13 L0 8 L-4 13 L-8 8 Z" fill="#9b7be6" fill-opacity="0.93" stroke="#4d3586" stroke-width="1.6" stroke-linejoin="round"></path>
+        <path d="M-7 -6 A8 8 0 0 1 3 -11" stroke="#d9c9ff" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round"></path>
+        <ellipse cx="-4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <ellipse cx="4.2" cy="-1" rx="2.4" ry="3.3" fill="#1c1233"></ellipse>
+        <circle cx="-3.4" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+        <circle cx="5" cy="-2.2" r="0.9" fill="#f4efe1"></circle>
+      </symbol>
+    </defs>
+
+    <rect width="640" height="400" fill="url(#lawn)"></rect>
+
+    <polyline points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#0c1a13" stroke-opacity="0.45" stroke-width="44" stroke-linejoin="round" transform="translate(0 3)"></polyline>
+    <polyline points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#8f6f40" stroke-width="40" stroke-linejoin="round"></polyline>
+    <polyline points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#c9a66b" stroke-width="34" stroke-linejoin="round"></polyline>
+    <polyline points="-10,100 220,100 220,300 420,300 420,140 650,140" fill="none" stroke="#b18d55" stroke-width="22" stroke-dasharray="10 14" stroke-linejoin="round" stroke-opacity="0.55"></polyline>
+
+    <g style="mix-blend-mode: screen">
+      <circle cx="140" cy="186" r="125" fill="url(#pool)"></circle>
+      <circle cx="340" cy="226" r="125" fill="url(#pool)"></circle>
+      <circle cx="500" cy="226" r="125" fill="url(#pool)"></circle>
+      <circle cx="580" cy="322" r="110" fill="url(#pool)"></circle>
+    </g>
+
+    <sc-if value="{{showRange}}" hint-placeholder-val="{{ true }}">
+      <circle cx="340" cy="226" r="120" fill="#f2c14e" fill-opacity="0.07" stroke="#f2c14e" stroke-width="1.5" stroke-dasharray="6 6"></circle>
+    </sc-if>
+
+    <sc-if value="{{showBeam}}" hint-placeholder-val="{{ true }}">
+      <line x1="340" y1="222" x2="414" y2="244" stroke="#ffe7a3" stroke-width="9" stroke-opacity="0.35" stroke-linecap="round" filter="url(#soft)"></line>
+      <line x1="340" y1="222" x2="414" y2="244" stroke="#fff4c9" stroke-width="2.5" stroke-linecap="round"></line>
+      <circle cx="414" cy="244" r="9" fill="#fff4c9" fill-opacity="0.45" filter="url(#soft)"></circle>
+    </sc-if>
+
+    <use href="#lantern" x="122" y="160" width="36" height="52"></use>
+    <use href="#lantern" x="322" y="200" width="36" height="52"></use>
+    <use href="#lantern" x="482" y="200" width="36" height="52"></use>
+    <use href="#lantern" x="562" y="296" width="36" height="52"></use>
+
+    <sc-if value="{{showGhosts}}" hint-placeholder-val="{{ true }}">
+      <use href="#ghost" x="62" y="82" width="30" height="34"></use>
+      <rect x="64" y="70" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect x="64" y="70" width="26" height="4" rx="2" fill="#7fd68a"></rect>
+
+      <use href="#ghost" x="205" y="196" width="30" height="34"></use>
+      <rect x="207" y="184" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect x="207" y="184" width="17" height="4" rx="2" fill="#e9c75a"></rect>
+
+      <use href="#ghost" x="405" y="228" width="30" height="34"></use>
+      <rect x="407" y="216" width="26" height="4" rx="2" fill="#0c1a13" fill-opacity="0.7"></rect>
+      <rect x="407" y="216" width="8" height="4" rx="2" fill="#e65a5a"></rect>
+    </sc-if>
+
+    <g aria-hidden="true">
+      <circle cx="626" cy="140" r="9" fill="#f4efe1" fill-opacity="0.12"></circle>
+      <path d="M620 147 V136 A6 6 0 0 1 632 136 V147" stroke="#f4efe1" stroke-opacity="0.55" stroke-width="2" fill="none"></path>
+    </g>
+
+    <rect width="640" height="400" fill="url(#dusk)"></rect>
+    <rect width="640" height="400" fill="#07130d" fill-opacity="{{dim}}"></rect>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scene":{"editor":"enum","options":["play","quiet"],"default":"play"},"dim":{"editor":"range","min":0,"max":0.9,"step":0.05,"default":0},"$preview":{"width":640,"height":400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var scene = this.props.scene ?? 'play';
+    var dim = parseFloat(this.props.dim ?? 0) || 0;
+    return {
+      dim: dim,
+      showRange: scene === 'play',
+      showBeam: scene === 'play',
+      showGhosts: scene !== 'empty'
+    };
+  }
+}
+</script>
+</body>
+</html>

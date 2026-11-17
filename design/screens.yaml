@@ -1,0 +1,36 @@
+# The design inputs for Lantern Line: one entry per artboard exported from the Claude
+# Design canvas "Lantern Line screens". Each artboard is design/screens/<name>.dc.html (its
+# source) and design/screens/<name>.png (how it looks, 1280x800 for the 640x400 board).
+# A task that builds a screen follows its artboard; the board's sizes, colours and copy
+# are the specification, and the PNG is what "done" looks like.
+screens:
+  - artboard: StartScreen
+    screen: the start screen, shown before the first wave and after a restart
+    reach: open the game
+    must: show the title, the line "Light the lanterns. Stop the ghosts before they reach the gate.", a Start button that begins wave 1 (or Enter or Space), and the three how-to-play steps
+    tasks: [work/m4-03-start-screen.md]
+  - artboard: Main
+    screen: the game in play, with the HUD, the build tray and a lantern's range on hover
+    reach: start a game and point at a placed lantern
+    must: show lives, gold and the wave with its pips in the HUD; show the Lantern and Firefly jar in the build tray with their costs; draw the hovered lantern's range ring and its stats
+    tasks: [work/m4-01-hud.md, work/m2-01-splash-tower.md, work/m2-02-range-on-hover.md]
+  - artboard: HudStates
+    screen: the HUD's other states, paused at 2x with low lives, and a refused placement
+    reach: pause a game at 2x with 3 lives left, then pick a tower you cannot afford
+    must: turn lives danger red at 3 or fewer, show Resume while paused, fill 2x gold when active, and say "Not enough gold" with the cost and the gold held
+    tasks: [work/m4-02-pause-and-speed.md, work/m3-02-tower-cost.md]
+  - artboard: Win
+    screen: the win card, after the last wave is held
+    reach: hold all 10 waves
+    must: say the garden is safe, show lives left, ghosts turned back and gold banked, and offer Play again and Menu
+    tasks: [work/m1-03-win-lose-restart.md]
+  - artboard: Lose
+    screen: the lose card, when the last life is lost
+    reach: let ghosts reach the gate until no lives are left
+    must: say the ghosts got through, show waves held, lanterns hung and ghosts turned back, and offer Try again, which restarts at wave 1
+    tasks: [work/m1-03-win-lose-restart.md]
+  - artboard: Board
+    screen: the board every screen sits on, the map, lanterns, ghosts with health bars, and a beam
+    reach: any screen
+    must: draw ghosts with a health bar that shortens and reddens as they take hits, and a lantern's beam to its target
+    tasks: [work/m1-01-enemy-health.md]

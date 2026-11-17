@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lantern Line in play</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 640px; height: 400px; overflow: hidden; font-family: Inter, system-ui, sans-serif; color: #f4efe1">
+  <dc-import name="Board" scene="play" dim="0" hint-size="640px,400px"></dc-import>
+
+  <div style="position: absolute; left: 0; top: 0; right: 0; height: 40px; box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; gap: 8px; background: rgba(10, 22, 16, 0.78); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(244, 239, 225, 0.08)">
+    <div style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: 13px; background: rgba(244, 239, 225, 0.06)">
+      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.5 1.1 5.3 3.1 1.8-2 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="#e65a5a"></path></svg>
+      <span style="font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">7</span>
+      <span style="font-size: 11px; color: #b8c4b0">lives</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: 13px; background: rgba(244, 239, 225, 0.06)">
+      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#f2c14e"></circle><circle cx="12" cy="12" r="6.5" fill="none" stroke="#b9861f" stroke-width="1.6"></circle><path d="M12 8.5v7" stroke="#b9861f" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      <span style="font-weight: 700; font-size: 15px; color: #f2c14e; font-variant-numeric: tabular-nums">120</span>
+      <span style="font-size: 11px; color: #b8c4b0">gold</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 13px; background: rgba(244, 239, 225, 0.06)">
+      <span style="font-size: 11px; color: #b8c4b0">Wave</span>
+      <span style="font-weight: 700; font-size: 15px; color: #c3a8ff; font-variant-numeric: tabular-nums">3 / 10</span>
+      <div aria-hidden="true" style="display: flex; gap: 2px">
+        <sc-for list="{{pips}}" as="pip" hint-placeholder-count="10">
+          <div style="{{pip.style}}"></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 11px; color: #b8c4b0">Next wave in 0:08</span>
+    <button type="button" aria-label="Pause" style="width: 32px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 7px; border: 1px solid rgba(184, 196, 176, 0.45); background: rgba(244, 239, 225, 0.04); color: #f4efe1">
+      <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="2.8" height="9" rx="1" fill="#f4efe1"></rect><rect x="7.2" y="1.5" width="2.8" height="9" rx="1" fill="#f4efe1"></rect></svg>
+    </button>
+    <div role="group" aria-label="Speed" style="display: flex; height: 28px; border-radius: 7px; border: 1px solid rgba(184, 196, 176, 0.45); overflow: hidden">
+      <button type="button" aria-pressed="true" style="width: 34px; border: 0; background: rgba(244, 239, 225, 0.16); color: #f4efe1; font: 600 12px Inter, system-ui, sans-serif">1x</button>
+      <button type="button" aria-pressed="false" style="width: 34px; border: 0; background: transparent; color: #b8c4b0; font: 600 12px Inter, system-ui, sans-serif">2x</button>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 345px; top: 92px; display: flex; flex-direction: column; gap: 2px; padding: 6px 9px; border-radius: 8px; background: rgba(10, 22, 16, 0.86); border: 1px solid rgba(242, 193, 78, 0.45); font-size: 11px">
+    <span style="font-weight: 700; color: #f2c14e">Lantern · level 1</span>
+    <span style="color: #d8d2c2">Range 3 tiles · 1 damage · 0.6 s</span>
+  </div>
+
+  <div style="position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 8px; padding: 6px; border-radius: 12px; background: rgba(10, 22, 16, 0.82); backdrop-filter: blur(6px); border: 1px solid rgba(244, 239, 225, 0.08)">
+    <button type="button" aria-pressed="true" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px 0 8px; border-radius: 8px; border: 1.5px solid #f2c14e; background: rgba(242, 193, 78, 0.12); color: #f4efe1; font: 13px Inter, system-ui, sans-serif">
+      <svg width="22" height="30" viewBox="-20 -28 40 56" aria-hidden="true"><path d="M0 -28 V-20" stroke="#5a4326" stroke-width="2"></path><rect x="-9" y="-21" width="18" height="5" rx="2.5" fill="#4a3720"></rect><rect x="-13" y="-17" width="26" height="28" rx="11" fill="#e8a83a"></rect><ellipse cx="0" cy="-3" rx="5.5" ry="7.5" fill="#fff4c9"></ellipse><rect x="-8" y="10" width="16" height="4.5" rx="2.2" fill="#4a3720"></rect></svg>
+      <span style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px"><span style="font-weight: 700">Lantern</span><span style="font-size: 11px; color: #f2c14e">50 gold</span></span>
+    </button>
+    <button type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px 0 8px; border-radius: 8px; border: 1.5px solid rgba(184, 196, 176, 0.35); background: transparent; color: #f4efe1; font: 13px Inter, system-ui, sans-serif">
+      <svg width="24" height="30" viewBox="0 0 24 30" aria-hidden="true"><rect x="6" y="2" width="12" height="4" rx="1.5" fill="#6b5a3a"></rect><path d="M5 7h14v16a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5z" fill="#cfe9f2" fill-opacity="0.22" stroke="#cfe9f2" stroke-opacity="0.7" stroke-width="1.4"></path><circle cx="10" cy="15" r="2.2" fill="#d6ff7a"></circle><circle cx="15" cy="20" r="1.8" fill="#d6ff7a"></circle><circle cx="11" cy="22" r="1.4" fill="#d6ff7a"></circle></svg>
+      <span style="display: flex; flex-direction: column; align-items: flex-start; gap: 1px"><span style="font-weight: 700">Firefly jar</span><span style="font-size: 11px; color: #f2c14e">120 gold · splash</span></span>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var pips = [];
+    for (var i = 0; i < 10; i++) {
+      pips.push({ style: 'width: 4px; height: 12px; border-radius: 2px; background: ' + (i < 3 ? '#c3a8ff' : 'rgba(195, 168, 255, 0.22)') + ';' });
+    }
+    return { pips: pips };
+  }
+}
+</script>
+</body>
+</html>
