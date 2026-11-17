@@ -24,3 +24,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] `rangePreview` over empty grass returns the range of the tower kind that would be placed.
 - [ ] `rangePreview` over a path cell returns `null`.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/Main.png (source design/screens/Main.dc.html)

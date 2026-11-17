@@ -1,7 +1,8 @@
 # Lantern Line: HUD and start screen design brief
 
-The design input for milestone M4 (`work/m4-*.md`). It may later be replaced by
-Claude Design exports; until then this file is the board the M4 tasks follow.
+The Claude Design exports in design/screens/ are the specification for every screen, and
+design/screens.yaml says which task follows which artboard. This brief keeps the tokens and
+the HUD's data model; where the two differ, the artboard wins.
 
 ## Tokens
 
@@ -13,7 +14,7 @@ Claude Design exports; until then this file is the board the M4 tasks follow.
 | `--hud-accent` | `#f2c14e` | Gold value, active buttons, title |
 | `--hud-danger` | `#e65a5a` | Lives at 3 or fewer |
 | `--hud-ghost` | `#8e6bd8` | Wave counter |
-| `--hud-height` | `32px` | Height of the HUD bar |
+| `--hud-height` | `40px` | Height of the HUD bar |
 | `--hud-pad` | `8px` | Inner padding |
 | `--hud-gap` | `16px` | Gap between HUD items |
 | `--hud-font` | `16px system-ui, sans-serif` | HUD text |

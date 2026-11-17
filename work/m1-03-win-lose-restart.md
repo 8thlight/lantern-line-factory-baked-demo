@@ -27,3 +27,10 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] Calling `step` on a lost or won game leaves enemies, lives and towers unchanged.
 - [ ] `restart` returns full lives, no towers, no enemies, wave 1 and `status` `'playing'`.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboards for this task, as design/screens.yaml describes:
+
+- design/screens/Win.png (source design/screens/Win.dc.html)
+- design/screens/Lose.png (source design/screens/Lose.dc.html)

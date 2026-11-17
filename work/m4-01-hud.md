@@ -25,3 +25,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] `hudModel` reflects gold and wave after they change in state.
 - [ ] `hudModel` does not change the state it reads.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/Main.png (source design/screens/Main.dc.html)

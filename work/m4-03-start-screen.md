@@ -26,3 +26,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] `start` moves status to `'playing'`, and the next step spawns the first ghost.
 - [ ] `start` on a game already playing changes nothing.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/StartScreen.png (source design/screens/StartScreen.dc.html)

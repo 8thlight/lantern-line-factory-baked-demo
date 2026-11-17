@@ -24,3 +24,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] With 10 gold, placing a lantern is refused, no tower is added, and gold stays 10.
 - [ ] `placementError` returns `'gold'`, `'path'`, `'taken'` and `'bounds'` in the matching cases, and `null` for a valid cell with enough gold.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/HudStates.png (source design/screens/HudStates.dc.html)

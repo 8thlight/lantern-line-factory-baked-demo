@@ -25,3 +25,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] Three hits of 1 kill a 3-health ghost: the third returns `true` and `health` is 0, not negative.
 - [ ] In a game test, a ghost with 3 health beside a lantern is still on the board after the first shot and gone after the third, with `kills` going 0 then 1.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/Board.png (source design/screens/Board.dc.html)

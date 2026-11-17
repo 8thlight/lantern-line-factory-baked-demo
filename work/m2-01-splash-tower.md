@@ -24,3 +24,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] In a game test, a brazier firing at a group of three close ghosts damages all three; a lantern in the same spot damages one.
 - [ ] `createTower(col, row, BRAZIER)` carries the brazier's range, cooldown and splash.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/Main.png (source design/screens/Main.dc.html)

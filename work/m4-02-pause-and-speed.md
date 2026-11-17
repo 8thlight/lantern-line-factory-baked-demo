@@ -25,3 +25,9 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] A paused `step` leaves enemy positions, spawn timers and tower reloads unchanged.
 - [ ] At speed 2, one `step(state, 0.5)` moves a ghost as far as two `step(state, 0.5)` calls at speed 1.
 - [ ] `npm test` passes.
+
+## Design
+
+Follow the Claude Design artboard for this task, as design/screens.yaml describes:
+
+- design/screens/HudStates.png (source design/screens/HudStates.dc.html)
