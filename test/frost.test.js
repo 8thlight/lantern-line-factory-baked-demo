@@ -62,7 +62,7 @@ test('a frost tower costs 40 gold and is refused when gold is short', () => {
 
 test('a frost tower in the game loop slows a ghost and does not kill it', () => {
   const game = quietGame();
-  placeTower(game, 1, 1, FROST); // just below the first stretch of path
+  placeTower(game, 1, 1, FROST); // just above the first stretch of path
   const enemy = spawnEnemy(game);
   step(game, 0.1);
   assert.deepEqual(game.enemies, [enemy]);
