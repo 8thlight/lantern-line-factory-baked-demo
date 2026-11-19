@@ -122,5 +122,6 @@ touches:
   - src/theme.js
   - test/game-over.test.js
   - test/render.test.js
+  - test/enemy.test.js
 
 Acceptance criterion: Re-cut of line-factory-baked-demo-ov2 (GitHub #3 win/lose states with restart, and #4 vd6 board drawn to the Claude Design board), whose PR #23 was retired red after 3 verify rounds. Build it to the ov2 triage's acceptance criterion and also answer the review's two P2 notes: (1) draw every lantern's radial light pool in one pass before any lantern body (split the pool into its own exported helper or loop over the towers twice in draw), so a later lantern's pool never paints over an earlier lantern's body or the hover highlight; (2) make src/theme.js's THEME the only colour name: export no PALETTE alias from src/render.js, and have any test that reads colours (test/enemy.test.js's health-bar test) read THEME instead. Not fixed in place because a landing allows no edits and the print had no rounds left.
