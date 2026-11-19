@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "da444d8130a6e5b1765c15981bd58b6a3d649ec5a58f7cadd8a62f30ff2ef99e",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "OUTCOME #66: towerPrice(state, kind) in src/game.js adds the kind's cost to the difficulty's priceStep times the number of placed towers with the same name. challengeEntry(null) gives no entry, so the step falls back to 0 with no difficulty. placementError checks gold against this price and placeTower deducts the same price; upgrade costs are not touched. test/tower-price.test.js proves every case the brief lists: 20/25/30 for lanterns, a brazier at 30 beside two lanterns, the 24-gold refusal with 'gold' leaving the tower count and gold unchanged, the 25-gold placement down to 0, a third lantern at 20 on easy and with no difficulty, the same upgrade cost however many towers stand, and the HUD text 'Lantern 25' on normal and 'Lantern' with no difficulty.",
+        "OUTCOME #67: priceStep, armourFrom and armourEvery sit in a separate frozen CHALLENGES table keyed like DIFFICULTIES, reached through one lookup, challengeEntry. challengeEntry rejects unknown keys through difficultyEntry, and the DIFFICULTIES entries stay {name, health, gold, lives}, so test/difficulty.test.js still holds. spawnEnemy counts plain ghosts from 1 on the wave's spawner (waveSpawner starts plain at 0, and the `?? 0` covers spawners built without it), so armour depends only on the spawn number within the wave. Bosses come from createEnemy's armour = 0 default. The tests also run the real tick on wave 4 and get 0,0,1,0,0,1,0,0, and the wave 5 boss has armour 0.",
+        "CONSTRUCTION: damageEnemy applies Math.max(0.5, amount - armour) only when armour is above 0 and falls back to the full amount when there is no armour field, exactly as the brief says. The frost test shows armour applies to the tick's hits (health 5 to 4.5) and the ghost is still slowed. drawGhost changes stroke colour and width only for armoured ghosts, and the test checks that plain ghosts keep ghostEdge at 1.6. The HUD shows the price only when state.difficulty is set, so the Tower text pinned by test/pause-speed.test.js ('Lantern', with no difficulty) is unchanged. No existing test file is edited."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
