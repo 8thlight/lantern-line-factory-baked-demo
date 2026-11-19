@@ -62,10 +62,13 @@ test('the wave number moves from 1 to 2 only after wave 1 has spawned out and it
 
 test('the wave number moves from 1 to 2 only when the lanterns banish the last ghost of wave 1', () => {
   const game = createGame({ waveSize: 2, spawnInterval: 1 });
-  // Three lanterns beside the path's start: three beams banish a 3-health ghost in one step.
-  placeTower(game, 0, 1);
-  placeTower(game, 1, 1);
-  placeTower(game, 0, 3);
+  // Three lanterns on the free cells hugging the path's first cell, wherever the path starts:
+  // each is within range of the spawn point, so three beams banish a 3-health ghost in one step.
+  const start = WAYPOINTS[0];
+  for (const [dc, dr] of [[0, -1], [1, -1], [0, 1], [1, 1], [-1, -1], [-1, 1]]) {
+    if (game.towers.length < 3) placeTower(game, start.col + dc, start.row + dr);
+  }
+  assert.equal(game.towers.length, 3);
 
   step(game, 0.01);
   assert.equal(game.kills, 1);

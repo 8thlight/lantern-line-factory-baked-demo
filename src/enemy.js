@@ -18,8 +18,9 @@ export function damageEnemy(enemy, amount) {
 }
 
 // Health left as a share of full health, 0 to 1: what the health bar draws.
+// A ghost made with no health at all has none left, rather than NaN.
 export function healthFraction(enemy) {
-  return enemy.health / enemy.maxHealth;
+  return enemy.maxHealth > 0 ? enemy.health / enemy.maxHealth : 0;
 }
 
 // Move an enemy `dt` seconds along the path. Mutates and returns it.

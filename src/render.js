@@ -82,7 +82,7 @@ function drawGhost(ctx, enemy) {
 const BAR_WIDTH = 26;
 const BAR_HEIGHT = 4;
 
-function drawHealthBar(ctx, x, top, fraction) {
+export function drawHealthBar(ctx, x, top, fraction) {
   const left = x - BAR_WIDTH / 2;
   ctx.fillStyle = PALETTE.healthTrack;
   ctx.fillRect(left, top, BAR_WIDTH, BAR_HEIGHT);
