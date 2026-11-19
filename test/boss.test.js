@@ -104,7 +104,18 @@ test('wave 5 spawns its count of ghosts and then exactly one boss, as does wave 
   assert.equal([...last.values()].at(-1), true);
 
   const early = spawnsUntil(createGame({ lives: 1000 }), (g) => g.wave === 5);
-  assert.equal(tally(early)[1], 0);
+  const firstFour = WAVES.slice(0, 4).reduce((sum, w) => sum + w.count, 0);
+  assert.deepEqual(tally(early), [firstFour, 0]);
+});
+
+test('a boss wave cleared of its ghosts waits for its boss before it ends', () => {
+  const game = atWave(5);
+  while (game.spawner.spawned < game.spawner.count) step(game, 0.01);
+  game.enemies = [];
+  step(game, 0.01);
+  assert.deepEqual([game.wave, bossWarning(game)], [5, BOSS_WARNING]);
+  stepUntil(game, (g) => g.enemies.some((e) => e.boss === true));
+  assert.equal(game.wave, 5);
 });
 
 test('a boss has the health and speed its entry declares and takes that many hits', () => {
