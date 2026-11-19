@@ -37,7 +37,7 @@ window.addEventListener('keydown', (event) => {
 
 canvas.addEventListener('mousemove', (event) => {
   const { col, row } = cellAt(event);
-  hover = { col, row, ok: canPlace(state, col, row) };
+  hover = { col, row, ok: canPlace(state, col, row), kind };
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -49,7 +49,7 @@ function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); // clamp after a hidden tab
   last = now;
   step(state, dt);
-  if (hover) hover.ok = canPlace(state, hover.col, hover.row);
+  if (hover) Object.assign(hover, { ok: canPlace(state, hover.col, hover.row), kind });
   draw(ctx, state, hover);
   requestAnimationFrame(frame);
 }

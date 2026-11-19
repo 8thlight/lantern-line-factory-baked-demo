@@ -1,6 +1,6 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
-import { WAYPOINTS, pathCells } from './path.js';
+import { WAYPOINTS, cellCenter, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
 import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
@@ -40,6 +40,23 @@ export function placeTower(state, col, row, kind = LANTERN) {
   if (!canPlace(state, col, row)) return false;
   state.towers.push(createTower(col, row, kind));
   return true;
+}
+
+// The tower standing on a cell, or null.
+export function towerAt(state, col, row) {
+  return state.towers.find((t) => t.col === col && t.row === row) ?? null;
+}
+
+// The ring the pointer shows: a placed tower's reach, or on a cell a tower may take, the
+// reach of the kind a click would place there (the hover's kind, a lantern if it names none).
+// Null with no hover, on the path or off the board.
+export function rangePreview(state, hover) {
+  if (!hover) return null;
+  const tower = towerAt(state, hover.col, hover.row);
+  if (tower) return { x: tower.x, y: tower.y, radius: tower.range };
+  if (!canPlace(state, hover.col, hover.row)) return null;
+  const { x, y } = cellCenter(hover);
+  return { x, y, radius: (hover.kind ?? LANTERN).range };
 }
 
 export function spawnEnemy(state) {

@@ -4,16 +4,19 @@
 import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
+import { rangePreview } from './game.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
-// Pools first, then the hover, then tower bodies, so no lantern's pool lands on another's body.
+// Pools first, then the hover and its range ring, then tower bodies, so no lantern's pool lands
+// on another's body and the ring sits under the lanterns, as the Main artboard layers it.
 // A tower that splashes is a brazier: it casts no pool and is drawn as its square.
 export function draw(ctx, state, hover, sprites = SPRITES) {
   sprites.drawPath(ctx, state);
   for (const tower of state.towers) if (!(tower.splash > 0)) sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
+  drawRangeRing(ctx, rangePreview(state, hover));
   for (const tower of state.towers) {
     if (tower.splash > 0) sprites.drawBrazier(ctx, tower);
     else sprites.drawLanternBody(ctx, tower);
@@ -94,6 +97,23 @@ function strokePolyline(ctx, points, colour, width) {
 function drawHover(ctx, { col, row, ok }) {
   ctx.fillStyle = ok ? THEME.hover : THEME.hoverBad;
   ctx.fillRect(col * TILE, row * TILE, TILE, TILE);
+}
+
+// The reach of the tower under the pointer, or of the one a click would place: a faint fill
+// under a thin dashed outline (design/screens.html:204).
+function drawRangeRing(ctx, ring) {
+  if (!ring) return;
+  ctx.save();
+  ctx.fillStyle = THEME.rangeFill;
+  ctx.strokeStyle = THEME.rangeRing;
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 6]);
+  ctx.beginPath();
+  ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
 }
 
 // The whole lantern on its own: its pool, then its body.
