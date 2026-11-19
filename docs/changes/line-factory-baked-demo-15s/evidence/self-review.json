@@ -1,0 +1,13 @@
+{
+  "print_id": "line-factory-baked-demo-15s",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/waves.js",
+    "test/tower-cost.test.js",
+    "test/waves.test.js"
+  ],
+  "said": "FOUND 3\n- `src/waves.js:2-16`: the comments repeated the table's own numbers (the wave 1 values in the header, and a `count * health` total after each row), so each figure was written twice. Removed them. fixed\n- `src/game.js:15`: the `Math.min` guard in `waveEntry` (a game with more waves than the table repeats the last wave) had no test. Added one to `test/waves.test.js`, and it fails when the guard is removed. fixed\n- `src/game.js:64`: the `kind.cost ?? 0` guard (a tower kind with no cost is free) had no test. Added one to `test/tower-cost.test.js`, and it fails when the guard is removed. fixed\n\nGATES green. This clone has no Makefile, so instead of `make check-build` I ran `node --test` on the 11 suites the change touches (87/87 pass) and `npm --prefix . run test` (96/96 pass). The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}

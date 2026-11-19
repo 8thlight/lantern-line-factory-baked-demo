@@ -1,0 +1,13 @@
+{
+  "print_id": "58",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/hud.js",
+    "src/render.js",
+    "test/start-screen.test.js"
+  ],
+  "said": "FOUND 3\n- `src/render.js:472`: the start screen recomputed the canvas height (`HUD_HEIGHT + HEIGHT`), which was also new in `src/hud.js:13`, so the same number lived in two places. `hud.js` now exports `CANVAS_HEIGHT` and `render.js` imports it. Fixed in c6c5b43.\n- `test/start-screen.test.js:85`: the tagline and hint were checked with `texts.includes(\u2026) === true`, and the test drew the ready game twice. It now checks for an exact match of `[TAGLINE, HINT]` on a single draw. This file is the print's new reproducer, not one the base already had, so the edit is allowed. Fixed in a7e38f9.\n- the last gate finding (`merge-red-build` on ef5452a): the forge kept no failed log, and all the touched suites pass locally on the new head. I could not reproduce the failure, so I found no cause to fix. Left: the next verify on this head will show whether it is still red.\n- GATES green: `node --test` on the 7 touched suites passed 79/79 (start-screen, pause-speed, upgrade, game-over, render, hud, game). This clone has no Makefile, so I ran `node --test` instead of `make check-build`; this run is noted in the attempt notes. The tree is clean and committed.",
+  "gates": "green",
+  "finding": null
+}
