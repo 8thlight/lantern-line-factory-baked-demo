@@ -4,9 +4,10 @@
 import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
+import { DIFFICULTIES } from './difficulty.js';
 import { rangePreview, towerPrice } from './game.js';
 import { towerById } from './tower.js';
-import { CANVAS_HEIGHT, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -48,7 +49,7 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   if (state.status === 'won' || state.status === 'lost') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind && (state.difficulty ? `${kind.name} ${towerPrice(state, kind)}` : kind.name));
-  if (state.status === 'ready') drawStartScreen(ctx, best);
+  if (state.status === 'ready') drawStartScreen(ctx, best, state.difficulty);
 }
 
 // The one place a tower's kind is read for drawing: the sprite that draws its body. A tower that
@@ -477,7 +478,9 @@ const START_STEPS = [
 // shows faintly behind, the title at 35% height and the Start button at 60%. The tagline hangs
 // from the title, and the hint and steps from the button, so they move with them. A saved best
 // wave sits midway between the tagline and the button; with none, nothing is drawn there.
-function drawStartScreen(ctx, best = null) {
+// A game with a difficulty gets the Easy, Normal, Hard row along the bottom, the chosen one
+// filled in the accent and the others outlined; with none, the row is not drawn.
+function drawStartScreen(ctx, best = null, difficulty = null) {
   const centre = WIDTH / 2;
   const titleY = Math.round(0.35 * CANVAS_HEIGHT);
   const { x, y, width, height } = START_BUTTON;
@@ -510,6 +513,10 @@ function drawStartScreen(ctx, best = null) {
   ctx.fillText('or press Enter or Space', centre, hintY);
   ctx.fillStyle = THEME.hudInk;
   START_STEPS.forEach((line, i) => ctx.fillText(line, centre, hintY + 38 + 22 * i));
+  if (difficulty !== null) {
+    ctx.font = 'bold 13px system-ui, sans-serif';
+    for (const b of DIFFICULTY_BUTTONS) drawButton(ctx, b, DIFFICULTIES[b.key].name, b.key === difficulty);
+  }
   ctx.restore();
 }
 

@@ -205,6 +205,13 @@ export function start(state) {
   return state;
 }
 
+// A ready game made again on the difficulty `key`, with that difficulty's gold and lives, so
+// restart keeps it; any other status is returned as it is.
+export function chooseDifficulty(state, key) {
+  if (state.status !== 'ready') return state;
+  return createGame({ ...state.options, status: 'ready', difficulty: key });
+}
+
 // Pause and unpause the round.
 export function togglePause(state) {
   state.paused = !state.paused;
