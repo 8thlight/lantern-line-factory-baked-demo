@@ -22,16 +22,20 @@ const HEIGHT = ROWS * TILE;
 // An upgraded tower wears its level marks over its body.
 // While the game is ready, the start screen covers the whole canvas, bar included; a playing,
 // won or lost game draws no start screen.
+// The pointed cell and its range ring draw only while the game is playing: under the start
+// screen and the end cards the pointer previews nothing, while a selected tower keeps its ring
+// and card.
 export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
+  const pointed = state.status === 'playing' ? hover : null;
   const model = selectedModel(state, selected);
   const chosen = model && towerById(state, selected);
   ctx.save();
   ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);
   for (const tower of state.towers) if (bodySprite(tower) === 'drawLanternBody') sprites.drawLanternLight(ctx, tower);
-  if (hover) drawHover(ctx, hover);
-  drawRangeRing(ctx, rangePreview(state, hover));
-  if (chosen && !(hover && hover.col === chosen.col && hover.row === chosen.row)) {
+  if (pointed) drawHover(ctx, pointed);
+  drawRangeRing(ctx, rangePreview(state, pointed));
+  if (chosen && !(pointed && pointed.col === chosen.col && pointed.row === chosen.row)) {
     drawRangeRing(ctx, { x: chosen.x, y: chosen.y, radius: chosen.range });
   }
   for (const tower of state.towers) sprites[bodySprite(tower)](ctx, tower);
@@ -432,7 +436,7 @@ function drawTowerCard(ctx, tower, model, gold) {
   ctx.textBaseline = 'middle';
   const lines = [
     [`${model.name} · level ${model.level}`, THEME.hudAccent],
-    [`Range ${model.range / TILE} tiles · ${model.damage} damage`, THEME.hudInk],
+    [`Range ${model.range / TILE} tiles · ${model.damage} damage · targets ${model.mode}`, THEME.hudInk],
     [upgradeLine(model, gold), model.refusal ? THEME[REFUSAL_INK[model.refusal]] : THEME.hudAccent],
   ];
   lines.forEach(([text, colour], i) => {
