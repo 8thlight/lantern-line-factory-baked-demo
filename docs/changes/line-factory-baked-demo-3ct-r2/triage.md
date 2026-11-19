@@ -58,13 +58,6 @@ touches:
   - src/game.js
   - src/render.js
   - src/main.js
-  - test/start-screen.test.js
-  - test/game-over.test.js
   - test/game.test.js
-  - test/pause-speed.test.js
-  - test/gold.test.js
-  - test/waves.test.js
-  - test/brazier.test.js
-  - test/hud.test.js
 
 Acceptance criterion: test/start-screen.test.js proves four things: a new game and a restarted game are 'ready', and stepping them spawns nothing; start moves 'ready' to 'playing', and the next step spawns the first ghost; start on a game that is playing, won or lost changes nothing; draw on a ready game draws the Start overlay and not an end card. npm --prefix . run test passes with every existing suite green.
