@@ -42,7 +42,7 @@ export const THEME = Object.freeze({
   hoverBad: 'rgba(230, 90, 90, 0.35)',
   text: '#f4efe1',
   dim: 'rgba(7, 19, 13, 0.7)', // #07130d at 0.7
-  // the range ring a hovered lantern or grass cell shows: the Board artboard's #f2c14e ring
-  rangeRing: 'rgba(242, 193, 78, 0.7)',
-  rangeFill: 'rgba(242, 193, 78, 0.07)',
+  // the range ring a hovered tower or grass cell shows
+  rangeRing: '#f2c14e',
+  rangeFill: 'rgba(242, 193, 78, 0.07)', // #f2c14e at 0.07
 });
