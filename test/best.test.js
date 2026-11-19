@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { BEST_KEY, bestAfterStep, readBest, writeBest } from '../src/best.js';
+import { BEST_KEY, bestAfterStep, browserStorage, readBest, writeBest } from '../src/best.js';
 import { createGame, step } from '../src/game.js';
 import { draw } from '../src/render.js';
 
@@ -165,4 +165,15 @@ test('a step that does not end a run leaves the best as it was and writes nothin
   assert.equal(bestAfterStep(storage, 'ready', { status: 'ready', wave: 1 }, 2), 2);
   assert.equal(bestAfterStep(storage, 'lost', { status: 'lost', wave: 9 }, 2), 2);
   assert.deepEqual(storage.items, {});
+});
+
+test('a browser that refuses storage boots with none, and one that allows it hands its storage over', () => {
+  const refused = {
+    get localStorage() {
+      throw new Error('SecurityError');
+    },
+  };
+  assert.equal(browserStorage(refused), undefined);
+  const storage = memoryStorage();
+  assert.equal(browserStorage({ localStorage: storage }), storage);
 });

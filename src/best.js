@@ -6,6 +6,16 @@ export const BEST_KEY = 'lantern-line.best-wave';
 
 const isWave = (wave) => Number.isInteger(wave) && wave >= 1;
 
+// The browser's localStorage, or undefined where there is none or the browser refuses it:
+// with storage turned off, merely reading `localStorage` throws a SecurityError.
+export function browserStorage(scope = globalThis) {
+  try {
+    return scope.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
 // The saved best wave as a number, or null when there is none to read.
 export function readBest(storage) {
   try {

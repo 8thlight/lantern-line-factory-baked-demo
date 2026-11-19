@@ -5,7 +5,7 @@ import { clickCell, createGame, hoverAt, restart, start, step, togglePause, togg
 import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
-import { bestAfterStep, readBest } from './best.js';
+import { bestAfterStep, browserStorage, readBest } from './best.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -16,7 +16,7 @@ let state = createGame({ status: 'ready' }); // the start screen, until Start, E
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
 let selected = null; // the id of the tower the card shows, chosen by a click on it
-const storage = globalThis.localStorage; // undefined outside a browser, where best.js reads it as empty
+const storage = browserStorage(); // undefined outside a browser or where it is refused, read as empty
 let best = readBest(storage); // the best wave any run has reached, shown on the start screen
 
 const TOGGLES = { pause: togglePause, speed: toggleSpeed };
