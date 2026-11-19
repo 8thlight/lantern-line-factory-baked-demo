@@ -53,7 +53,7 @@ test('at speed 2, one step(state, 0.5) moves a ghost as far as two step(state, 0
   step(slow, 0.5);
   const where = ({ x, y, distance }) => ({ x, y, distance });
   assert.deepEqual(where(fastGhost), where(slowGhost));
-  assert.equal(fastGhost.distance, 60);
+  assert.equal(fastGhost.distance, fastGhost.speed * 1); // one second of game time
 });
 
 test('speed scales the spawner and tower reloads too', () => {
