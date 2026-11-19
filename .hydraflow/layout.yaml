@@ -1,0 +1,108 @@
+# This line's layout, drafted by hydraflow init from the factory's own declaration (R35).
+schema_version: 1
+roots:
+  source: src
+  tests: tests
+  mechanisms: tests/architecture
+  docs: docs
+  standards: docs/standards
+  adrs: docs/adr
+  declarations: .hydraflow
+  git_hooks: .githooks
+  checkout: .
+  sandbox_dockerfile: Dockerfile.sandbox
+  gitignore: .gitignore
+  readme: README.md
+languages:
+- javascript
+test_paths:
+- e2e/**
+- test/**
+rings:
+  unit: test/{slug}.test.js
+  scenario: test/{slug}.test.js
+  e2e: e2e/{slug}.spec.js
+standards:
+  adr_enforcement:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  api_contract:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  artifact_chain:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  build_evidence:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  ci_is_configured:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  code_craft:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  console_alignment:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  dark_factory:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  decision_seam:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  defect_route:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  design_review:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  domain_entities:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  escape_ledger:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  evidence_before_verdict:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  fail_closed:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  hooks_wired:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  house_method:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  hygiene:
+    reads:
+    - checkout
+    not_applicable_rules:
+      credential-baseline-is-stale: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-baseline-rose: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-bearer-value: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-jwt-shaped: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-private-key-armour: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-scan-reaches-the-witness: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-shaped-literal: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-source-not-parseable: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-uri-with-password: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-vendor-prefix: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      marker-spelled-in-prose: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      readme-standard-drift: 'switched on by hydraflow init: hygiene/standard.yaml marks this rule the kernel''s own, and this line is not the kernel'
+      suppression-guard-is-not-configured: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+  knowledge:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  line_contract:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  no_second_copy:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  offline_verdicts:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  operator_channel:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  overflow_is_declared:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  ports_and_adapters:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  proxy_is_the_only_path:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  sandbox_trust_boundary:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  scope:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  test_lock:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  testing:
+    reads:
+    - checkout
+    not_applicable_rules:
+      readme-standard-drift: 'switched on by hydraflow init: testing/standard.yaml marks this rule the kernel''s own, and this line is not the kernel'
+      substring-binding: 'switched on by hydraflow init: the line keeps no checks that bind one declaration to another'
+  the_line_keeps_moving:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+  ubiquitous_language:
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'

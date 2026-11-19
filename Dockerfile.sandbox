@@ -1,0 +1,6 @@
+# This line's stage image, written by hydraflow init from what its repository holds.
+# Toolchains found: node (no version pinned; pin one in .nvmrc or package.json engines.node).
+# The shared base carries python, node; this recipe installs nothing more.
+# Edit it freely: it is the line's own. Its final stage stays FROM the shared base.
+ARG HYDRAFLOW_BASE_IMAGE
+FROM ${HYDRAFLOW_BASE_IMAGE}
