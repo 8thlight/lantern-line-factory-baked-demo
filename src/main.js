@@ -4,7 +4,7 @@ import { COLS, ROWS, TILE } from './path.js';
 import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
 import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
-import { draw } from './render.js';
+import { SPRITES, draw } from './render.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -14,6 +14,7 @@ const ctx = canvas.getContext('2d');
 let state = createGame();
 let hover = null;
 let kind = LANTERN; // the kind a click places: 1 for a lantern, 2 for a brazier, 3 for frost
+let picked = null; // the kind the HUD names: none until a key picks one, so the bar at boot is the HUD alone
 
 const TOGGLES = { pause: togglePause, speed: toggleSpeed };
 
@@ -57,7 +58,8 @@ canvas.addEventListener('contextmenu', (event) => {
 
 // 1, 2 and 3 choose a kind; while the round is playing, P pauses and F changes speed, once per press.
 window.addEventListener('keydown', (event) => {
-  kind = kindForKey(event.key, kind);
+  picked = kindForKey(event.key, picked);
+  kind = picked ?? kind;
   const toggle = hudKey(event.key);
   if (toggle && state.status === 'playing' && !event.repeat) TOGGLES[toggle](state);
 });
@@ -78,7 +80,7 @@ function frame(now) {
   last = now;
   step(state, dt);
   if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
-  draw(ctx, state, hover);
+  draw(ctx, state, hover, SPRITES, picked);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
