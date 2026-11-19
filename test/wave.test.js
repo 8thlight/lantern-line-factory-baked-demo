@@ -21,7 +21,7 @@ test('a single large dt spawns the backlog but never more than count', () => {
 test('waveDone is false until the last ghost has spawned, then true', () => {
   const wave = createWave({ count: 5, interval: 1 });
   for (let i = 0; i < 4; i++) {
-    updateWave(wave, i === 0 ? 0 : 1);
+    assert.equal(updateWave(wave, i === 0 ? 0 : 1), 1);
     assert.equal(waveDone(wave), false);
   }
   assert.equal(updateWave(wave, 1), 1);
