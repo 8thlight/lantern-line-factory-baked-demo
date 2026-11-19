@@ -6,7 +6,7 @@ import { LANTERN, MAX_LEVEL, canPlace, cellError, createTower, towerById, update
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 import { WAVES } from './waves.js';
-import { difficultyEntry } from './difficulty.js';
+import { challengeEntry, difficultyEntry } from './difficulty.js';
 
 export const START_LIVES = 10;
 export const START_GOLD = 50;
@@ -21,11 +21,12 @@ function waveEntry(wave) {
 
 // A wave's spawner: its entry's count and interval, unless the game was made with its own.
 // A wave whose entry has a boss sends it as its last spawn; a wave of no ghosts sends no boss either.
+// `plain` counts the plain ghosts spawned this wave, so the difficulty can armour every so many.
 export function waveSpawner({ options }, wave) {
   const entry = waveEntry(wave);
   const count = options.waveSize ?? entry.count;
   const boss = count > 0 ? entry.boss ?? null : null;
-  return { ...createWave({ count: count + (boss ? 1 : 0), interval: options.spawnInterval ?? entry.interval }), boss };
+  return { ...createWave({ count: count + (boss ? 1 : 0), interval: options.spawnInterval ?? entry.interval }), boss, plain: 0 };
 }
 
 // `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave,
@@ -69,17 +70,24 @@ export function createGame({
   };
 }
 
-// Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or
-// 'taken') first, then 'gold' when the gold held is below the kind's cost; null when it may.
-// A kind with no cost is free.
-export function placementError(state, col, row, kind = LANTERN) {
-  return cellError(state, col, row) ?? (state.gold < (kind.cost ?? 0) ? 'gold' : null);
+// What the next tower of `kind` costs on this game: its cost, plus the difficulty's price step
+// for every tower of the same name already standing. With no difficulty the step is 0.
+export function towerPrice(state, kind = LANTERN) {
+  const step = challengeEntry(state.difficulty)?.priceStep ?? 0;
+  return (kind.cost ?? 0) + step * state.towers.filter((t) => t.name === kind.name).length;
 }
 
-// Place a tower of `kind` and pay its cost, unless placementError refuses it.
+// Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or
+// 'taken') first, then 'gold' when the gold held is below the kind's price; null when it may.
+// A kind with no cost is free.
+export function placementError(state, col, row, kind = LANTERN) {
+  return cellError(state, col, row) ?? (state.gold < towerPrice(state, kind) ? 'gold' : null);
+}
+
+// Place a tower of `kind` and pay its price, unless placementError refuses it.
 export function placeTower(state, col, row, kind = LANTERN) {
   if (placementError(state, col, row, kind) !== null) return false;
-  state.gold -= kind.cost ?? 0;
+  state.gold -= towerPrice(state, kind);
   state.towers.push({ id: state.nextTowerId++, ...createTower(col, row, kind) });
   return true;
 }
@@ -146,11 +154,21 @@ function toughened(state, health) {
   return Math.ceil(health * (difficultyEntry(state.difficulty)?.health ?? 1));
 }
 
+// A plain ghost's armour: 1 for every armourEvery-th of its wave, counted from 1, from the
+// difficulty's armourFrom wave on; 0 for the rest, and always with no difficulty.
+function armoured(state, nth) {
+  const { armourFrom = null, armourEvery = 0 } = challengeEntry(state.difficulty) ?? {};
+  return armourFrom !== null && state.wave >= armourFrom && armourEvery > 0 && nth % armourEvery === 0 ? 1 : 0;
+}
+
 // A plain ghost of the current wave, as fast as its entry in the table and as tough, scaled by
-// the game's difficulty.
+// the game's difficulty, and armoured when it is the wave's armourEvery-th plain ghost (counted
+// on the wave's spawner; one built without the count starts it from 0).
 export function spawnEnemy(state) {
   const { health, speed } = waveEntry(state.wave);
-  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health: toughened(state, health), speed });
+  state.spawner.plain = (state.spawner.plain ?? 0) + 1;
+  const armour = armoured(state, state.spawner.plain);
+  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health: toughened(state, health), speed, armour });
   state.enemies.push(enemy);
   return enemy;
 }
