@@ -1,7 +1,7 @@
 import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createGame, placeTower, placementError, sellTower, sellValue, towerPrice, upgradeTower } from '../src/game.js';
-import { LANTERN, towerById } from '../src/tower.js';
+import { LANTERN, createTower, towerById } from '../src/tower.js';
 import { CANVAS_HEIGHT, HUD_HEIGHT, SELL_REFUSALS, hudKey } from '../src/hud.js';
 import { SPRITES, draw } from '../src/render.js';
 import { THEME } from '../src/theme.js';
@@ -53,6 +53,15 @@ test('a lantern placed for 20 gold has spent 20 and a sell value of 10; after a 
   const before = [tower.spent, sellValue(tower)];
   upgradeTower(game, 1);
   assert.deepEqual([before, [tower.spent, sellValue(tower)]], [[20, 10], [45, 22]]);
+});
+
+test('a tower pushed by hand with no spent sells for 0, and an upgrade counts from 0', () => {
+  const game = createGame({ waveSize: 0, gold: 1000 });
+  game.towers.push({ id: game.nextTowerId++, ...createTower(1, 1) });
+  const tower = towerById(game, 1);
+  const before = sellValue(tower);
+  upgradeTower(game, 1);
+  assert.deepEqual([before, tower.spent, sellValue(tower)], [0, 25, 12]);
 });
 
 test('on normal a lantern placed at the stepped price remembers that price', () => {

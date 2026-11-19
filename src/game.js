@@ -106,8 +106,8 @@ export function upgradeError(state, id) {
 }
 
 // Raise a tower one level by the damage and range its upgrade (copied from its kind) declares
-// and pay the upgrade's cost, counting it into the tower's `spent`. Returns upgradeError's reason, having changed nothing, when it
-// refuses; null when done.
+// and pay the upgrade's cost, counting it into the tower's `spent`. Returns upgradeError's
+// reason, having changed nothing, when it refuses; null when done.
 export function upgradeTower(state, id) {
   const reason = upgradeError(state, id);
   if (reason !== null) return reason;
