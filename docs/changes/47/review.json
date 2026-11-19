@@ -1,20 +1,21 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "b59dc2ba2318b41d570b7414e3909861de269ad8b5471ebc63740c9cb5078e0b",
+  "digest": "05d48f0b4fc0937c91f682102b44a3e29dbd928f30f6d0f36baca7004b810d88",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] untested-layout: src/render.js:91 puts the HUD 'Tower' label at x=300 and its value at x=348, and draws the kind name without measuring it. No test checks that 'Lantern', 'Brazier' or 'Frost' ends before PAUSE_BUTTON.x. The tests only check the order of the fillText calls, so an overlap with the Pause button on a narrow board would not be caught. I could not check this against hud.js because it is not in the review folder. A test asserting that HUD_KIND.valueX plus a bound on the name width is less than PAUSE_BUTTON.x would close the gap.",
-        "[P1] fragile-invariant: slowEnemy (src/enemy.js:25) always overwrites the factor with the incoming one. This is correct with the single FROST kind, and two frost hits stay at 0.5 as the brief asks. But a later, weaker slow kind would lift a stronger slow instead of keeping the stronger one. If more slow kinds are planned, Math.min(enemy.slow, factor) while slowLeft > 0 would keep the 'never deeper than the factor, never shallower' intent.",
-        "[P2] test-naming: in test/frost.test.js, the test 'slowEnemy then a second: half the distance' calls slowEnemy only once. Its name suggests a second hit, so the name should change to match what it tests, or the test should make the second call.",
-        "[P2] render-classification: the new isLantern helper is used only for the pool pass. The body pass in draw repeats the splash/slow checks inline, so a later kind has to be classified in two places. One shared kind classifier would keep the two passes consistent."
+        "The outcome matches the brief. src/tower.js adds FROST with cost 40, damage 0.5 (below the lantern's 1), slow 0.5 and slowFor 2. createTower now carries slow and slowFor, defaulting both to 0 for other kinds, and kindForKey maps '3' to FROST.",
+        "The slow is handled correctly. In src/game.js, step calls slowEnemy only on ghosts the frost tower hits and does not kill. slowEnemy sets the factor and restarts slowLeft without multiplying, so two 0.5 hits leave the ghost at 0.5, not 0.25. When a step outlasts the slow, advanceEnemy splits it into a slowed part and a full-speed part, then puts slow back to 1 once slowLeft reaches 0. Repeated floating-point subtraction can leave a tiny slowLeft, but the next step's Math.min clamps it to exactly 0, so no ghost stays slowed forever.",
+        "The P1 from the review of record is fixed: the HUD names the kind from boot. src/main.js keeps kind = LANTERN at boot and passes it on every frame with draw(ctx, state, hover, SPRITES, kind). draw adds the 'Tower' label and kind name only when it is handed a kind, so existing render expectations still hold. test/pause-speed.test.js checks the name at boot and after pressing 1, 2 and 3.",
+        "Frost has its own colours and drawing. src/theme.js adds the frostBody, frostCore and ghostSlowed tokens. In src/render.js, a single bodySprite function picks the frost diamond and keeps frost from casting a lantern pool. drawGhost tints a ghost while its slowLeft is above 0.",
+        "Each of the four acceptance criteria has a test in test/frost.test.js. Half the distance in the next second is checked end to end through step. Return to full speed after slowFor is checked directly and with a step split where the slow runs out. Two hits leaving the factor rather than its square is checked directly and through step. The 40-gold cost is checked, and placementError refuses frost at 39 gold. test/brazier.test.js now expects key '3' to give FROST."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
