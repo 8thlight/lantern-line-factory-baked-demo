@@ -1,8 +1,9 @@
-// Two tower kinds. The Lantern fires a beam at the nearest enemy; the Brazier reaches less far
-// and fires more slowly, but its shot splashes onto every ghost around its target.
+// Two tower kinds. The Lantern fires a beam; the Brazier reaches less far and fires more slowly,
+// but its shot splashes onto every ghost around its target. Either shoots the nearest ghost by
+// default, or the one furthest along the path once switched to first.
 
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
-import { nearestInRange } from './targeting.js';
+import { pickTarget } from './targeting.js';
 
 export const LANTERN = { range: 100, cooldown: 0.6, damage: 1 }; // pixels, seconds, health
 export const BRAZIER = { range: 80, cooldown: 1.2, damage: 1, splash: 40 }; // pixels, seconds, health, pixels
@@ -19,14 +20,33 @@ export function kindForKey(key, current) {
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
   const damage = kind.damage ?? LANTERN.damage;
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, reload: 0 };
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, reload: 0, mode: 'nearest' };
+}
+
+// The mode a toggle switches to: 'first' gives 'nearest', anything else gives 'first'.
+export function nextMode(mode) {
+  return mode === 'first' ? 'nearest' : 'first';
+}
+
+// The tower standing on a cell, or null.
+export function towerAt({ towers }, col, row) {
+  return towers.find((t) => t.col === col && t.row === row) ?? null;
+}
+
+// A right-click's toggle: while the round is playing, the tower on the cell switches mode.
+// Returns that tower, or null when the round is over or the cell holds none.
+export function toggleModeAt(state, col, row) {
+  if (state.status !== 'playing') return null;
+  const tower = towerAt(state, col, row);
+  if (tower) tower.mode = nextMode(tower.mode);
+  return tower;
 }
 
 // A tower may stand on any in-bounds cell that is not path and not taken.
 export function canPlace({ path, towers }, col, row) {
   if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return false;
   if (path.has(cellKey(col, row))) return false;
-  return !towers.some((t) => t.col === col && t.row === row);
+  return towerAt({ towers }, col, row) === null;
 }
 
 // Count the reload down; when ready and an enemy is in range, fire.
@@ -34,7 +54,7 @@ export function canPlace({ path, towers }, col, row) {
 export function updateTower(tower, enemies, dt) {
   tower.reload = Math.max(0, tower.reload - dt);
   if (tower.reload > 0) return null;
-  const target = nearestInRange(tower, enemies);
+  const target = pickTarget(tower, enemies);
   if (target) tower.reload = tower.cooldown;
   return target;
 }
