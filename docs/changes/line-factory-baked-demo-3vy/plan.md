@@ -223,3 +223,15 @@ each of issue #68's criteria:
   gold and 8 lives. On a playing game, it returns that same game unchanged.
 - A ready normal game draws `Easy`, `Normal` and `Hard`. A ready game with no difficulty
   draws none of them.
+
+## Touches amendment
+
+- reason: train-wreck: the base conflict in src/render.js resolves cleanly, but the 4 reds left, in test/pause-speed.test.js, can only be fixed by editing that file as ruling q-8ea7b2c1 (a) ordered, and that path is outside the signed touches. With the merge resolved and that test updated, npm test is 237/237 green.
+
+touches:
+  - src/main.js
+  - src/game.js
+  - src/hud.js
+  - src/render.js
+  - test/difficulty-choice.test.js
+  - test/pause-speed.test.js
