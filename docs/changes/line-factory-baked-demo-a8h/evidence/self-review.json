@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-a8h",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/wave.test.js"
+  ],
+  "said": "- `FOUND 1`\n- `test/wave.test.js:24`: the `waveDone` test checked `false` after each of the first four ticks but never checked that those ticks spawned anything, so a wave that spawned nothing would still have passed those four checks. Each tick now has to return 1 as well. fixed (commit c37d3d6)\n- `GATES green`: `node --test test/enemy.test.js test/wave.test.js test/game.test.js` passed 15 of 15, and `npm --prefix . run test` passed 24 of 24. The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}

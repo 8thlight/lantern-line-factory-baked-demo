@@ -1,0 +1,20 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "12bd52d41aff257f11a01525af2ccd56d7ac60ab6d5f40702978cb555f7cdd8c",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] fragile test fixture: quietGame now sets waveSize 0. A zero-count wave is waveDone from the start, so in src/game.js step() every tick with an empty board adds 1 to state.wave and builds a new empty wave. The quiet game's wave number keeps climbing for no reason. No test checks wave in a quiet game today, but any future test that steps an empty quiet board and reads state.wave will get a wrong number. Either make the next-wave check require count > 0, or suppress spawning in quietGame some other way.",
+        "[P1] missing test: the wave-advance game test only clears the board by leaking ghosts. No test covers the other way the board clears, with wave 1's last ghost killed by lanterns, to show state.wave goes to 2 only then and not on an earlier kill.",
+        "[P2] edge case: healthFraction divides health by maxHealth. createEnemy({ health: 0 }) makes that 0/0, so the bar gets NaN for its width. Nothing creates a 0-health ghost today. Guard maxHealth <= 0 or reject it in createEnemy.",
+        "[P2] no test for render: drawHealthBar's colour thresholds (above 2/3 green, above 1/3 yellow, else red) and the bar shortening have no tests. Pulling the colour choice into a small pure function would make it testable without a canvas."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
