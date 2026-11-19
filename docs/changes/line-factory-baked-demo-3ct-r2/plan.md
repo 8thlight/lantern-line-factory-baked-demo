@@ -30,10 +30,7 @@ It does not build M1's restart or end cards (see "Not in this change").
 
 ## Who meets it
 
-- person: the player, who opens the game and sees the Start overlay before any ghost spawns,
-  then starts wave 1 with the Start button, Enter or Space. Artboard:
-  `design/screens/StartScreen.png` (source `design/screens/StartScreen.dc.html`), with tokens
-  and layout in `design/hud.md` under "Start screen".
+- person: the player, on the Start screen drawn at design/screens/StartScreen.png (source design/screens/StartScreen.dc.html; tokens and layout in design/hud.md under "Start screen"), who opens the game, sees the Start overlay before any ghost spawns, and starts wave 1 with the Start button, Enter or Space.
 
 ## Refusals
 
