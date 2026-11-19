@@ -67,16 +67,7 @@ GitHub issue #79, opened again as issue #85, bead lantern-line-factory-baked-dem
 
 ## Who meets it
 
-- person: a player in a round in play with a mouse or a touch screen, the Main artboard's player
-  (design/screens/Main.dc.html:49-52, the tower card). They click a placed tower and its card now
-  ends in two buttons, `Upgrade` and `Sell`, side by side. Pressing Upgrade does what U does: the
-  tower goes up a level and the gold drops by the upgrade's cost; when U would be refused the
-  button is drawn dimmed, the card's refusal line stays, and pressing it changes nothing. Pressing
-  Sell does what S does: the tower is gone, its sell value is paid and the card closes. Neither
-  press ever places a tower or selects another on the cell under the button. The key lines stay,
-  so the keys remain discoverable. The artboard's card draws no buttons; the code's card has
-  carried lines past the artboard since the upgrade print, and the buttons follow the HUD's own
-  Pause button style (design/hud.md).
+- person: the player, in a round in play with a mouse or a touch screen on the Main artboard drawn at design/screens/Main.png (source design/screens/Main.dc.html, listed in design/screens.yaml; the tower card at lines 49-52 of that source), clicks a placed tower and its card now ends in two buttons, `Upgrade` and `Sell`, side by side. Pressing Upgrade does what U does: the tower goes up a level and the gold drops by the upgrade's cost; when U would be refused the button is drawn dimmed, the card's refusal line stays, and pressing it changes nothing. Pressing Sell does what S does: the tower is gone, its sell value is paid and the card closes. Neither press ever places a tower or selects another on the cell under the button. The key lines stay, so the keys remain discoverable. The artboard's card draws no buttons; the code's card has carried lines past the artboard since the upgrade print, and the buttons follow the HUD's own Pause button style (design/hud.md).
 - agent: a caller of src/hud.js, such as src/main.js, a test or a later print. It reads
   `cardRect(tower)`, `cardButtons(tower)` (`{ upgrade, sell }`, canvas pixels) and
   `cardButtonAt(tower, x, y)` (`'upgrade'`, `'sell'` or `null`), the one source render.js draws
