@@ -3,11 +3,11 @@
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
 import { nearestInRange } from './targeting.js';
 
-export const LANTERN = { range: 100, cooldown: 0.6 }; // pixels, seconds
+export const LANTERN = { range: 100, cooldown: 0.6, damage: 1 }; // pixels, seconds, health
 
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, reload: 0 };
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage: kind.damage, reload: 0 };
 }
 
 // A tower may stand on any in-bounds cell that is not path and not taken.

@@ -1,7 +1,7 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
 import { WAYPOINTS, pathCells } from './path.js';
-import { advanceEnemy, createEnemy } from './enemy.js';
+import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
 import { canPlace, createTower, updateTower } from './tower.js';
 
 export const START_LIVES = 10;
@@ -60,10 +60,11 @@ export function step(state, dt) {
   for (const tower of state.towers) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
-    // Today one hit removes a ghost. Enemy health is milestone work (work/m1-01).
-    state.enemies = state.enemies.filter((e) => e !== target);
-    state.kills += 1;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });
+    if (damageEnemy(target, tower.damage)) {
+      state.enemies = state.enemies.filter((e) => e !== target);
+      state.kills += 1;
+    }
   }
 
   return state;

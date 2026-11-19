@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { START_LIVES, createGame, placeTower, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
+import { LANTERN } from '../src/tower.js';
 
 // A game with no automatic spawning, so each test controls its enemies.
 function quietGame(options) {
@@ -53,13 +54,27 @@ test('towers are refused on the path and on a taken cell', () => {
   assert.equal(game.towers.length, 1);
 });
 
-test('a tower beside the path shoots an enemy that walks into range', () => {
+test('a 3-health ghost beside a lantern survives the first shot and is gone after the third', () => {
   const game = quietGame();
   placeTower(game, 1, 1); // just below the first stretch of path
-  spawnEnemy(game);
+  const enemy = spawnEnemy(game);
+  assert.equal(enemy.health, 3);
+  const reload = LANTERN.cooldown + 0.05; // each step fires exactly one beam
+
   step(game, 0.1);
-  assert.equal(game.enemies.length, 0);
-  assert.equal(game.kills, 1);
   assert.equal(game.shots.length, 1);
+  assert.deepEqual(game.enemies, [enemy]);
+  assert.equal(enemy.health, 2);
+  assert.equal(game.kills, 0);
+
+  step(game, reload);
+  assert.deepEqual(game.enemies, [enemy]);
+  assert.equal(enemy.health, 1);
+  assert.equal(game.kills, 0);
+
+  step(game, reload);
+  assert.equal(enemy.health, 0);
+  assert.deepEqual(game.enemies, []);
+  assert.equal(game.kills, 1);
   assert.equal(game.lives, START_LIVES);
 });
