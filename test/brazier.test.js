@@ -5,7 +5,7 @@ import { ENEMY_HEALTH } from '../src/enemy.js';
 import { TILE } from '../src/path.js';
 import { BRAZIER, LANTERN, createTower } from '../src/tower.js';
 import { splashTargets } from '../src/targeting.js';
-import { SPRITES, drawBrazier } from '../src/render.js';
+import { SPRITES, draw, drawBrazier } from '../src/render.js';
 import { THEME } from '../src/theme.js';
 
 test('splashTargets returns the enemies within the radius, one exactly on the edge included and one just outside left out', () => {
@@ -72,6 +72,15 @@ test('a brazier that banishes a group counts each ghost once', () => {
   assert.equal(game.kills, 3);
 });
 
+test('a lantern hits only its target, even with a second ghost standing on the same spot', () => {
+  const game = createGame({ waveSize: 0 });
+  placeTower(game, 1, 1, LANTERN);
+  const ghosts = [spawnEnemy(game), spawnEnemy(game)];
+  step(game, 0.01);
+  const healths = ghosts.map((g) => g.health).sort((a, b) => a - b);
+  assert.deepEqual(healths, [ENEMY_HEALTH - LANTERN.damage, ENEMY_HEALTH]);
+});
+
 test('placeTower with no kind places a lantern', () => {
   const game = createGame({ waveSize: 0 });
   placeTower(game, 1, 1);
@@ -86,13 +95,26 @@ test('drawBrazier draws an orange square centred on the tower, in THEME colours 
       get: (target, name) => (name in target ? target[name] : (...args) => calls.push({ name, args, fillStyle: target.fillStyle })),
     },
   );
-  drawBrazier(ctx, createTower(1, 1, BRAZIER));
+  const tower = createTower(1, 1, BRAZIER);
+  drawBrazier(ctx, tower);
   const squares = calls.filter((c) => c.name === 'fillRect');
   const side = TILE * 0.6;
-  assert.deepEqual(squares[0], { name: 'fillRect', args: [60 - side / 2, 60 - side / 2, side, side], fillStyle: THEME.lanternPaper });
+  assert.deepEqual(squares[0], { name: 'fillRect', args: [tower.x - side / 2, tower.y - side / 2, side, side], fillStyle: THEME.lanternPaper });
   assert.deepEqual(
     squares.map((c) => Object.values(THEME).includes(c.fillStyle)),
     squares.map(() => true),
   );
   assert.equal(SPRITES.drawBrazier, drawBrazier);
+});
+
+test('draw gives a brazier its square and no lantern pool, and a lantern its pool and body', () => {
+  const counts = { drawLanternLight: 0, drawLanternBody: 0, drawBrazier: 0 };
+  const sprites = { ...SPRITES };
+  for (const name of Object.keys(counts)) sprites[name] = () => (counts[name] += 1);
+  const game = createGame({ waveSize: 0 });
+  placeTower(game, 1, 1, BRAZIER);
+  placeTower(game, 3, 1, LANTERN);
+  const ctx = new Proxy({}, { get: (target, name) => (name in target ? target[name] : () => ctx) });
+  draw(ctx, game, null, sprites);
+  assert.deepEqual(counts, { drawLanternLight: 1, drawLanternBody: 1, drawBrazier: 1 });
 });
