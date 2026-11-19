@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "37d946ad32521641ee70fefbe98557bf73d8cf2425decaf705ae8c22e558f5cc",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P2] naming: the test in test/upgrade.test.js is titled 'draw makes one level mark per level above the first', but it asserts [0, 2, 3] marks for levels 1\u20133. drawLevelMarks in src/render.js draws one mark per level for an upgraded tower, so a level-2 tower gets 2 marks. That matches the issue's 'an upgraded tower is drawn with a mark per level', but the title describes a different rule (which would give 0, 1, 2 marks). Rename the test to say level 1 has no marks and level N >= 2 has N.",
+        "[P1] missing-test: the browser wiring in src/main.js has no test. Nothing covers that the click handler stores clickCell's id in `selected`, that U calls upgradeTower(state, selected) only while playing and not on a key repeat, that Escape and restart clear the selection, or that `selected` reaches draw. clickCell, hudKey and selectedModel are each tested alone, but a broken handler that never upgrades or never selects would still pass CI.",
+        "[P1] fragile-structure: towers now hold a live reference to their kind object (`kind` in createTower), and upgradeError/upgradeTower read upgradeCost, upgradeDamage and upgradeRange from it at upgrade time. Any later code that serialises or clones game state, such as a save or snapshot feature, will lose or detach that reference, and upgrades will then quietly refuse with 'max' because of the `kind?.upgradeCost === undefined` branch. Storing the kind's name, or copying the upgrade fields onto the tower, would make this sturdier."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
