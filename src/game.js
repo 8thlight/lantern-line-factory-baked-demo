@@ -1,8 +1,9 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
 import { WAYPOINTS, pathCells } from './path.js';
-import { advanceEnemy, createEnemy } from './enemy.js';
+import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
 import { canPlace, createTower, updateTower } from './tower.js';
+import { createWave, updateWave, waveDone } from './wave.js';
 
 export const START_LIVES = 10;
 export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
@@ -13,21 +14,18 @@ const SHOT_TTL = 0.1; // how long a beam stays drawn
 export function createGame({
   waypoints = WAYPOINTS,
   spawnInterval = SPAWN_INTERVAL,
+  waveSize = WAVE_SIZE,
   lives = START_LIVES,
   totalWaves = TOTAL_WAVES,
-  waveSize = WAVE_SIZE,
 } = {}) {
   return {
-    options: { waypoints, spawnInterval, lives, totalWaves, waveSize },
+    options: { waypoints, spawnInterval, waveSize, lives, totalWaves },
     status: 'playing', // 'playing', 'won' or 'lost'
-    wave: 1,
-    totalWaves,
-    waveSize,
-    spawnedThisWave: 0,
     waypoints,
     path: pathCells(waypoints),
-    spawnInterval,
-    spawnTimer: 0,
+    wave: 1,
+    totalWaves,
+    spawner: createWave({ count: waveSize, interval: spawnInterval }),
     nextEnemyId: 1,
     enemies: [],
     towers: [],
@@ -62,31 +60,12 @@ export function restart(state) {
   return createGame(state.options);
 }
 
-// Once a wave has spawned out and the board is clear, win on the last wave or
-// start the next. A stand-in until work/m1-02 brings src/wave.js.
-function clearWave(state) {
-  if (state.spawnedThisWave < state.waveSize || state.enemies.length > 0) return;
-  if (state.wave >= state.totalWaves) {
-    state.status = 'won';
-    return;
-  }
-  state.wave += 1;
-  state.spawnedThisWave = 0;
-  state.spawnTimer = 0;
-}
-
 // Advance the whole game by `dt` seconds. A round that is over stays as it is.
 export function step(state, dt) {
   if (state.status !== 'playing') return state;
 
-  if (state.spawnedThisWave < state.waveSize) {
-    state.spawnTimer -= dt;
-    if (state.spawnTimer <= 0) {
-      spawnEnemy(state);
-      state.spawnedThisWave += 1;
-      state.spawnTimer += state.spawnInterval;
-    }
-  }
+  const due = updateWave(state.spawner, dt);
+  for (let i = 0; i < due; i++) spawnEnemy(state);
 
   for (const enemy of state.enemies) advanceEnemy(enemy, state.waypoints, dt);
   leakEnemies(state);
@@ -101,12 +80,26 @@ export function step(state, dt) {
   for (const tower of state.towers) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
-    // Today one hit removes a ghost. Enemy health is milestone work (work/m1-01).
-    state.enemies = state.enemies.filter((e) => e !== target);
-    state.kills += 1;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });
+    if (damageEnemy(target, tower.damage)) {
+      state.enemies = state.enemies.filter((e) => e !== target);
+      state.kills += 1;
+    }
   }
 
-  clearWave(state);
+  // A wave is cleared once it has spawned out and the board is clear, whether its
+  // ghosts were banished or leaked: the last wave wins the round, any other starts
+  // the next. Every wave is the same size for now.
+  // A wave of no ghosts is spawned out from the start, so it is kept from counting waves up on an empty board.
+  if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
+    if (state.wave >= state.totalWaves) {
+      state.status = 'won';
+      return state;
+    }
+    const { count, interval } = state.spawner;
+    state.wave += 1;
+    state.spawner = createWave({ count, interval });
+  }
+
   return state;
 }

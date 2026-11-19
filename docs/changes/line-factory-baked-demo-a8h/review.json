@@ -1,0 +1,20 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "57cb183ca8cceb45ed5cce65fdf35051653252a5529c2227cf45d86d8e3adbf4",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The change does what both issues ask. createEnemy now takes a health option (default 3) and stores both health and maxHealth. damageEnemy keeps health at 0 or above and returns true only when the ghost dies. LANTERN has damage 1, and towers default to it. In step(), a ghost is removed and counted in kills only when damageEnemy returns true.",
+        "Waves are bounded. updateWave's while loop stops at count, so a single 10s tick spawns exactly 5. A new wave's timer starts at 0, so it spawns 1 at t=0. step() moves state.wave on only when waveDone is true and the board is empty. The count>0 check stops a wave of size 0 (the new quietGame) from counting waves up on an empty board.",
+        "Every acceptance criterion has its own test. enemy.test.js covers 3 health minus 1 leaving 2 and returning false, and the third hit returning true with health 0. wave.test.js covers spawns at t=0,1,2,3,4 with 5 in total, a 10s dt capped at 5, and waveDone flipping only after the last spawn. game.test.js shows a ghost surviving two shots with kills at 0 and gone after the third with kills at 1. It also shows wave going from 1 to 2 only after spawn-out plus a clear board, whether the ghosts were banished or leaked. The old quietGame helper, the spawn-interval test and the one-shot-kill test have been rewritten for the new behaviour.",
+        "drawGhost now draws the Board artboard's health bar: a 26x4 track whose fill shortens with each hit and changes colour from green to yellow to red. A recording-context test checks it."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}

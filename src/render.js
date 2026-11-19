@@ -4,6 +4,9 @@
 import { COLS, ROWS, TILE, cellKey } from './path.js';
 import { THEME } from './theme.js';
 
+// The colours render.js draws with, under the name the health bar's tests read them by.
+export const PALETTE = THEME;
+
 const POOL_R = TILE * 3; // radius of a lantern's light pool
 const BAR_W = 26; // health bar, full width
 const BAR_H = 4;
@@ -146,7 +149,7 @@ export function drawLantern(ctx, { x, y }) {
 }
 
 // A ghost: a rounded head, a zig-zag hem, two eyes, and its health bar above it.
-// Ghosts carry no health until work/m1-01, so a missing health draws a full bar.
+// A ghost handed no health draws a full bar.
 export function drawGhost(ctx, ghost) {
   const { x, y } = ghost;
   ctx.save();
@@ -187,11 +190,19 @@ export function drawGhost(ctx, ghost) {
 
   const { health, maxHealth } = ghost;
   const share = health == null || !maxHealth ? 1 : Math.max(0, Math.min(1, health / maxHealth));
-  ctx.fillStyle = THEME.healthTrack;
-  ctx.fillRect(-BAR_W / 2, -26, BAR_W, BAR_H);
-  ctx.fillStyle = share > 0.7 ? THEME.healthHigh : share > 0.35 ? THEME.healthMid : THEME.healthLow;
-  ctx.fillRect(-BAR_W / 2, -26, BAR_W * share, BAR_H);
+  drawHealthBar(ctx, 0, -26, share);
   ctx.restore();
+}
+
+// The Board artboard's bar: a 26x4 track whose fill shortens and reddens with each hit.
+export function drawHealthBar(ctx, x, top, fraction) {
+  const left = x - BAR_W / 2;
+  ctx.fillStyle = THEME.healthTrack;
+  ctx.fillRect(left, top, BAR_W, BAR_H);
+  if (fraction > 2 / 3) ctx.fillStyle = THEME.healthHigh;
+  else if (fraction > 1 / 3) ctx.fillStyle = THEME.healthMid;
+  else ctx.fillStyle = THEME.healthLow;
+  ctx.fillRect(left, top, BAR_W * fraction, BAR_H);
 }
 
 // A glowing beam from a lantern's centre to its target's centre.
