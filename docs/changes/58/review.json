@@ -1,17 +1,18 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "632ac0982cb4cedde0fed694f2bbf808b45889bac5bc440f3dc039fa28be4124",
+  "digest": "d1d8ddb3049250d668629abe2409abfe01059bc57915e76ee017c39da11d793c",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P2] structure: drawStartScreen in src/render.js derives the title's y (0.35 \u00d7 canvas height) and START_BUTTON's y (0.6 \u00d7 canvas height) from the canvas size, but hard-codes the tagline at y=190, the hint at y=302 and the steps at 340+22i. If HUD_HEIGHT or ROWS changes, those lines will drift away from the title and button. Derive them from canvasHeight or from START_BUTTON as well."
+        "OUTCOME: the diff covers every acceptance item in the brief. createGame takes `status` (default 'playing') and stores it in `options`, so restart(createGame({status:'ready'})) comes back 'ready'. step already returns early for any status other than 'playing', so a 'ready' game spawns nothing. start(state) only moves 'ready' to 'playing'. render.js now draws the end card only for 'won'/'lost' and draws the start overlay ('Lantern Line', the tagline, the Start button and the hint) only for 'ready'. hud.js adds START_BUTTON (x 240, y 242, 160 by 44, centred at 60% of the canvas height) with startButtonAt and startKey next to the HUD buttons. main.js boots with createGame({ status: 'ready' }) and calls start on a click on Start or on a non-repeat Enter/Space. test/start-screen.test.js checks each criterion, including through main.js with stand-ins for the DOM. The edits to the existing tests are limited to one Enter press in the boot helpers of test/pause-speed.test.js and test/upgrade.test.js, which the signed touches: and acceptance text name explicitly.",
+        "CONSTRUCTION: no defect found. The click handler now checks 'won'/'lost' explicitly, so a click on a 'ready' game is not taken as game over and does not restart it. A click off Start does nothing on a ready game. Restarting a game that opened 'ready' goes back to the start screen, as the brief asks. Games created without the option still start 'playing' because options.status defaults to 'playing', so existing callers and tests behave as before. The start overlay is drawn after the HUD, outside the board's save/restore, so it covers the whole canvas as design/hud.md describes."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }

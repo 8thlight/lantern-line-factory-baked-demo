@@ -3,9 +3,11 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "src/game.js"
+    "src/hud.js",
+    "src/render.js",
+    "test/start-screen.test.js"
   ],
-  "said": "FOUND 1\n- `src/game.js:186`: my edit to the comment above `step` left one line at 130 characters, where the block around it wraps at about 95. Reflowed the comment: fixed (da0f1d9).\n\nEverything else checked out against the plan and the triage:\n- **Files:** all seven `touches:` paths are handled, and nothing outside them changed.\n- **Acceptance criteria:** each one is asserted with an exact `equal`/`deepEqual`, and no negative assertions were added.\n- **Guards:** each guard has a test that would fail if it were removed: the held-key check (held Enter), the narrowed end-card condition (no end card on a ready game), and the click-off-Start check (gold unchanged).\n- **Comments:** the comment about the path showing through is true, because `THEME.hudBg` is translucent.\n\nGATES green: `node --test` on start-screen, pause-speed, upgrade, game-over, render, hud and game passed 79/79, and `npm --prefix . run test` passed 179/179. The tree is committed and clean. There's no Makefile in this clone, so the `make check-build` route didn't apply.",
+  "said": "FOUND 3\n- `src/render.js:472`: the start screen recomputed the canvas height (`HUD_HEIGHT + HEIGHT`), which was also new in `src/hud.js:13`, so the same number lived in two places. `hud.js` now exports `CANVAS_HEIGHT` and `render.js` imports it. Fixed in c6c5b43.\n- `test/start-screen.test.js:85`: the tagline and hint were checked with `texts.includes(\u2026) === true`, and the test drew the ready game twice. It now checks for an exact match of `[TAGLINE, HINT]` on a single draw. This file is the print's new reproducer, not one the base already had, so the edit is allowed. Fixed in a7e38f9.\n- the last gate finding (`merge-red-build` on ef5452a): the forge kept no failed log, and all the touched suites pass locally on the new head. I could not reproduce the failure, so I found no cause to fix. Left: the next verify on this head will show whether it is still red.\n- GATES green: `node --test` on the 7 touched suites passed 79/79 (start-screen, pause-speed, upgrade, game-over, render, hud, game). This clone has no Makefile, so I ran `node --test` instead of `make check-build`; this run is noted in the attempt notes. The tree is clean and committed.",
   "gates": "green",
   "finding": null
 }
