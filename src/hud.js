@@ -34,14 +34,15 @@ export const UPGRADE_REFUSALS = Object.freeze({
 });
 
 // What the selected tower's card shows, read from the state and never written to it; null when
-// no tower has the id. Its upgrade cost is null at the most.
+// no tower has the id. Its upgrade cost is null at the most. It carries the tower's targeting
+// mode, which a right-click toggles.
 export function selectedModel(state, id) {
   const tower = towerById(state, id);
   if (!tower) return null;
   const refusal = upgradeError(state, id);
-  const { name, level, damage, range } = tower;
+  const { name, level, damage, range, mode } = tower;
   const upgradeCost = refusal === 'max' ? null : tower.upgrade.cost;
-  return { name, level, maxLevel: MAX_LEVEL, damage, range, upgradeCost, refusal };
+  return { name, level, maxLevel: MAX_LEVEL, damage, range, mode, upgradeCost, refusal };
 }
 
 // The card's last line: what U does, or the refusal's sentence when it would refuse.

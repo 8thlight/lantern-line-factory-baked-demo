@@ -1,0 +1,21 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "a163dd048292f1c688834905f93b223e62e1a9fd75eb8dc4543a6de6f57a420f",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "src/render.js: `draw` now works out `pointed` as `hover` only when `state.status === 'playing'`, and passes it to `drawHover`, `rangePreview` and the selected-ring check. On a 'ready', 'won' or 'lost' game this hides the hover cell and its preview ring, while the selected tower's own ring and card still draw, as the brief asks.",
+        "src/hud.js: `selectedModel` takes `mode` from the tower and adds it to its return, and `drawTowerCard`'s range line now ends with ` \u00b7 targets ${model.mode}`.",
+        "test/upgrade.test.js changes only at the model `deepEqual` (through the shared `lantern` fixture, which gains `mode: 'nearest'`) and the three range-line expectations, as the brief allows.",
+        "test/placement-preview-and-mode.test.js covers each acceptance point. A playing game draws the hover fill and one dashed ring; 'ready', 'won' and 'lost' draw neither, for both a good and a bad cell. `selectedModel` returns 'nearest', then 'first', then 'nearest' again as the mode is toggled. The card line reads 'Range 2.5 tiles \u00b7 1 damage \u00b7 targets nearest', then 'targets first' after the toggle. It also checks that the selected tower's ring survives on an end-state game.",
+        "Limit: the review folder holds only the diffs, not the full sources. I could not check whether the longer range line still fits the tower card's width; nothing in the diff suggests a fixed-width clip."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
