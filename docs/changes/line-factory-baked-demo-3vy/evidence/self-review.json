@@ -1,0 +1,12 @@
+{
+  "print_id": "line-factory-baked-demo-3vy",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/hud.js",
+    "test/difficulty-choice.test.js"
+  ],
+  "said": "FOUND 3\n- `src/hud.js:24`: the row width repeated 96 and 8 next to the buttons' own width and gap, so the same numbers were written twice. Now each is declared once. fixed (068ca34)\n- `test/difficulty-choice.test.js:94`: the draw test only counted a filled Normal, so it would still have passed if all three buttons were filled. It now checks that each button is either filled or outlined (`['stroke','fill','stroke']`). fixed (76ca3f3)\n- `src/main.js:46,84`: nothing tested the click, E/N/H and held-key (`!event.repeat`) wiring. A new boot test chooses Easy by click and Hard by key, ignores a held N, and starts the round on 60 gold and 8 lives. I removed the guard as a check and the test failed. fixed (76ca3f3)\n\nGATES green: this clone has no Makefile, so no `check-build`. `node --test` on the 9 touched and dependent test files passed 100/100, and `npm --prefix . run test` passed 216/216. The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}

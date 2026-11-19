@@ -1,0 +1,18 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "acb4e64cab908569123814b34f209025922d02a8e4b2a21b1186afdaef2dac43",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] missing test: the brief says the difficulty row must sit clear of the Start button and the start steps. test/difficulty-choice.test.js only checks for overlap with START_BUTTON and between the three buttons. Nothing checks that the row at CANVAS_HEIGHT-36 stays below the last START_STEPS line, which render.js draws at hintY + 38 + 22*i. If the hint or steps move, or more steps are added, the text could run into the buttons without any test failing.",
+        "[P2] style: render.js inserts DIFFICULTY_BUTTONS into the hud.js import between START_BUTTON and hudModel, which breaks the list's alphabetical order. src/main.js keeps its import list in that order."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
