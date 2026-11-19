@@ -82,10 +82,9 @@ test('restarting a game created ready gives a ready game', () => {
 });
 
 test('drawing a ready game draws the title and Start, a playing game neither', () => {
-  const texts = textsOf(drawn(createGame({ status: 'ready' })));
-  assert.deepEqual(startTexts(drawn(createGame({ status: 'ready' }))), ['Lantern Line', 'Start']);
-  assert.equal(texts.includes(TAGLINE), true);
-  assert.equal(texts.includes(HINT), true);
+  const calls = drawn(createGame({ status: 'ready' }));
+  assert.deepEqual(startTexts(calls), ['Lantern Line', 'Start']);
+  assert.deepEqual(textsOf(calls).filter((t) => t === TAGLINE || t === HINT), [TAGLINE, HINT]);
   assert.deepEqual(startTexts(drawn(createGame())), []);
   for (const status of ['won', 'lost']) assert.deepEqual(startTexts(drawn({ ...createGame(), status })), []);
 });
