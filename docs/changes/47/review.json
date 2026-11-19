@@ -1,0 +1,20 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "b59dc2ba2318b41d570b7414e3909861de269ad8b5471ebc63740c9cb5078e0b",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] untested-layout: src/render.js:91 puts the HUD 'Tower' label at x=300 and its value at x=348, and draws the kind name without measuring it. No test checks that 'Lantern', 'Brazier' or 'Frost' ends before PAUSE_BUTTON.x. The tests only check the order of the fillText calls, so an overlap with the Pause button on a narrow board would not be caught. I could not check this against hud.js because it is not in the review folder. A test asserting that HUD_KIND.valueX plus a bound on the name width is less than PAUSE_BUTTON.x would close the gap.",
+        "[P1] fragile-invariant: slowEnemy (src/enemy.js:25) always overwrites the factor with the incoming one. This is correct with the single FROST kind, and two frost hits stay at 0.5 as the brief asks. But a later, weaker slow kind would lift a stronger slow instead of keeping the stronger one. If more slow kinds are planned, Math.min(enemy.slow, factor) while slowLeft > 0 would keep the 'never deeper than the factor, never shallower' intent.",
+        "[P2] test-naming: in test/frost.test.js, the test 'slowEnemy then a second: half the distance' calls slowEnemy only once. Its name suggests a second hit, so the name should change to match what it tests, or the test should make the second call.",
+        "[P2] render-classification: the new isLantern helper is used only for the pool pass. The body pass in draw repeats the splash/slow checks inline, so a later kind has to be classified in two places. One shared kind classifier would keep the two passes consistent."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}

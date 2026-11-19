@@ -1,0 +1,11 @@
+{
+  "print_id": "47",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/render.js"
+  ],
+  "said": "FOUND 2\n- `src/render.js:204`: `FROST_SIDE` repeated `TILE * 0.6`, a value `BRAZIER_SIDE` already declares, and the comment above it calls the diamond the brazier's square turned 45\u00b0. It now reads `BRAZIER_SIDE`. Fixed, in ab59ace.\n- `src/game.js:158`: the `!dead.includes(enemy)` guard has no test that goes red when it is removed. Left as is: a banished ghost leaves `state.enemies` in the same tick, so slowing it has no effect anyone can see. The plan calls for the guard, and removing it would change nothing in play.\n\nGATES green: the 12 suites the plan names pass 107/107, and `npm --prefix . run test` passes 130/130. `test/path.test.js` is unedited, and the tree is committed and clean. This clone's Makefile has no `check-build` target, so I ran `node --test` on the suites the change touches, as the plan says.",
+  "gates": "green",
+  "finding": null
+}
