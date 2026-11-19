@@ -6,7 +6,7 @@ import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
 import { towerById } from './tower.js';
-import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -20,6 +20,8 @@ const HEIGHT = ROWS * TILE;
 // `kind`, when handed, is the kind a click places, and the bar names it. `selected`, when it is a
 // placed tower's id, rings that tower and draws its card above the ghosts and beams.
 // An upgraded tower wears its level marks over its body.
+// While the game is ready, the start screen covers the whole canvas, bar included; a playing,
+// won or lost game draws no start screen.
 export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
   const model = selectedModel(state, selected);
   const chosen = model && towerById(state, selected);
@@ -37,9 +39,10 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
   if (chosen) drawTowerCard(ctx, chosen, model, state.gold);
-  if (state.status !== 'playing') drawEndCard(ctx, state.status);
+  if (state.status === 'won' || state.status === 'lost') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind);
+  if (state.status === 'ready') drawStartScreen(ctx);
 }
 
 // The one place a tower's kind is read for drawing: the sprite that draws its body. A tower that
@@ -453,6 +456,47 @@ function drawEndCard(ctx, status) {
   ctx.fillText(END_TITLES[status], WIDTH / 2, HEIGHT / 2 - 18);
   ctx.font = '600 15px Inter, system-ui, sans-serif';
   ctx.fillText('Click to play again', WIDTH / 2, HEIGHT / 2 + 22);
+  ctx.restore();
+}
+
+const START_STEPS = [
+  '1  Hang lanterns on the grass beside the path',
+  '2  Each one shines on the nearest ghost in range',
+  '3  A ghost that reaches the gate costs a life',
+];
+
+// design/hud.md's Start screen, with the StartScreen artboard's hint and steps
+// (design/screens/StartScreen.dc.html): a veil in --hud-bg over the whole canvas, so the path
+// shows faintly behind, the title at 35% height and the Start button at 60%. The tagline hangs
+// from the title, and the hint and steps from the button, so they move with them.
+function drawStartScreen(ctx) {
+  const centre = WIDTH / 2;
+  const titleY = Math.round(0.35 * CANVAS_HEIGHT);
+  const { x, y, width, height } = START_BUTTON;
+  const hintY = y + height + 16;
+  ctx.save();
+  ctx.fillStyle = THEME.hudBg;
+  ctx.fillRect(0, 0, WIDTH, CANVAS_HEIGHT);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = 'bold 40px system-ui, sans-serif';
+  ctx.fillStyle = THEME.hudAccent;
+  ctx.fillText('Lantern Line', centre, titleY);
+  ctx.font = '16px system-ui, sans-serif';
+  ctx.fillStyle = THEME.hudMuted;
+  ctx.fillText('Light the lanterns. Stop the ghosts before they reach the gate.', centre, titleY + 36);
+  ctx.beginPath();
+  ctx.fillStyle = THEME.hudAccent;
+  ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
+  ctx.fill();
+  ctx.font = 'bold 17px system-ui, sans-serif';
+  ctx.fillStyle = THEME.hudAccentInk;
+  ctx.fillText('Start', x + width / 2, y + height / 2);
+  ctx.font = '12px system-ui, sans-serif';
+  ctx.fillStyle = THEME.hudMuted;
+  ctx.fillText('or press Enter or Space', centre, hintY);
+  ctx.fillStyle = THEME.hudInk;
+  START_STEPS.forEach((line, i) => ctx.fillText(line, centre, hintY + 38 + 22 * i));
   ctx.restore();
 }
 

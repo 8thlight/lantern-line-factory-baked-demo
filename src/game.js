@@ -29,6 +29,8 @@ export function waveSpawner({ options }, wave) {
 
 // `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave,
 // `waveSize` counting the plain ghosts, so a boss wave of a nonzero size still sends its boss after them.
+// `status` left out starts the game playing; 'ready' holds it on the start screen, and restart
+// brings it back the same way.
 export function createGame({
   waypoints = WAYPOINTS,
   spawnInterval,
@@ -36,11 +38,12 @@ export function createGame({
   lives = START_LIVES,
   gold = START_GOLD,
   totalWaves = TOTAL_WAVES,
+  status = 'playing',
 } = {}) {
-  const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves };
+  const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves, status };
   return {
     options,
-    status: 'playing', // then 'won' or 'lost', and the round is over
+    status, // 'ready' until started, 'playing', then 'won' or 'lost', and the round is over
     waypoints,
     path: pathCells(waypoints),
     wave: 1,
@@ -162,6 +165,12 @@ export function restart(state) {
   return createGame(state.options);
 }
 
+// Begin a ready game's first wave; any other status is left as it is.
+export function start(state) {
+  if (state.status === 'ready') state.status = 'playing';
+  return state;
+}
+
 // Pause and unpause the round.
 export function togglePause(state) {
   state.paused = !state.paused;
@@ -174,10 +183,10 @@ export function toggleSpeed(state) {
   return state;
 }
 
-// Advance the whole game by `dt` seconds of play, `speed` times over. A finished round stays
-// as it ended, and a paused one as it was. 2x is two ticks of the frame's `dt`, never one tick
-// of twice the `dt`, so a long frame cannot carry a ghost past a tower's reach or fold two
-// reloads into one shot.
+// Advance the whole game by `dt` seconds of play, `speed` times over. A ready game stays as it
+// is until started, a finished round as it ended, and a paused one as it was. 2x is two ticks
+// of the frame's `dt`, never one tick of twice the `dt`, so a long frame cannot carry a ghost
+// past a tower's reach or fold two reloads into one shot.
 export function step(state, dt) {
   if (state.status !== 'playing' || state.paused) return state;
   for (let i = 0; i < state.speed && state.status === 'playing'; i++) tick(state, dt);

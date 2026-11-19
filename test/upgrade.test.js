@@ -273,6 +273,7 @@ async function bootMain() {
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   await import(`../src/main.js?upgrade=${++boots}`);
+  keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
   return {
     click: (col, row) => handlers.click({ clientX: col * TILE + TILE / 2, clientY: HUD_HEIGHT + row * TILE + TILE / 2 }),
     key: (key, repeat = false) => keys.keydown({ key, repeat }),

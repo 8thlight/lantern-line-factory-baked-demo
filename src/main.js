@@ -1,8 +1,8 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { clickCell, createGame, hoverAt, restart, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
-import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey } from './hud.js';
+import { clickCell, createGame, hoverAt, restart, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
+import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
 
@@ -11,7 +11,7 @@ canvas.width = COLS * TILE;
 canvas.height = HUD_HEIGHT + ROWS * TILE; // the HUD bar, then the whole board below it
 const ctx = canvas.getContext('2d');
 
-let state = createGame();
+let state = createGame({ status: 'ready' }); // the start screen, until Start, Enter or Space
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
 let selected = null; // the id of the tower the card shows, chosen by a click on it
@@ -31,12 +31,19 @@ const cellAt = (event) => {
   return boardCellAt(x, y);
 };
 
-// Once the round is over, a click starts a fresh one rather than placing a lantern.
+// On the start screen, only a click on Start does anything: it begins wave 1.
+// Once the round is over, a click starts a fresh one, back on the start screen, rather than
+// placing a lantern.
 // A click on a HUD button toggles it; anywhere else on the bar does nothing.
 // On the board, a click on a placed tower selects it for its card; anywhere else places a tower
 // and clears the selection.
 canvas.addEventListener('click', (event) => {
-  if (state.status !== 'playing') {
+  if (state.status === 'ready') {
+    const { x, y } = pointAt(event);
+    if (startButtonAt(x, y)) start(state);
+    return;
+  }
+  if (state.status === 'won' || state.status === 'lost') {
     state = restart(state);
     selected = null;
     return;
@@ -61,8 +68,13 @@ canvas.addEventListener('contextmenu', (event) => {
 
 // 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses, F changes
 // speed and U upgrades the selected tower (paused or not), once per press. Escape clears the selection.
+// On the start screen, Enter or Space begins wave 1, once per press.
 window.addEventListener('keydown', (event) => {
   kind = kindForKey(event.key, kind);
+  if (state.status === 'ready' && startKey(event.key) && !event.repeat) {
+    start(state);
+    return;
+  }
   const action = hudKey(event.key);
   if (action === 'deselect') {
     selected = null;
