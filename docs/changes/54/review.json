@@ -1,0 +1,22 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "f3389c1b2bc058b23b3ad4f7cc74d52848873385623bf5c898e36801ac419ae5",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The diff meets the brief: in src/waves.js, entries 5 and 10 (and only those) now have a boss entry. Each boss has health, speed and bounty: wave 5 is 40 health, speed 45, bounty 30; wave 10 is 80 health, speed 55, bounty 50. Both are slower and tougher than the wave's plain ghosts, and both pay at least 3 \u00d7 ENEMY_BOUNTY.",
+        "waveSpawner adds one extra spawn only when the wave's entry has a boss and the wave sends at least one ghost. The spawn loop in tick sends that boss last even when one long tick owes several spawns. test/boss.test.js covers this for waves 1\u20134, 5 and 10, and for the long-tick case.",
+        "spawnBoss gives the boss its entry's health, maxHealth, speed and bounty through createEnemy and sets boss: true. The tests prove it takes `health` hits of 1 to defeat and pays its declared gold to state.gold when a tower kills it.",
+        "leakEnemies now takes BOSS_LIVES (3) for a boss and 1 for a plain ghost, and lives still stop at 0. The tests prove this through step and through a direct call, including a boss leak that loses the round.",
+        "hudModel now sets bossWave from spawner.boss, so the flag is on from the start of a boss wave. drawHud writes 'Boss wave' in hudDanger at HUD_BOSS_X, before the Pause and Speed buttons. drawGhost draws a boss BOSS_SCALE times larger and moves its health bar up by the same factor. Tests check the model, the text, the scale and the bar position.",
+        "The two tests the brief named in test/waves.test.js were updated and still prove what they proved before. The key-set test now allows exactly one extra key, 'boss', and only on a boss wave. The win test now expects each wave's ghost count plus BOSS_LIVES per boss wave in lives lost. The new test/hud.test.js line adds bossWave: false to the new-game model."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
