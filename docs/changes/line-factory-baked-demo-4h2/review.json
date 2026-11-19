@@ -1,0 +1,18 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "2e0adadc99c6de44958d12a51e24e7e8da5026d6da195612e6fb600c6ec0e34b",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] brief-contradiction: the acceptance criterion says `npm test` passes 'with no existing test file edited', but the diff edits four existing test files: test/card-buttons.test.js, test/pause-speed.test.js, test/sell.test.js and test/upgrade.test.js. Each edit adds a `Math.random = () => 0` stub with an after() that puts it back. This is not an outcome miss. src/main.js now calls pickPath(Math.random) when it boots, as the brief requires, so the boot tests in those files need a fixed random to stay on path 1. The signed brief's touches list names all four files, so it allows these edits. Only the literal wording of the criterion is broken. Someone should reconcile the criterion with the touches list so later reviews don't stumble on the same conflict.",
+        "[P2] edge-contract: pickPath(random) returns undefined if random returns 1 or more, or a negative number. createGame would then fall back to path 1, because a missing waypoints defaults to WAYPOINTS. Math.random never returns those values and the brief limits random to 0 up to but not including 1, so nothing hits this today. Clamping the index or asserting the range would make it fail loudly instead of quietly."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}

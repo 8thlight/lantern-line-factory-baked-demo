@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-4h2",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 0\n\nI read the plan and the triage, then checked the two build commits (`6b0c8c7..HEAD`) against them. I diffed from the ratify commit because the origin branch is far behind once the merges are counted.\n- **Planned files:** all eight files in the signed `touches:` list are handled, and nothing outside that list changed. Steps 1 to 5 of the plan are built as written. `restart` and `chooseDifficulty` are unchanged.\n- **Acceptance criteria:** `test/random-path.test.js` covers all six. Each assertion could have failed. The paths compared are always distinct: `nextRound` goes from path 2 to path 3, the ready case from path 1 to path 5, and `chooseDifficulty` keeps path 2 rather than the default path 1. The lengths are pinned exactly, not just checked against 24 to 26. Same-list identity is checked with a strict `assert.equal`. There are no unpaired negative assertions.\n- **Comments:** each one matches what the code does. `pickPath` uses `PATHS.length` rather than repeating 5.\n- **Reproducer:** it was committed alone and before the fix (42149b2, then ce1ea99).\n\nGATES green: there is no Makefile or `check-build` target in this tree. I ran `node --test` on the reproducer, the four edited test files, every other file that boots `src/main.js`, and the tests for `path.js` and `game.js`: 101 of 101 passed. The working tree is clean.",
+  "gates": "green",
+  "finding": null
+}
