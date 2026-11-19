@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { TOTAL_WAVES, createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
+import { START_LIVES, TOTAL_WAVES, createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
 import { ENEMY_SPEED } from '../src/enemy.js';
 
@@ -35,7 +35,7 @@ test('clearing every wave with lives left sets status to won, on the last wave',
   step(game, WALK); // and leaks
   assert.equal(game.status, 'won');
   assert.equal(game.wave, 2);
-  assert.equal(game.lives, 8);
+  assert.equal(game.lives, START_LIVES - 2);
 });
 
 test('a ghost that takes the last life on the step that clears the last wave loses the round', () => {
@@ -72,11 +72,11 @@ test('restart returns full lives, no towers, no enemies, wave 1 and status playi
   assert.equal(game.wave, 2);
   step(game, 0.01);
   game.status = 'lost';
-  assert.deepEqual([game.lives, game.towers.length, game.enemies.length], [9, 1, 1]);
+  assert.deepEqual([game.lives, game.towers.length, game.enemies.length], [START_LIVES - 1, 1, 1]);
 
   const fresh = restart(game);
   assert.equal(game.status, 'lost'); // a new game, the finished one left as it was
-  assert.equal(fresh.lives, 10);
+  assert.equal(fresh.lives, START_LIVES);
   assert.deepEqual(fresh.towers, []);
   assert.deepEqual(fresh.enemies, []);
   assert.deepEqual(fresh.shots, []);
