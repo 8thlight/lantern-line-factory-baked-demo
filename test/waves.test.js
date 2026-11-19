@@ -1,19 +1,22 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WAVES } from '../src/waves.js';
-import { TOTAL_WAVES, createGame, restart, step } from '../src/game.js';
+import { BOSS_LIVES, TOTAL_WAVES, createGame, restart, step } from '../src/game.js';
 
 // Step a game by half a second until `done` holds, at most `limit` times.
 function stepUntil(game, done, limit = 2000) {
   for (let i = 0; i < limit && !done(game); i++) step(game, 0.5);
 }
 
-test('the table holds ten waves, each with a positive count, interval, health and speed', () => {
+test('the table holds ten waves, each with a positive count, interval, health and speed, and a boss on a boss wave', () => {
   assert.equal(WAVES.length, 10);
   for (const wave of WAVES) {
     const { count, interval, health, speed } = wave;
     assert.deepEqual([count > 0, interval > 0, health > 0, speed > 0], [true, true, true, true]);
-    assert.deepEqual(Object.keys(wave).sort(), ['count', 'health', 'interval', 'speed']);
+    assert.deepEqual(
+      Object.keys(wave).sort(),
+      wave.boss ? ['boss', 'count', 'health', 'interval', 'speed'] : ['count', 'health', 'interval', 'speed'],
+    );
   }
 });
 
@@ -57,7 +60,7 @@ test("ghosts spawned in wave 2 carry wave 2's health and speed", () => {
 test('clearing the last entry wins the round', () => {
   const game = createGame({ lives: 1000 });
   stepUntil(game, (g) => g.status !== 'playing', 20000);
-  const total = WAVES.reduce((sum, w) => sum + w.count, 0);
+  const total = WAVES.reduce((sum, w) => sum + w.count + (w.boss ? BOSS_LIVES : 0), 0);
   assert.deepEqual([game.status, game.wave, game.lives], ['won', WAVES.length, 1000 - total]);
 });
 
@@ -71,7 +74,7 @@ test('explicit waveSize and spawnInterval still override the table, in every wav
   assert.equal(restart(game).spawner.count, 1);
 });
 
-test('a game holding more waves than the table sends the last entry again', () => {
+test('a game holding more waves than the table sends the last entry again, boss and all', () => {
   const game = createGame({ totalWaves: WAVES.length + 1, lives: 1000 });
   stepUntil(game, (g) => g.wave === WAVES.length + 1, 20000);
   assert.equal(game.wave, WAVES.length + 1);
@@ -80,6 +83,6 @@ test('a game holding more waves than the table sends the last entry again', () =
   const ghost = game.enemies.at(-1);
   assert.deepEqual(
     [game.spawner.count, ghost.health, ghost.speed],
-    [last.count, last.health, last.speed],
+    [last.count + 1, last.health, last.speed],
   );
 });
