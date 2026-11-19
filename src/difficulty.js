@@ -7,11 +7,14 @@ export const DIFFICULTIES = Object.freeze({
   hard: Object.freeze({ name: 'Hard', health: 2, gold: 60, lives: 8 }),
 });
 
-// The entry for `key`, or null when `key` is null or left out. Any other key is refused.
+// The entry for `key`, or null when `key` is null or left out. Any other key is refused, naming
+// the keys DIFFICULTIES holds.
 export function difficultyEntry(key) {
   if (key === null || key === undefined) return null;
   if (Object.hasOwn(DIFFICULTIES, key)) return DIFFICULTIES[key];
+  const keys = Object.keys(DIFFICULTIES);
+  const choices = `${keys.slice(0, -1).join(', ')} or ${keys.at(-1)}`;
   throw new RangeError(
-    `Unknown difficulty '${String(key)}': pass one of easy, normal or hard, or leave difficulty out to play the game as it is.`,
+    `Unknown difficulty '${String(key)}': pass one of ${choices}, or leave difficulty out to play the game as it is.`,
   );
 }
