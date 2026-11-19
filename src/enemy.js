@@ -1,13 +1,14 @@
-// Enemies ("ghosts") drift along the path at a fixed speed.
+// Enemies ("ghosts") drift along the path at a fixed speed, and pay their bounty when banished.
 
 import { pathLength, pointAlong } from './path.js';
 
 export const ENEMY_SPEED = 60; // pixels per second
 export const ENEMY_HEALTH = 3; // hits of 1 to banish a ghost
+export const ENEMY_BOUNTY = 5; // gold paid when a ghost is banished
 
-export function createEnemy({ id, waypoints, speed = ENEMY_SPEED, health = ENEMY_HEALTH }) {
+export function createEnemy({ id, waypoints, speed = ENEMY_SPEED, health = ENEMY_HEALTH, bounty = ENEMY_BOUNTY }) {
   const { x, y } = pointAlong(waypoints, 0);
-  return { id, x, y, distance: 0, speed, reachedEnd: false, health, maxHealth: health };
+  return { id, x, y, distance: 0, speed, reachedEnd: false, health, maxHealth: health, bounty };
 }
 
 // Lower an enemy's health by `amount`, never below 0. Mutates it.
