@@ -2,7 +2,7 @@
 
 import { COLS, ROWS, TILE } from './path.js';
 import { createGame, placeTower, restart, step } from './game.js';
-import { LANTERN, canPlace, kindForKey } from './tower.js';
+import { LANTERN, canPlace, kindForKey, nextMode, towerAt } from './tower.js';
 import { draw } from './render.js';
 
 const canvas = document.getElementById('board');
@@ -29,6 +29,16 @@ canvas.addEventListener('click', (event) => {
   }
   const { col, row } = cellAt(event);
   placeTower(state, col, row, kind);
+});
+
+// A right-click switches the tower under the cursor between nearest and first;
+// the browser's own menu never opens over the board.
+canvas.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+  if (state.status !== 'playing') return;
+  const { col, row } = cellAt(event);
+  const tower = towerAt(state, col, row);
+  if (tower) tower.mode = nextMode(tower.mode);
 });
 
 window.addEventListener('keydown', (event) => {
