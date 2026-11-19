@@ -3,9 +3,9 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "test/range-preview.test.js"
+    "src/theme.js"
   ],
-  "said": "FOUND 1\n- `src/game.js:37`: the comment on `rangePreview` says it returns null for a cell off the map, but no test checked that. Fixed: I added an off-map assertion (`{ col: -1 }` \u2192 `null`) to `test/range-preview.test.js` and committed it as ab74ae4. I made the commit as HydraFlow, the same author as the earlier commits, because the container has no git identity set.\n- Nothing else to fix:\n  - **Planned files and criteria:** every file the plan names is in the diff, and every acceptance criterion has a test that fails when the feature is missing.\n  - **Leftover palette:** nothing in `src/` or `test/` still uses `PALETTE`.\n  - **Scope:** the diff stays inside the triage's touches.\n  - **Repeated values:** the ring's radius comes from `tower.range` or `LANTERN.range`, and no colour is copied out of `THEME`.\n\nGATES green: `node --test test/range-preview.test.js` 6/6, `npm --prefix . run test` 21/21. I ran these because the Makefile has no `check-build` target and this is a node project with no lint or type step. The tree is committed and clean.",
+  "said": "FOUND 2\n- `src/theme.js:46`: `rangeRing` was `rgba(242, 193, 78, 0.7)`. The Board artboard's ring sets no stroke-opacity, so 0.7 was invented, and THEME's header says every opacity comes from the artboard. Fixed: it is now `#f2c14e`, and `rangeFill` has a `#f2c14e at 0.07` note like the other tokens (6a76be0).\n- `src/theme.js:45`: the comment said only \"a hovered lantern\" shows a ring, but `rangePreview` shows one for any hovered tower, braziers included. Fixed in the same commit.\n- I checked the rest and changed nothing: all four touches are handled and nothing outside them changed. The tests check `towerAt`, `rangePreview` on a tower, on grass, on a path cell, off the map and with no hover, and that `draw` strokes the ring in `THEME.rangeRing`. Each \"no ring\" check sits beside a \"ring drawn\" check.\n- The last gate finding came with no failed log, so I could not reproduce the red at the merge. I only confirmed the tests below pass on this head.\n\nGATES green: `npm --prefix . run test` passes 66 of 66. This clone has no Makefile, so there is no `make check-build` target to run.",
   "gates": "green",
   "finding": null
 }

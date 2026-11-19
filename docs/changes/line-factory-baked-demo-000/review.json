@@ -1,17 +1,16 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "7b852f218bb97cc37cbc0eb1556dc21bfbe3968af90772c09cb76e72c12183be",
+  "digest": "a36d634a2c564fb58145ca531212ee086b7d2c3edc22b2f8f0cf23ddc9f6a8cf",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P2] construction/scope: drawLanternLight in src/render.js was changed so it falls back to a flat THEME.glowMid fill when createRadialGradient returns nothing usable. This lets the Proxy recording fake in the test run through draw(). Shipping code now branches on a test double, and the fake should provide a gradient stub instead. A real canvas never takes this path, so behaviour does not change, but this edit was not in the brief.",
-        "[P2] design: the brief asks for the circle to be drawn 'as a faint outline'. drawRange also fills the disc with THEME.rangeFill (alpha 0.07) and dashes the stroke. The fill is faint and the acceptance criterion only checks the stroke colour and radius, so this is a small departure from the brief's wording, not a miss.",
-        "[P1] edge/test gap: for an empty cell, rangePreview depends entirely on canPlace(state, col, row). If canPlace also checks something besides path and occupancy (for example gold or a game-over state), the grass preview disappears at those times, but the brief says it should always show LANTERN.range on empty grass. I could not check this because tower.js is not in the rendered folder. No test covers rangePreview over grass when the player has no gold.",
-        "[P1] test gap: the draw test only covers hovering a placed tower. Nothing checks that hovering empty grass draws a ring at cellCenter with radius LANTERN.range, or that hovering a path cell draws no ring."
+        "[P1] edge/coupling: rangePreview (src/game.js) decides whether empty grass gets a ring by calling canPlace. The brief only asks for null on a path cell or with no hover. If canPlace also checks anything else, such as gold or the tower kind, the grass preview will vanish whenever placement is blocked for that reason. Only the source diffs were rendered, so I could not check what canPlace actually tests, and no test covers grass that is free but blocked for some other reason. Consider an explicit path, bounds and occupancy check, or add a test that pins this behaviour down.",
+        "[P2] design: drawRange (src/render.js) fills the circle with THEME.rangeFill as well as stroking it dashed. The brief asks for a faint outline. The fill is very faint (alpha 0.07) and the comment says it follows the artboard, but the tests only check the stroke colour, so the fill is an untested extra beyond the brief.",
+        "[P2] structure: render.js now imports rangePreview from game.js, so the drawing layer depends on the game-logic module. There is no cycle today, but render could instead receive the ring precomputed by main.js, keeping render free of game imports."
       ],
       "seat": "review",
       "verdict": "changes-required"
