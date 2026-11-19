@@ -329,12 +329,13 @@ const HUD_ITEMS = [
   { label: 'Wave', labelX: 190, valueX: 236 },
 ];
 const BUTTON_RADIUS = 6;
+const HUD_FONT = '16px system-ui, sans-serif';
 
 function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }) {
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
-  ctx.font = '16px system-ui, sans-serif';
+  ctx.font = HUD_FONT;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   const values = [
@@ -376,7 +377,7 @@ const KIND_X = 290;
 
 function drawKind(ctx, { name, cost }) {
   ctx.save();
-  ctx.font = '16px system-ui, sans-serif';
+  ctx.font = HUD_FONT;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = THEME.hudInk;
