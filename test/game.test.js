@@ -5,7 +5,7 @@ import { WAYPOINTS, pathLength } from '../src/path.js';
 import { LANTERN } from '../src/tower.js';
 
 // A game whose waves hold no ghosts, so each test controls its enemies.
-// Its wave number stays at 1: a wave of no ghosts never ends.
+// Its wave number stays at 1: step() never advances past a wave of no ghosts.
 function quietGame(options) {
   return createGame({ ...options, waveSize: 0 });
 }
