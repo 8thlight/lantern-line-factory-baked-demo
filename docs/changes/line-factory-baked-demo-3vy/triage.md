@@ -58,5 +58,6 @@ touches:
   - src/hud.js
   - src/render.js
   - test/difficulty-choice.test.js
+  - test/pause-speed.test.js
 
 Acceptance criterion: npm --prefix . run test passes with the new test/difficulty-choice.test.js proving every criterion of issue #68 (difficultyButtonAt returns 'easy', 'normal' and 'hard' inside each button and null on Start and off every button; no difficulty button overlaps Start or another, and all lie inside the canvas; difficultyKey maps e/E, n and h and returns null for x and Enter; chooseDifficulty on a ready normal game with 'hard' gives a ready hard game with 60 gold and 8 lives, and on a playing game returns that same game unchanged; a ready normal game draws the texts Easy, Normal and Hard and a ready game with no difficulty draws none of them), with no existing file under test/ edited
