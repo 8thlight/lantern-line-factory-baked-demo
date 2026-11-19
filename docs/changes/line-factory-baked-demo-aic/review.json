@@ -1,17 +1,17 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "e52dac84e9313b1fa2e7df2d4a93ab9d85699653189fe81406cb624513db7778",
+  "digest": "2bee57e9042c3aa62e7ffd78ba18f0aa15a111c1a824865f456454c60079256b",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] fragile-structure: the 40px HUD bar is drawn over the top of the board (drawFrame paints it after draw). Only the two button rects are hit-tested in src/main.js. A click anywhere else on the bar falls through to placeTower on row 0, and a tower or ghost in that row is partly hidden under the opaque bar. No test covers clicks on the bar outside the buttons, or whether row 0 should be placeable under the HUD.",
-        "[P1] unhandled-edge: the keydown handler in src/main.js toggles on every keydown, including auto-repeat (event.repeat is not checked). Holding P or F flips pause or speed many times, so where it stops depends on how long the key was held.",
-        "[P1] missing-test: nothing tests the click and keyboard wiring in src/main.js, including that a HUD button click places no tower. Only the pure helpers hudButtonAt and hudButtonForKey are tested; the HUD_ACTIONS dispatch and its early return are not.",
-        "[P2] style: in src/render.js the FONT constant sits between WIDTH and HEIGHT, which splits the board dimension pair; and drawPill runs each layout closure twice through a measuring() stand-in, which is harder to follow than measuring the text widths up front."
+        "[P1] behaviour/edge: the 40px HUD bar is drawn over the board's top row, and clickHud takes every click with y < HUD_HEIGHT. mousemove also clears hover there. So the top 40px of row 0 can no longer be clicked to place a tower or show a hover. The cells can still be reached below y=40 only if TILE > 40, and any ghost or tower in that strip is drawn under the 0.78-alpha bar. Neither brief asked for this change in placement. The artboard may intend an overlay, but I could not check that from here because only the diffs are present. Either confirm it against design/screens/Main.dc.html or reserve canvas height for the bar.",
+        "[P1] missing test: src/main.js wiring has no direct test. The brief asks that clicks on the buttons and the P/F keys toggle pause and speed. The tests prove clickHud and keyHud on their own, but nothing checks that main.js calls clickHud before placeTower, or that keydown passes event.repeat through.",
+        "[P2] construction/style: keyHud runs on every keydown even when state.status is not 'playing', so P and F still toggle paused and speed on a finished round. restart() resets both, so nothing breaks, but it is an inconsistent contract next to the click handler, which only acts in play.",
+        "[P2] structure: the measuring() stand-in in render.js changes the real ctx.font while it measures, and hudText sets fillStyle on the stand-in object. It is safe inside save/restore, but the double-layout trick is fragile. A pure width calculation would be simpler."
       ],
       "seat": "review",
       "verdict": "changes-required"
