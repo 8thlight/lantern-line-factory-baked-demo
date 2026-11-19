@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { chooseDifficulty, createGame, restart, start } from '../src/game.js';
 import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, START_BUTTON, difficultyButtonAt, difficultyKey } from '../src/hud.js';
@@ -41,6 +41,17 @@ const difficultyTexts = (calls) =>
   calls.filter((c) => c.name === 'fillText' && LABELS.some((label) => label === c.args[0])).map((c) => c.args[0]);
 const centre = (b) => [b.x + b.width / 2, b.y + b.height / 2];
 const overlaps = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+// The difficulty whose button is filled rather than outlined: each button's roundRect is
+// followed by a fill when it is the chosen one and by a stroke otherwise.
+const strokes = (calls) =>
+  DIFFICULTY_BUTTONS.map((b) => {
+    const i = calls.findIndex((c) => c.name === 'roundRect' && c.args[0] === b.x && c.args[1] === b.y);
+    return calls[i + 1]?.name;
+  });
+const textAfter = (calls, label) => {
+  const texts = calls.filter((c) => c.name === 'fillText').map((c) => c.args[0]);
+  return texts[texts.indexOf(label) + 1];
+};
 const facts = ({ status, difficulty, gold, lives }) => [status, difficulty, gold, lives];
 
 test('difficultyButtonAt names each button inside it, and null on Start and off every button', () => {
@@ -91,8 +102,59 @@ test('chooseDifficulty on a playing game returns that same game unchanged', () =
 test('a ready normal game draws Easy, Normal and Hard with Normal filled; a ready game with no difficulty draws none', () => {
   const calls = drawn(createGame({ status: 'ready', difficulty: 'normal' }));
   assert.deepEqual(difficultyTexts(calls), ['Easy', 'Normal', 'Hard']);
+  assert.deepEqual(strokes(calls), ['stroke', 'fill', 'stroke']);
   const normal = DIFFICULTY_BUTTONS[1];
   const filled = calls.filter((c) => c.name === 'roundRect' && c.fillStyle === THEME.hudAccent && c.args[0] === normal.x);
   assert.equal(filled.length, 1);
   assert.deepEqual(difficultyTexts(drawn(createGame({ status: 'ready' }))), []);
+});
+
+// src/main.js against stand-ins for the DOM, as test/start-screen.test.js boots it.
+const saved = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
+after(() => Object.assign(globalThis, saved));
+
+let instance = 0;
+async function boot() {
+  const handlers = {};
+  const keys = {};
+  const frames = [];
+  const ctx = recordingContext();
+  const canvas = {
+    addEventListener: (type, handler) => (handlers[type] = handler),
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: canvas.width, height: canvas.height }),
+    getContext: () => ctx,
+  };
+  globalThis.document = { getElementById: () => canvas };
+  globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
+  globalThis.requestAnimationFrame = (frame) => frames.push(frame);
+  instance += 1;
+  await import(`../src/main.js?difficulty=${instance}`);
+
+  return {
+    click: (x, y) => handlers.click({ clientX: x, clientY: y, preventDefault() {} }),
+    key: (key, repeat = false) => keys.keydown({ key, repeat }),
+    // Run the next queued frame and return what it drew.
+    frame() {
+      ctx.calls.length = 0;
+      frames.shift()(performance.now());
+      return ctx.calls;
+    },
+  };
+}
+
+test('main.js opens on normal; a click or a key chooses the difficulty, a held key does not, and Enter starts on it', async () => {
+  const game = await boot();
+  assert.deepEqual(strokes(game.frame()), ['stroke', 'fill', 'stroke']);
+  game.click(...centre(DIFFICULTY_BUTTONS[0]));
+  assert.deepEqual(strokes(game.frame()), ['fill', 'stroke', 'stroke']);
+  game.key('H');
+  const hard = game.frame();
+  assert.deepEqual(strokes(hard), ['stroke', 'stroke', 'fill']);
+  assert.deepEqual([textAfter(hard, 'Gold'), textAfter(hard, 'Lives')], ['60', '8']);
+  game.key('n', true);
+  assert.deepEqual(strokes(game.frame()), ['stroke', 'stroke', 'fill']);
+  game.key('Enter');
+  const playing = game.frame();
+  assert.deepEqual(difficultyTexts(playing), []);
+  assert.deepEqual([textAfter(playing, 'Gold'), textAfter(playing, 'Lives')], ['60', '8']);
 });
