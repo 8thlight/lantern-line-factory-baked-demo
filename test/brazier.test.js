@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createGame, placeTower, spawnEnemy, step } from '../src/game.js';
 import { ENEMY_HEALTH } from '../src/enemy.js';
 import { TILE } from '../src/path.js';
-import { BRAZIER, LANTERN, createTower } from '../src/tower.js';
+import { BRAZIER, LANTERN, createTower, kindForKey } from '../src/tower.js';
 import { splashTargets } from '../src/targeting.js';
 import { SPRITES, draw, drawBrazier } from '../src/render.js';
 import { THEME } from '../src/theme.js';
@@ -33,6 +33,13 @@ test('the brazier reaches less far and fires more slowly than the lantern, and o
   assert.equal(BRAZIER.cooldown > LANTERN.cooldown, true);
   assert.equal(BRAZIER.splash > 0, true);
   assert.equal(createTower(1, 1).splash, 0);
+});
+
+test('key 1 chooses the lantern, key 2 the brazier, and any other key keeps the kind chosen', () => {
+  assert.deepEqual(
+    [kindForKey('1', BRAZIER), kindForKey('2', LANTERN), kindForKey('3', BRAZIER), kindForKey('a', LANTERN)],
+    [LANTERN, BRAZIER, BRAZIER, LANTERN],
+  );
 });
 
 // A quiet game with a tower of `kind` at (1, 1), centre (60, 60), beside the path's first
