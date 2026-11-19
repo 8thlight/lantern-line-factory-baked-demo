@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
+import { click, createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
 import { ENEMY_SPEED, createEnemy } from '../src/enemy.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
 
@@ -100,4 +100,18 @@ test('restart returns full lives, no towers, no enemies, wave 1 and status playi
   assert.equal(fresh.totalWaves, 3);
   assert.notEqual(fresh, game);
   assert.equal(game.towers.length, 1);
+});
+
+test('a click while playing places a lantern, and a click once the round is over restarts it', () => {
+  const game = quietGame({ lives: 2 });
+  assert.equal(click(game, 1, 0), game);
+  assert.equal(game.towers.length, 1);
+
+  const lost = lostGame({ lives: 2 });
+  assert.equal(lost.status, 'lost');
+  const fresh = click(lost, 2, 0);
+  assert.notEqual(fresh, lost);
+  assert.equal(fresh.status, 'playing');
+  assert.deepEqual(fresh.towers, []);
+  assert.equal(fresh.lives, 2);
 });

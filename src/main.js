@@ -1,7 +1,7 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, placeTower, restart, step } from './game.js';
+import { click, createGame, step } from './game.js';
 import { canPlace } from './tower.js';
 import { draw } from './render.js';
 
@@ -21,12 +21,8 @@ function cellAt(event) {
 }
 
 canvas.addEventListener('click', (event) => {
-  if (state.status !== 'playing') {
-    state = restart(state);
-    return;
-  }
   const { col, row } = cellAt(event);
-  placeTower(state, col, row);
+  state = click(state, col, row);
 });
 
 canvas.addEventListener('mousemove', (event) => {

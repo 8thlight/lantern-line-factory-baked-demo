@@ -60,6 +60,14 @@ export function restart(state) {
   return createGame(state.options);
 }
 
+// A click on cell (col, row): once the round is over it starts a fresh one, and while
+// it is playing it places a lantern there. Returns the game to keep playing.
+export function click(state, col, row) {
+  if (state.status !== 'playing') return restart(state);
+  placeTower(state, col, row);
+  return state;
+}
+
 // End the round, clearing the beams so none stays drawn under the end-of-round card.
 function endRound(state, status) {
   state.status = status;
