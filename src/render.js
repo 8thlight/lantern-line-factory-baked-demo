@@ -201,7 +201,7 @@ export function drawBrazier(ctx, { x, y }) {
 
 // The frost tower's placeholder until the board art brings its sprite: an icy diamond (the
 // brazier's square turned 45 degrees about its centre) with a pale square core.
-const FROST_SIDE = TILE * 0.6;
+const FROST_SIDE = BRAZIER_SIDE;
 const FROST_CORE = TILE * 0.2;
 
 export function drawFrost(ctx, { x, y }) {
