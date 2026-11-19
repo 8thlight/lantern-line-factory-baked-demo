@@ -23,6 +23,7 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] With 50 gold, placing a 20-gold lantern leaves 30.
 - [ ] With 10 gold, placing a lantern is refused, no tower is added, and gold stays 10.
 - [ ] `placementError` returns `'gold'`, `'path'`, `'taken'` and `'bounds'` in the matching cases, and `null` for a valid cell with enough gold.
+- [ ] The gold-per-kill tests may be updated so their totals account for the tower's cost, with every bounty amount unchanged; every other existing suite stays unedited.
 - [ ] `npm test` passes.
 
 ## Design

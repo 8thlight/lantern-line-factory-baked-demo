@@ -23,4 +23,5 @@ Each is proven by a test under `test/`, run with `node --test`.
 - [ ] A test asserts the table escalates: each wave's `count * health` is at least the previous wave's.
 - [ ] In a game test, ghosts spawned in wave 2 carry wave 2's health and speed.
 - [ ] Clearing the last entry ends the game as won.
+- [ ] The wave and win tests from M1 may be updated so their counts, intervals, health and speed come from the table, with what each one proves unchanged; every other existing suite stays unedited.
 - [ ] `npm test` passes.
