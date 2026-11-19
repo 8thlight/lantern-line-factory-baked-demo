@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-ov2",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/game-over.test.js"
+  ],
+  "said": "FOUND 3\n- `test/game-over.test.js:6`: the walk time hard-coded the ghost speed 60, which `src/enemy.js` already declares as `ENEMY_SPEED`. It now imports that constant. fixed\n- `test/game-over.test.js:63,75`: the enemies the tests added by hand were written out field by field, copying the shape `createEnemy` already builds. They now come from `createEnemy`. fixed\n- `test/game-over.test.js:58`: the `placeTower` result was never checked. If the cell had been refused, the \"towers unchanged\" check would have compared two empty lists and passed anyway. Both placements are now asserted to succeed. fixed\n\nEverything else checked out against the plan and the triage: all six touched paths, every acceptance criterion, the comments, and no file changed outside the touches list.\n\nThe fix is committed as 699e77b and the tree is clean. Git had no identity set in this container, so I passed the same HydraFlow author the earlier build commits used on that one command and left the git config unchanged.\n\nGATES green: `node --test test/game-over.test.js test/render.test.js` passes 13/13 and `npm test` passes 28/28. The repo has no Makefile, so I checked with `node --test` and `npm test`, as the attempt notes say.",
+  "gates": "green",
+  "finding": null
+}

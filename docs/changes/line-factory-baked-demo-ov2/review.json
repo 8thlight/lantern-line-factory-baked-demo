@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "c950da7b54b05d8ebbd57c38f3419ce7efc1808b67c4ca26ba92afe6f8904357",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] test-fragility: the quietGame helper in test/game-over.test.js (and busyGame in test/render.test.js) sets game.spawnTimer = Infinity to stop automatic spawning, but step now spawns from state.spawner via updateWave and never reads spawnTimer. The helper does nothing. The lose and restart tests pass only because every extra ghost spawned during step(game, WALK) also leaks or is ignored. They do not control their ghosts the way the comment says, so the setup should pause state.spawner or the stale helper should be removed.",
+        "[P1] contract-drift: drawGhost no longer calls healthFraction from src/enemy.js. It works out the bar's share inline from ghost.health / ghost.maxHealth instead. This matches the brief's wording, but if enemy.js stores health under different fields or changes how healthFraction is computed, the bar silently shows full. No test draws a real createEnemy ghost after it takes damage, so that drift would go unnoticed.",
+        "[P2] behaviour: once the round ends, step returns before shots' ttl counts down, so any beams on screen at the moment of loss or win stay drawn for good under the end-of-round card. Expiring shots, or not drawing them when status is not 'playing', would keep the end screens clean."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
