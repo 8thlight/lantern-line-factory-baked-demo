@@ -23,11 +23,12 @@ export const START_BUTTON = Object.freeze({ x: WIDTH / 2 - 80, y: Math.round(0.6
 // across the canvas with its bottom 8 above the canvas's bottom edge, below the start steps.
 const DIFFICULTY_ORDER = ['easy', 'normal', 'hard'];
 const DIFFICULTY_WIDTH = 96;
+const DIFFICULTY_HEIGHT = 28;
 const DIFFICULTY_GAP = 8;
 const DIFFICULTY_ROW = DIFFICULTY_ORDER.length * (DIFFICULTY_WIDTH + DIFFICULTY_GAP) - DIFFICULTY_GAP;
 export const DIFFICULTY_BUTTONS = Object.freeze(
   DIFFICULTY_ORDER.map((key, i) =>
-    Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (DIFFICULTY_WIDTH + DIFFICULTY_GAP), y: CANVAS_HEIGHT - 8 - 28, width: DIFFICULTY_WIDTH, height: 28 }),
+    Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (DIFFICULTY_WIDTH + DIFFICULTY_GAP), y: CANVAS_HEIGHT - 8 - DIFFICULTY_HEIGHT, width: DIFFICULTY_WIDTH, height: DIFFICULTY_HEIGHT }),
   ),
 );
 
