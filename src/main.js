@@ -1,8 +1,8 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, placeTower, restart, step } from './game.js';
-import { LANTERN, canPlace, kindForKey, toggleModeAt } from './tower.js';
+import { createGame, hoverAt, placeTower, restart, step } from './game.js';
+import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { draw } from './render.js';
 
 const canvas = document.getElementById('board');
@@ -45,7 +45,7 @@ window.addEventListener('keydown', (event) => {
 
 canvas.addEventListener('mousemove', (event) => {
   const { col, row } = cellAt(event);
-  hover = { col, row, ok: canPlace(state, col, row), kind };
+  hover = hoverAt(state, col, row, kind);
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -57,7 +57,7 @@ function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); // clamp after a hidden tab
   last = now;
   step(state, dt);
-  if (hover) Object.assign(hover, { ok: canPlace(state, hover.col, hover.row), kind });
+  if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
   draw(ctx, state, hover);
   requestAnimationFrame(frame);
 }

@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "868424a1644765f8f10207d9371aaabf4c1fce26290c0d67c011e1ecf943560a",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "Both briefs are met. src/waves.js exports ten WAVES entries. Every count, interval, health and speed is positive, and each entry's count*health is at least the previous one's (15, 24, 28, 40, 45, 60, 66, 84, 91, 120). createGame and step now build each spawner from WAVES[wave-1] through createSpawner, which still uses an explicit waveSize or spawnInterval when one is given, so suites that call createGame({ waveSize: 0 }) work unedited. spawnEnemy gives each ghost its wave's health and speed. TOTAL_WAVES is WAVES.length, so the existing last-wave check sets status 'won'.",
+        "Tower cost is done as asked. LANTERN costs 20 and BRAZIER 30. placementError checks the cell first ('bounds', 'path', 'taken') and then gold, and returns null when placement is allowed. placeTower refuses unless placementError is null and deducts the cost only after that check passes, so a refused placement never spends gold (tower-cost.test.js tests this). main.js now builds the hover from hoverAt on every mousemove and every frame, so ok tracks gold as it is spent and earned. tower-cost.test.js shows draw painting an unaffordable free cell in THEME.hoverBad and an affordable one in THEME.hover.",
+        "Edits to existing suites stay inside what the issues allow. In gold.test.js only the totals change, each by exactly the tower's cost (-20 for a lantern, -30 for a brazier), and every bounty amount is unchanged. game.test.js only adds gold: 3 * LANTERN.cost to fund its three lanterns. game-over.test.js takes its wave count and walk speed from WAVES, and what it proves is unchanged. restart still works because the options it rebuilds from keep waveSize and spawnInterval undefined, so a restarted game reads the table again."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}

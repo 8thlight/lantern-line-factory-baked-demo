@@ -2,33 +2,45 @@
 
 import { WAYPOINTS, cellCenter, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
-import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
+import { LANTERN, canPlace, cellError, createTower, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
+import { WAVES } from './waves.js';
 
 export const START_LIVES = 10;
 export const START_GOLD = 50;
-export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
-export const WAVE_SIZE = 5; // ghosts per wave
-export const TOTAL_WAVES = 5; // waves to hold for the round to be won
+export const TOTAL_WAVES = WAVES.length; // waves to hold for the round to be won
 const SHOT_TTL = 0.1; // how long a beam stays drawn
 
+// The table's entry for a wave; a game holding more waves than the table repeats its last.
+function waveEntry(wave) {
+  return WAVES[Math.min(wave, WAVES.length) - 1];
+}
+
+// A wave's spawner: its entry's count and interval, unless the game was made with its own.
+function createSpawner({ waveSize, spawnInterval }, wave) {
+  const entry = waveEntry(wave);
+  return createWave({ count: waveSize ?? entry.count, interval: spawnInterval ?? entry.interval });
+}
+
+// `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave.
 export function createGame({
   waypoints = WAYPOINTS,
-  spawnInterval = SPAWN_INTERVAL,
-  waveSize = WAVE_SIZE,
+  spawnInterval,
+  waveSize,
   lives = START_LIVES,
   gold = START_GOLD,
   totalWaves = TOTAL_WAVES,
 } = {}) {
+  const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves };
   return {
-    options: { waypoints, spawnInterval, waveSize, lives, gold, totalWaves },
+    options,
     status: 'playing', // then 'won' or 'lost', and the round is over
     waypoints,
     path: pathCells(waypoints),
     wave: 1,
     totalWaves,
-    spawner: createWave({ count: waveSize, interval: spawnInterval }),
+    spawner: createSpawner(options, 1),
     nextEnemyId: 1,
     enemies: [],
     towers: [],
@@ -39,10 +51,24 @@ export function createGame({
   };
 }
 
+// Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or
+// 'taken') first, then 'gold' when the gold held is below the kind's cost; null when it may.
+// A kind with no cost is free.
+export function placementError(state, col, row, kind = LANTERN) {
+  return cellError(state, col, row) ?? (state.gold < (kind.cost ?? 0) ? 'gold' : null);
+}
+
+// Place a tower of `kind` and pay its cost, unless placementError refuses it.
 export function placeTower(state, col, row, kind = LANTERN) {
-  if (!canPlace(state, col, row)) return false;
+  if (placementError(state, col, row, kind) !== null) return false;
+  state.gold -= kind.cost ?? 0;
   state.towers.push(createTower(col, row, kind));
   return true;
+}
+
+// The hover the pointer shows on a cell: `ok` when a tower of `kind` may be placed there now.
+export function hoverAt(state, col, row, kind = LANTERN) {
+  return { col, row, kind, ok: placementError(state, col, row, kind) === null };
 }
 
 // The tower standing on a cell, or null.
@@ -62,8 +88,10 @@ export function rangePreview(state, hover) {
   return { x, y, radius: (hover.kind ?? LANTERN).range };
 }
 
+// A ghost of the current wave, as tough and fast as its entry in the table.
 export function spawnEnemy(state) {
-  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints });
+  const { health, speed } = waveEntry(state.wave);
+  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed });
   state.enemies.push(enemy);
   return enemy;
 }
@@ -113,7 +141,7 @@ export function step(state, dt) {
   }
 
   // The next wave starts once this one has spawned out and the board is clear,
-  // whether its ghosts were banished or leaked. Every wave is the same size for now.
+  // whether its ghosts were banished or leaked, and reads its entry in the table.
   // A wave of no ghosts is spawned out from the start, so it is kept from counting waves up on an empty board.
   // Clearing the last wave wins the round; lives are above 0 here, since a loss returned above.
   if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
@@ -121,9 +149,8 @@ export function step(state, dt) {
       state.status = 'won';
       return state;
     }
-    const { count, interval } = state.spawner;
     state.wave += 1;
-    state.spawner = createWave({ count, interval });
+    state.spawner = createSpawner(state.options, state.wave);
   }
 
   return state;
