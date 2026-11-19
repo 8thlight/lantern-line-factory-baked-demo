@@ -3,10 +3,10 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "src/game.js",
-    "test/game.test.js"
+    "test/game.test.js",
+    "test/wave.test.js"
   ],
-  "said": "FOUND 1\n- `src/game.js:76` (and the matching comment at `test/game.test.js:8`): both comments said \"a wave of no ghosts never ends\", but the code doesn't work that way. `waveDone` returns true straight away for a wave of no ghosts, and it's the `count > 0` check in `step()` that keeps the wave number from advancing. I reworded both comments to say that. Fixed, and committed.\n\nThe rest of the review turned up nothing. Every planned file is in the diff, and every acceptance criterion has a test whose assertion could fail. The `count > 0` check and the guard that stops `healthFraction` returning NaN each have a test that fails if the guard is removed. Every change is inside the signed touches. The `.github/workflows/ci.yml` change came from the merge of main, not from this print.\n\nGATES green: `npm --prefix . run test` passes all 28 tests and the tree is committed and clean. This clone has no `make check-build` target, and `package.json` declares no lint or type-check script, so the test run was the only check available.",
+  "said": "I found three small problems in the tests and fixed all three in one commit. All 30 tests pass and the tree is clean.\n\nFOUND 3\n- `test/wave.test.js:5`: the test's title still said \"exactly 5 in all\", but its total check was moved into the next test, so it no longer checks the total. I renamed it to what it checks: 1 spawn at t=0, none half a second later, the next at 1 second. fixed\n- `test/game.test.js:129`: the title said \"its ghost still dies on the third beam\", but the test only checks the tower's `damage` and no ghost is ever hit. I renamed it to say that. fixed\n- `test/game.test.js:131`: the test wrote the lantern's damage as a bare `1` (and `2`) instead of reading `LANTERN.damage`, so the same number lived in two places. It now reads `LANTERN.damage` and `LANTERN.damage + 1`. fixed\n\nGATES green (this repo has no Makefile `check-build` target, so I ran `node --test` on the three touched test files, 21/21 passing, then `npm --prefix . run test`, 30/30 passing)",
   "gates": "green",
   "finding": null
 }
