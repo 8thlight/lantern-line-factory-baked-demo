@@ -34,9 +34,9 @@ export function selectedModel(state, id) {
   const tower = towerById(state, id);
   if (!tower) return null;
   const refusal = upgradeError(state, id);
-  const { level, damage, range } = tower;
-  const upgradeCost = refusal === 'max' ? null : tower.kind.upgradeCost;
-  return { name: tower.kind.name, level, maxLevel: MAX_LEVEL, damage, range, upgradeCost, refusal };
+  const { name, level, damage, range } = tower;
+  const upgradeCost = refusal === 'max' ? null : tower.upgrade.cost;
+  return { name, level, maxLevel: MAX_LEVEL, damage, range, upgradeCost, refusal };
 }
 
 // The card's last line: what U does, or the refusal's sentence when it would refuse.

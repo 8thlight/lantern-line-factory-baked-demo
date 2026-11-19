@@ -66,7 +66,7 @@ test('a placed tower starts at level 1, knows its kind and has its own id', () =
   const game = createGame({ waveSize: 0 });
   placeTower(game, 1, 1, LANTERN);
   placeTower(game, 3, 1, LANTERN);
-  assert.deepEqual(game.towers.map((t) => [t.id, t.level, t.kind]), [[1, 1, LANTERN], [2, 1, LANTERN]]);
+  assert.deepEqual(game.towers.map((t) => [t.id, t.level, t.name]), [[1, 1, 'Lantern'], [2, 1, 'Lantern']]);
   assert.equal(towerById(game, 2), game.towers[1]);
   assert.equal(towerById(game, 9), null);
   assert.equal(createTower(1, 1).level, 1);
@@ -108,6 +108,17 @@ test('a kind that declares no upgrade is refused with max at level 1', () => {
   assert.equal(before[0], 1);
   assert.equal(upgradeTower(game, 1), 'max');
   assert.deepEqual(stats(game), before);
+});
+
+test('a cloned game still upgrades, because a tower holds its upgrade as plain data', () => {
+  const game = structuredClone(withLantern(100));
+  assert.equal(upgradeTower(game, 1), null);
+  assert.deepEqual(stats(game), [
+    2,
+    LANTERN.damage + LANTERN.upgradeDamage,
+    LANTERN.range + LANTERN.upgradeRange,
+    80 - LANTERN.upgradeCost,
+  ]);
 });
 
 test('an id that names no tower is refused with missing', () => {
@@ -177,7 +188,7 @@ test('U upgrades and Escape clears the selection', () => {
   assert.deepEqual(['u', 'U', 'Escape'].map(hudKey), ['upgrade', 'upgrade', 'deselect']);
 });
 
-test('draw makes one level mark per level above the first', () => {
+test('draw marks a level-1 tower with none and a level-N tower with N marks', () => {
   const counts = [1, 2, 3].map((level) => {
     const ctx = recordingContext();
     drawLevelMarks(ctx, { ...createTower(1, 1), level });

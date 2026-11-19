@@ -70,27 +70,28 @@ export function placeTower(state, col, row, kind = LANTERN) {
 }
 
 // Why the tower with `id` may not be upgraded: 'missing' when no tower has it, then 'max' at
-// MAX_LEVEL or when its kind declares no upgrade, then 'gold' when the gold held is below the
+// MAX_LEVEL or when its kind declared no upgrade, then 'gold' when the gold held is below the
 // upgrade's cost; null when it may.
 export function upgradeError(state, id) {
   const tower = towerById(state, id);
   if (!tower) return 'missing';
-  if (tower.level >= MAX_LEVEL || tower.kind?.upgradeCost === undefined) return 'max';
-  if (state.gold < tower.kind.upgradeCost) return 'gold';
+  if (tower.level >= MAX_LEVEL || tower.upgrade === null) return 'max';
+  if (state.gold < tower.upgrade.cost) return 'gold';
   return null;
 }
 
-// Raise a tower one level by its kind's declared damage and range and pay its kind's upgrade
-// cost. Returns upgradeError's reason, having changed nothing, when it refuses; null when done.
+// Raise a tower one level by the damage and range its upgrade (copied from its kind) declares
+// and pay the upgrade's cost. Returns upgradeError's reason, having changed nothing, when it
+// refuses; null when done.
 export function upgradeTower(state, id) {
   const reason = upgradeError(state, id);
   if (reason !== null) return reason;
   const tower = towerById(state, id);
-  const { upgradeCost, upgradeDamage = 0, upgradeRange = 0 } = tower.kind;
+  const { cost, damage, range } = tower.upgrade;
   tower.level += 1;
-  tower.damage += upgradeDamage;
-  tower.range += upgradeRange;
-  state.gold -= upgradeCost;
+  tower.damage += damage;
+  tower.range += range;
+  state.gold -= cost;
   return null;
 }
 

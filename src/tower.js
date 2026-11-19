@@ -22,11 +22,13 @@ export function kindForKey(key, current) {
 
 // A kind with no damage of its own hits for the lantern's, so its beams always land;
 // a kind with no splash hits its target alone, and a kind with no slow slows nothing.
-// A tower starts at level 1 and keeps the kind it was built from, whose upgrade it reads.
+// A tower starts at level 1 with its kind's name and a copy of the upgrade its kind declares
+// (null when it declares none), so it stays plain data that survives a clone.
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
   const damage = kind.damage ?? LANTERN.damage;
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, slow: kind.slow ?? 0, slowFor: kind.slowFor ?? 0, reload: 0, mode: 'nearest', level: 1, kind };
+  const upgrade = kind.upgradeCost === undefined ? null : { cost: kind.upgradeCost, damage: kind.upgradeDamage ?? 0, range: kind.upgradeRange ?? 0 };
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, slow: kind.slow ?? 0, slowFor: kind.slowFor ?? 0, reload: 0, mode: 'nearest', level: 1, name: kind.name, upgrade };
 }
 
 // The mode a toggle switches to: 'first' gives 'nearest', anything else gives 'first'.
