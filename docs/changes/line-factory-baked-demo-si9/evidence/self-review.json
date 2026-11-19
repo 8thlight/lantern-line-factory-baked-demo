@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-si9",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/placement-preview-and-mode.test.js"
+  ],
+  "said": "FOUND 1\n- `test/placement-preview-and-mode.test.js:76`: the off-board test asserts that a ready, won or lost game draws no bad-hover fill at path cell (2, 2), but no test showed that a playing game draws that fill at all. That empty check could have passed even if the gate were removed. Added the matching check that a playing game fills (80, 80, 40, 40) there: fixed and committed. Everything else checks out: all four touched files are handled, the code changes exactly the lines the plan names, the comments match what the code does, the board facts are true ((2, 2) is on the path), and only `drawRangeRing` uses the `[6, 6]` dash. The diff stays inside the signed touches.\n- GATES green: the reproducer plus the edited and related test files pass (46/46), and `npm --prefix . run test` passes (185, 0 failing). This repo has no Makefile, so `make check-build` could not run here.",
+  "gates": "green",
+  "finding": null
+}
