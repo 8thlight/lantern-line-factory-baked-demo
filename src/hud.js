@@ -1,6 +1,6 @@
 // The HUD's model and where the pointer lands on the canvas. Pure logic, no DOM: render.js
 // draws the bar from hudModel and the selected tower's card from selectedModel, and main.js asks
-// these which button or cell a pointer is on, the start screen's Start button among them.
+// these which button or cell a pointer is on, the start screen's Start and difficulty buttons among them.
 
 import { COLS, ROWS, TILE } from './path.js';
 import { MAX_LEVEL, towerById } from './tower.js';
@@ -18,6 +18,15 @@ export const PAUSE_BUTTON = Object.freeze({ x: SPEED_BUTTON.x - 16 - 72, y: 6, w
 
 // design/hud.md's Start button, 160 by 44, centred across the canvas at 60% of its height.
 export const START_BUTTON = Object.freeze({ x: WIDTH / 2 - 80, y: Math.round(0.6 * CANVAS_HEIGHT) - 22, width: 160, height: 44 });
+
+// The start screen's difficulty row: Easy, Normal, Hard, each 96 by 28 and 8 apart, centred
+// across the canvas with its bottom 8 above the canvas's bottom edge, below the start steps.
+const DIFFICULTY_ROW = 3 * 96 + 2 * 8;
+export const DIFFICULTY_BUTTONS = Object.freeze(
+  ['easy', 'normal', 'hard'].map((key, i) =>
+    Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (96 + 8), y: CANVAS_HEIGHT - 8 - 28, width: 96, height: 28 }),
+  ),
+);
 
 // What the HUD shows, read from the state and never written to it. `bossWave` holds for the
 // whole of a wave whose spawner sends a boss, from its start.
@@ -68,6 +77,11 @@ export function startButtonAt(x, y) {
   return inside(START_BUTTON, x, y);
 }
 
+// The difficulty button under a canvas point: 'easy', 'normal', 'hard', or null off them all.
+export function difficultyButtonAt(x, y) {
+  return DIFFICULTY_BUTTONS.find((b) => inside(b, x, y))?.key ?? null;
+}
+
 // The board cell under a canvas point, or null on the bar. A point past the board's edge
 // still names a cell, for cellError to call 'bounds'.
 export function boardCellAt(x, y) {
@@ -89,4 +103,12 @@ export function hudKey(key) {
 // Enter or Space starts a ready round; hudKey leaves them alone.
 export function startKey(key) {
   return key === 'Enter' || key === ' ';
+}
+
+const DIFFICULTY_KEYS = Object.freeze({ e: 'easy', n: 'normal', h: 'hard' });
+
+// E, N or H chooses easy, normal or hard on the start screen, either case; any other key, null.
+export function difficultyKey(key) {
+  const lower = key.toLowerCase();
+  return Object.hasOwn(DIFFICULTY_KEYS, lower) ? DIFFICULTY_KEYS[lower] : null;
 }
