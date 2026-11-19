@@ -21,11 +21,12 @@ const HEIGHT = ROWS * TILE;
 // placed tower's id, rings that tower and draws its card above the ghosts and beams.
 // An upgraded tower wears its level marks over its body.
 // While the game is ready, the start screen covers the whole canvas, bar included; a playing,
-// won or lost game draws no start screen.
+// won or lost game draws no start screen. `best`, when handed, is the saved best wave, shown only
+// on the start screen; null draws no Best line.
 // The pointed cell and its range ring draw only while the game is playing: under the start
 // screen and the end cards the pointer previews nothing, while a selected tower keeps its ring
 // and card.
-export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
+export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null, best = null) {
   const pointed = state.status === 'playing' ? hover : null;
   const model = selectedModel(state, selected);
   const chosen = model && towerById(state, selected);
@@ -46,7 +47,7 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   if (state.status === 'won' || state.status === 'lost') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind);
-  if (state.status === 'ready') drawStartScreen(ctx);
+  if (state.status === 'ready') drawStartScreen(ctx, best);
 }
 
 // The one place a tower's kind is read for drawing: the sprite that draws its body. A tower that
@@ -472,8 +473,9 @@ const START_STEPS = [
 // design/hud.md's Start screen, with the StartScreen artboard's hint and steps
 // (design/screens/StartScreen.dc.html): a veil in --hud-bg over the whole canvas, so the path
 // shows faintly behind, the title at 35% height and the Start button at 60%. The tagline hangs
-// from the title, and the hint and steps from the button, so they move with them.
-function drawStartScreen(ctx) {
+// from the title, and the hint and steps from the button, so they move with them. A saved best
+// wave sits midway between the tagline and the button; with none, nothing is drawn there.
+function drawStartScreen(ctx, best = null) {
   const centre = WIDTH / 2;
   const titleY = Math.round(0.35 * CANVAS_HEIGHT);
   const { x, y, width, height } = START_BUTTON;
@@ -489,6 +491,11 @@ function drawStartScreen(ctx) {
   ctx.font = '16px system-ui, sans-serif';
   ctx.fillStyle = THEME.hudMuted;
   ctx.fillText('Light the lanterns. Stop the ghosts before they reach the gate.', centre, titleY + 36);
+  if (best !== null) {
+    ctx.font = 'bold 14px system-ui, sans-serif';
+    ctx.fillStyle = THEME.hudInk;
+    ctx.fillText(`Best: wave ${best}`, centre, titleY + 62);
+  }
   ctx.beginPath();
   ctx.fillStyle = THEME.hudAccent;
   ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
