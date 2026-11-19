@@ -1,4 +1,5 @@
-// Enemies ("ghosts") drift along the path at a fixed speed, and pay their bounty when banished.
+// Enemies ("ghosts") drift along the path at their speed, slowed while frost holds them, and pay
+// their bounty when banished.
 
 import { pathLength, pointAlong } from './path.js';
 
@@ -8,7 +9,7 @@ export const ENEMY_BOUNTY = 5; // gold paid when a ghost is banished
 
 export function createEnemy({ id, waypoints, speed = ENEMY_SPEED, health = ENEMY_HEALTH, bounty = ENEMY_BOUNTY }) {
   const { x, y } = pointAlong(waypoints, 0);
-  return { id, x, y, distance: 0, speed, reachedEnd: false, health, maxHealth: health, bounty };
+  return { id, x, y, distance: 0, speed, slow: 1, slowLeft: 0, reachedEnd: false, health, maxHealth: health, bounty };
 }
 
 // Lower an enemy's health by `amount`, never below 0. Mutates it.
@@ -24,10 +25,25 @@ export function healthFraction(enemy) {
   return enemy.maxHealth > 0 ? enemy.health / enemy.maxHealth : 0;
 }
 
-// Move an enemy `dt` seconds along the path. Mutates and returns it.
+// Slow an enemy to `factor` of its speed for `duration` seconds. A second hit sets the factor
+// again and restarts the time, and never multiplies, so two hits leave it at the factor.
+// Mutates and returns it.
+export function slowEnemy(enemy, factor, duration) {
+  enemy.slow = factor;
+  enemy.slowLeft = duration;
+  return enemy;
+}
+
+// Move an enemy `dt` seconds along the path, at its slowed speed for as much of `dt` as its slow
+// has left and at full speed for the rest; once the slow runs out it is back to full speed.
+// A ghost built with no slow moves at full speed. Mutates and returns it.
 export function advanceEnemy(enemy, waypoints, dt) {
   const end = pathLength(waypoints);
-  enemy.distance = Math.min(end, enemy.distance + enemy.speed * dt);
+  const slowLeft = enemy.slowLeft ?? 0;
+  const slowed = Math.min(dt, slowLeft);
+  enemy.distance = Math.min(end, enemy.distance + enemy.speed * ((enemy.slow ?? 1) * slowed + (dt - slowed)));
+  enemy.slowLeft = slowLeft - slowed;
+  if (enemy.slowLeft === 0) enemy.slow = 1;
   const { x, y } = pointAlong(waypoints, enemy.distance);
   enemy.x = x;
   enemy.y = y;

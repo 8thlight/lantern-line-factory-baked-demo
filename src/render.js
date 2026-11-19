@@ -12,25 +12,33 @@ const HEIGHT = ROWS * TILE;
 
 // Pools first, then the hover and its range ring, then tower bodies, so no lantern's pool lands
 // on another's body and the ring sits under the lanterns, as the Main artboard layers it.
-// A tower that splashes is a brazier: it casts no pool and is drawn as its square.
+// A tower that splashes is a brazier, drawn as its square; one that slows is frost, drawn as its
+// diamond; neither casts a pool.
 // The board sits below the HUD bar, drawn in its own coordinates moved down by HUD_HEIGHT,
 // so no cell is ever under the bar; the end card veils the board and the bar stays readable.
-export function draw(ctx, state, hover, sprites = SPRITES) {
+// `kind`, when handed, is the kind a click places, and the bar names it.
+export function draw(ctx, state, hover, sprites = SPRITES, kind = null) {
   ctx.save();
   ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);
-  for (const tower of state.towers) if (!(tower.splash > 0)) sprites.drawLanternLight(ctx, tower);
+  for (const tower of state.towers) if (isLantern(tower)) sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
   drawRangeRing(ctx, rangePreview(state, hover));
   for (const tower of state.towers) {
     if (tower.splash > 0) sprites.drawBrazier(ctx, tower);
+    else if (tower.slow > 0) sprites.drawFrost(ctx, tower);
     else sprites.drawLanternBody(ctx, tower);
   }
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
   ctx.restore();
-  drawHud(ctx, hudModel(state));
+  drawHud(ctx, hudModel(state), kind);
+}
+
+// A tower that neither splashes nor slows is a lantern, and only a lantern casts a pool.
+function isLantern(tower) {
+  return !(tower.splash > 0) && !(tower.slow > 0);
 }
 
 // Grass as alternating tiles with a few blades, then the path as layered stone:
@@ -191,6 +199,22 @@ export function drawBrazier(ctx, { x, y }) {
   ctx.fillRect(x - BRAZIER_CORE / 2, y - BRAZIER_CORE / 2, BRAZIER_CORE, BRAZIER_CORE);
 }
 
+// The frost tower's placeholder until the board art brings its sprite: an icy diamond (the
+// brazier's square turned 45 degrees about its centre) with a pale square core.
+const FROST_SIDE = TILE * 0.6;
+const FROST_CORE = TILE * 0.2;
+
+export function drawFrost(ctx, { x, y }) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = THEME.frostBody;
+  ctx.fillRect(-FROST_SIDE / 2, -FROST_SIDE / 2, FROST_SIDE, FROST_SIDE);
+  ctx.restore();
+  ctx.fillStyle = THEME.frostCore;
+  ctx.fillRect(x - FROST_CORE / 2, y - FROST_CORE / 2, FROST_CORE, FROST_CORE);
+}
+
 function line(ctx, x1, y1, x2, y2) {
   ctx.beginPath();
   ctx.moveTo(x1, y1);
@@ -207,6 +231,7 @@ function fillRounded(ctx, colour, x, y, width, height, radius) {
 
 // The artboard's ghost symbol (32x36 units around its centre): a round head, a hem of
 // curved points, a sheen and two eyes with shine; its health bar floats above it.
+// A ghost frost is slowing is tinted frost.
 const GHOST_SCALE = 0.94;
 
 export function drawGhost(ctx, enemy) {
@@ -217,7 +242,7 @@ export function drawGhost(ctx, enemy) {
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
 
-  ctx.fillStyle = THEME.ghostBody;
+  ctx.fillStyle = enemy.slowLeft > 0 ? THEME.ghostSlowed : THEME.ghostBody;
   ctx.strokeStyle = THEME.ghostEdge;
   ctx.lineWidth = 1.6;
   ctx.beginPath();
@@ -293,15 +318,17 @@ export function drawBeam(ctx, from, to) {
 }
 
 // The design/hud.md bar, drawn only from hudModel: Lives, Gold and Wave from the left at fixed
-// offsets (no text is measured), the Pause and Speed buttons on the right.
+// offsets (no text is measured), then the kind a click places when draw is handed one, styled
+// like the three before it and clear of the Pause and Speed buttons on the right.
 const HUD_ITEMS = [
   { label: 'Lives', labelX: HUD_PAD, valueX: 54 },
   { label: 'Gold', labelX: 96, valueX: 138 },
   { label: 'Wave', labelX: 190, valueX: 236 },
 ];
+const HUD_KIND = { label: 'Tower', labelX: 300, valueX: 348 };
 const BUTTON_RADIUS = 6;
 
-function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }) {
+function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }, kind) {
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
@@ -319,6 +346,12 @@ function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDange
     ctx.fillStyle = values[i][1];
     ctx.fillText(values[i][0], valueX, HUD_HEIGHT / 2);
   });
+  if (kind) {
+    ctx.fillStyle = THEME.hudMuted;
+    ctx.fillText(HUD_KIND.label, HUD_KIND.labelX, HUD_HEIGHT / 2);
+    ctx.fillStyle = THEME.hudInk;
+    ctx.fillText(kind.name, HUD_KIND.valueX, HUD_HEIGHT / 2);
+  }
   drawButton(ctx, PAUSE_BUTTON, paused ? 'Resume' : 'Pause', false);
   drawButton(ctx, SPEED_BUTTON, `${speed}x`, speed === 2);
   ctx.restore();
@@ -360,4 +393,4 @@ function drawEndCard(ctx, status) {
 }
 
 // The sprite table draw uses; a test hands in its own to count calls.
-export const SPRITES = { drawPath, drawLanternLight, drawLanternBody, drawBrazier, drawGhost, drawBeam };
+export const SPRITES = { drawPath, drawLanternLight, drawLanternBody, drawBrazier, drawFrost, drawGhost, drawBeam };

@@ -1,7 +1,7 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
 import { WAYPOINTS, cellCenter, pathCells } from './path.js';
-import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
+import { advanceEnemy, createEnemy, damageEnemy, slowEnemy } from './enemy.js';
 import { LANTERN, canPlace, cellError, createTower, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
@@ -154,6 +154,8 @@ function tick(state, dt) {
     // A splash takes in its own target, so each ghost is hit once and each kill counted and paid once.
     const hit = tower.splash > 0 ? splashTargets(target, state.enemies, tower.splash) : [target];
     const dead = hit.filter((enemy) => damageEnemy(enemy, tower.damage));
+    // A frost hit sets the slow and restarts its time; it never deepens it.
+    if (tower.slow > 0) for (const enemy of hit) if (!dead.includes(enemy)) slowEnemy(enemy, tower.slow, tower.slowFor);
     if (dead.length) {
       state.enemies = state.enemies.filter((e) => !dead.includes(e));
       state.kills += dead.length;
