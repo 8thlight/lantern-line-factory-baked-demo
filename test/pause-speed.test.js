@@ -157,7 +157,7 @@ async function boot() {
 const textsOf = (calls) => calls.filter((c) => c.name === 'fillText').map((c) => c.args[0]);
 const fillsIn = (calls, colour) => calls.filter((c) => c.name.startsWith('fill') && c.fillStyle === colour);
 // The bar's texts; the kind a click places is named from boot, a lantern until a key changes it,
-// with its price on the normal game main.js boots: its cost plus a step for each tower placed.
+// with its price on the normal game main.js boots: its cost plus a step for each of its kind placed.
 const priced = (kind, placed = 0) => `${kind.name} ${kind.cost + CHALLENGES.normal.priceStep * placed}`;
 const hudAt = (gold, pause = 'Pause', speed = '1x', kind = priced(LANTERN)) =>
   ['Lives', String(START_LIVES), 'Gold', String(gold), 'Wave', `1 / ${TOTAL_WAVES}`, 'Tower', kind, pause, speed];
