@@ -1,5 +1,5 @@
 // Canvas drawing only. Reads game state; never changes it.
-// Each sprite is its own function taking a context, drawn to design/screens/Board.
+// Each sprite is its own function taking a context, drawn to design/screens/Board.png.
 
 import { healthFraction } from './enemy.js';
 import { COLS, ROWS, TILE, cellKey } from './path.js';

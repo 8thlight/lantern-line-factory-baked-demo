@@ -1,5 +1,5 @@
 // Every colour the board is drawn with, as named tokens read off the Claude Design
-// artboards (design/screens/Board, Win and Lose). Alpha lives in the token, so
+// artboards (design/screens/Board.dc.html, Win.dc.html and Lose.dc.html). Alpha lives in the token, so
 // render.js never builds a colour string of its own.
 
 export const THEME = {
