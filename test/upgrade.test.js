@@ -1,6 +1,6 @@
 import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { BRAZIER, FROST, LANTERN, MAX_LEVEL, createTower, towerById } from '../src/tower.js';
+import { BRAZIER, FROST, LANTERN, MAX_LEVEL, createTower, toggleModeAt, towerById } from '../src/tower.js';
 import { START_GOLD, clickCell, createGame, placeTower, upgradeError, upgradeTower } from '../src/game.js';
 import { HUD_HEIGHT, UPGRADE_REFUSALS, hudKey, selectedModel, upgradeLine } from '../src/hud.js';
 import { LEVEL_MARK, SPRITES, draw, drawLevelMarks } from '../src/render.js';
@@ -164,7 +164,7 @@ function selectedModels() {
 
 test('the HUD model of a selected tower', () => {
   const { game, models } = selectedModels();
-  const lantern = { name: 'Lantern', maxLevel: 3 };
+  const lantern = { name: 'Lantern', maxLevel: 3, mode: 'nearest' };
   assert.deepEqual(models, [
     { ...lantern, level: 1, damage: 1, range: 100, upgradeCost: 25, refusal: null },
     { ...lantern, level: 2, damage: 2, range: 120, upgradeCost: 25, refusal: 'gold' },
@@ -218,7 +218,7 @@ test("draw shows the selected tower's card", () => {
   draw(ctx, game, null, SPRITES, null, 1);
   assert.deepEqual(texts(ctx).slice(0, 4).map((c) => [c.args[0], c.fillStyle]), [
     ['Lantern · level 1', THEME.hudAccent],
-    ['Range 2.5 tiles · 1 damage', THEME.hudInk],
+    ['Range 2.5 tiles · 1 damage · targets nearest', THEME.hudInk],
     ['Press U to upgrade: 25 gold', THEME.hudAccent],
     ['Lives', THEME.hudMuted],
   ]);
@@ -239,6 +239,23 @@ test("draw shows the selected tower's card", () => {
   draw(plain, game, null);
   assert.deepEqual(texts(bare).map((c) => c.args[0]), texts(plain).map((c) => c.args[0]));
   assert.equal(texts(bare)[0].args[0], 'Lives');
+});
+
+test("the selected tower's card names its targeting mode, and follows a right-click's switch", () => {
+  const game = createGame({ waveSize: 0 });
+  placeTower(game, 1, 1, LANTERN);
+  const line = () => {
+    const ctx = recordingContext();
+    draw(ctx, game, null, SPRITES, null, 1);
+    return texts(ctx)[1].args[0];
+  };
+  const before = line();
+  toggleModeAt(game, 1, 1);
+  assert.deepEqual([before, line(), selectedModel(game, 1).mode], [
+    'Range 2.5 tiles · 1 damage · targets nearest',
+    'Range 2.5 tiles · 1 damage · targets first',
+    'first',
+  ]);
 });
 
 test("the selected tower's card stays on the board", () => {
@@ -292,11 +309,11 @@ test('in the browser, a click selects a tower, U upgrades it once per press and 
   assert.equal(game.frame()[0], 'Lives');
   game.key('u');
   game.click(1, 1); // selects it
-  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 1', 'Range 2.5 tiles · 1 damage', 'Press U to upgrade: 25 gold']);
+  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 1', 'Range 2.5 tiles · 1 damage · targets nearest', 'Press U to upgrade: 25 gold']);
   game.key('u', true); // a held key's repeat does nothing
   assert.equal(game.frame()[0], 'Lantern · level 1');
   game.key('U');
-  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 2', 'Range 3 tiles · 2 damage', 'Needs 25 gold, you hold 5: banish more ghosts']);
+  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 2', 'Range 3 tiles · 2 damage · targets nearest', 'Needs 25 gold, you hold 5: banish more ghosts']);
   game.key('Escape');
   assert.equal(game.frame()[0], 'Lives');
 });

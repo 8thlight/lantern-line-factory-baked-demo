@@ -22,8 +22,10 @@ const HEIGHT = ROWS * TILE;
 // An upgraded tower wears its level marks over its body.
 // While the game is ready, the start screen covers the whole canvas, bar included; a playing,
 // won or lost game draws no start screen. `best`, when handed, is the saved best wave, shown only
-// on the start screen; null draws no Best line.
-export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null, best = null) {
+// on the start screen; null draws no Best line. The hover and its range ring are drawn only while
+// the round is playing: a ready, won or lost game takes no placement, so it previews none.
+export function draw(ctx, state, pointed, sprites = SPRITES, kind = null, selected = null, best = null) {
+  const hover = state.status === 'playing' ? pointed : null; // no placement preview under the start screen or the end card
   const model = selectedModel(state, selected);
   const chosen = model && towerById(state, selected);
   ctx.save();
@@ -411,7 +413,7 @@ export function drawLevelMarks(ctx, tower) {
 
 // The selected tower's card, as the Main artboard's tower card (design/screens/Main.dc.html:49-52):
 // a dark panel edged in the ring's gold beside the tower, its name and level, its reach and
-// damage, and what U does. Fixed sizes, no text measured, kept CARD_INSET inside the board.
+// damage, the ghost it targets (a right-click switches it), and what U does. Fixed sizes, no text measured, kept CARD_INSET inside the board.
 const CARD = { width: 300, height: 54, radius: 6, pad: 10, line: 15 };
 const CARD_INSET = 4;
 const REFUSAL_INK = { gold: 'hudDanger', max: 'hudMuted', missing: 'hudMuted' };
@@ -433,7 +435,7 @@ function drawTowerCard(ctx, tower, model, gold) {
   ctx.textBaseline = 'middle';
   const lines = [
     [`${model.name} · level ${model.level}`, THEME.hudAccent],
-    [`Range ${model.range / TILE} tiles · ${model.damage} damage`, THEME.hudInk],
+    [`Range ${model.range / TILE} tiles · ${model.damage} damage · targets ${model.mode}`, THEME.hudInk],
     [upgradeLine(model, gold), model.refusal ? THEME[REFUSAL_INK[model.refusal]] : THEME.hudAccent],
   ];
   lines.forEach(([text, colour], i) => {

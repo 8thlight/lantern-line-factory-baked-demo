@@ -120,6 +120,19 @@ test('every light pool is drawn before the hover cell and before any lantern bod
   assert.equal(Math.min(...bodies) > lastPool, true);
 });
 
+test('the hover cell and its range ring are drawn while playing and on no other screen', () => {
+  const drawn = ['playing', 'ready', 'won', 'lost'].map((status) => {
+    const ctx = recordingContext();
+    const game = createGame({ waveSize: 0 });
+    game.status = status;
+    draw(ctx, game, { col: 3, row: 1, ok: true });
+    const cells = ctx.calls.filter((c) => c.name === 'fillRect' && c.fillStyle === THEME.hover).length;
+    const rings = ctx.calls.filter((c) => c.name === 'arc' && c.strokeStyle === THEME.rangeRing).length;
+    return [status, cells, rings];
+  });
+  assert.deepEqual(drawn, [['playing', 1, 1], ['ready', 0, 0], ['won', 0, 0], ['lost', 0, 0]]);
+});
+
 test('drawGhost draws a curved body, two eyes, and a health bar that shortens with health', () => {
   const game = createGame({ waveSize: 0 });
   const ghost = spawnEnemy(game);
