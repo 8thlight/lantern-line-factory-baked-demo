@@ -179,9 +179,8 @@ their `armour` values.
 - 'an armoured ghost's outline is stroked in THEME.armour at 2 pixels; a plain ghost's is
   not': `drawGhost` of an armoured ghost and of a plain one. The strokes' `[strokeStyle,
   lineWidth]` lists deep-equal `[[THEME.armour, 2], [THEME.ghostSheen, 2]]` and
-  `[[THEME.ghostEdge, 1.6], [THEME.ghostSheen, 2]]` respectively, followed by the
-  health bar's strokes if any. The build writes the exact full list it records from the
-  plain ghost before the change, so the plain list proves today's drawing is unchanged.
+  `[[THEME.ghostEdge, 1.6], [THEME.ghostSheen, 2]]` respectively. The health bar only fills, so these are the ghost's only strokes, and the plain
+  list is today's drawing, unchanged.
 - 'THEME.armour is #c9ced6': `assert.equal(THEME.armour, '#c9ced6')`.
 
 It is red against the base because no ghost carries `armour` and `THEME.armour` is undefined.
