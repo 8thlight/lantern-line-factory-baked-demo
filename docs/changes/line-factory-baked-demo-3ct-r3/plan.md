@@ -82,21 +82,22 @@ player clicks Start or presses Enter or Space. A restart brings the start screen
   "so every existing test under `test/` keeps passing unedited"). It holds for every suite that
   builds games with `createGame()`: game-over, render, hud, game, tower-cost and the rest stay
   unedited. It cannot hold for the two suites that boot main.js itself. `reproduces:` locks
-  only test/start-screen.test.js, a new file, so no locked test is touched.
+  only test/start-screen.test.js, a new file. The amendment does not name it, so no locked
+  test is touched.
 
 touches:
   - src/game.js
   - src/render.js
   - src/hud.js
   - src/main.js
-  - test/start-screen.test.js
   - test/pause-speed.test.js
   - test/upgrade.test.js
 
 The suite these paths match: `test/**` (.hydraflow/layout.yaml), run with `node --test`.
 
-`reproduces:` stays as signed: test/start-screen.test.js. It is new, written red first, and
-stays in both lists. src/theme.js is not touched: the overlay paints only in existing THEME
+`reproduces:` stays as signed: test/start-screen.test.js. The signed `reproduces:` block
+locks it, so the fix may not edit it, and the amended `touches:` leaves it out. It is the test
+that proves the fix, written red first and then left as it is. src/theme.js is not touched: the overlay paints only in existing THEME
 tokens (see step 4).
 
 Every other suite stays unedited and must pass as it stands. I checked each lock:
@@ -121,6 +122,10 @@ the positive `deepEqual` on the `'ready'` game. No `notEqual`, `ok(!…)`, `incl
 is written, so neither baseline count can rise.
 
 ### 1. Reproducer: test/start-screen.test.js, committed red
+
+The signed `reproduces:` block locks this file. It is written once, red, against the base and
+committed before any source changes. The fix then turns it green without editing it, and the
+amended `touches:` does not name it.
 
 It imports `createGame`, `step`, `start`, `restart` and `START_GOLD` from ../src/game.js,
 `draw` from ../src/render.js, `START_BUTTON`, `startButtonAt`, `isStartKey`, `HUD_HEIGHT`,
