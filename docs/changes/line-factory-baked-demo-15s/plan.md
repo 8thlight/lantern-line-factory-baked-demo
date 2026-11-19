@@ -47,16 +47,8 @@ Both change `createGame`/`placeTower` in src/game.js and both edit test/game.tes
 
 ## Who meets it
 
-- person: the player, pointing at a free grass cell with a tower kind they cannot afford: the
-  hover cell turns the refusal colour (`THEME.hoverBad`), as it already does on the path or a
-  taken cell, and a click there places nothing and spends nothing. This follows the refused
-  placement in design/screens/HudStates.dc.html (design/screens/HudStates.png). That
-  artboard's "Not enough gold" line with the cost and gold held is drawn by the HUD, which is
-  work/m4-01-hud.md and not in either brief here; this print only gives that line its cause,
-  `placementError(...) === 'gold'`.
-- person: the player holding the line wave by wave: each wave sends more, tougher and faster
-  ghosts than the one before, and holding the tenth wins the round, as the Win artboard's ten
-  waves (design/screens/Win.dc.html) count them.
+- person: the player, in play on the refused placement drawn at design/screens/HudStates.png (source design/screens/HudStates.dc.html, listed in design/screens.yaml for work/m3-02-tower-cost.md), points at a free grass cell with a tower kind they cannot afford and sees the hover cell turn the refusal colour (`THEME.hoverBad`), as it already does on the path or a taken cell; a click there places nothing and spends nothing. That artboard's "Not enough gold" line with the cost and gold held is drawn by the HUD, work/m4-01-hud.md, outside both briefs here; this print gives that line its cause, `placementError(...) === 'gold'`.
+- person: the player, holding the line toward the win card drawn at design/screens/Win.png (source design/screens/Win.dc.html, listed in design/screens.yaml, reached by "hold all 10 waves"), meets each wave sending more, tougher and faster ghosts than the one before, and holding the tenth wins the round.
 
 ## Refusals
 
