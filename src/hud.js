@@ -15,9 +15,10 @@ const WIDTH = COLS * TILE;
 export const SPEED_BUTTON = Object.freeze({ x: WIDTH - HUD_PAD - 40, y: 6, width: 40, height: 28 });
 export const PAUSE_BUTTON = Object.freeze({ x: SPEED_BUTTON.x - 16 - 72, y: 6, width: 72, height: 28 });
 
-// What the HUD shows, read from the state and never written to it.
-export function hudModel({ lives, gold, wave, totalWaves, paused, speed }) {
-  return { lives, gold, wave, totalWaves, paused, speed, livesDanger: lives <= LIVES_DANGER };
+// What the HUD shows, read from the state and never written to it. `bossWave` holds for the
+// whole of a wave whose spawner sends a boss, from its start.
+export function hudModel({ lives, gold, wave, totalWaves, paused, speed, spawner }) {
+  return { lives, gold, wave, totalWaves, paused, speed, livesDanger: lives <= LIVES_DANGER, bossWave: Boolean(spawner?.boss) };
 }
 
 // What the card says in place of the upgrade line when upgradeError refuses, by its reason;

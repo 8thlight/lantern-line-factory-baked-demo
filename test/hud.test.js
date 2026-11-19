@@ -62,6 +62,7 @@ test('hudModel on a new game', () => {
     paused: false,
     speed: 1,
     livesDanger: false,
+    bossWave: false,
   });
 });
 
