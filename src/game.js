@@ -36,7 +36,20 @@ export function createGame({
     lives,
     gold,
     kills: 0,
+    paused: false,
+    speed: 1, // 1 or 2: how many seconds of game time pass in each second of play
   };
+}
+
+export function togglePause(state) {
+  state.paused = !state.paused;
+  return state;
+}
+
+// Speed moves between 1x and 2x.
+export function toggleSpeed(state) {
+  state.speed = state.speed === 2 ? 1 : 2;
+  return state;
 }
 
 export function placeTower(state, col, row, kind = LANTERN) {
@@ -81,9 +94,12 @@ export function restart(state) {
   return createGame(state.options);
 }
 
-// Advance the whole game by `dt` seconds. A finished round stays as it ended.
+// Advance the whole game by `dt` seconds. A finished round stays as it ended, and a paused one
+// stands still. Speed scales game time, so the spawner, ghosts, beams and reloads all run faster.
 export function step(state, dt) {
   if (state.status !== 'playing') return state;
+  if (state.paused) return state;
+  dt *= state.speed;
 
   const due = updateWave(state.spawner, dt);
   for (let i = 0; i < due; i++) spawnEnemy(state);
