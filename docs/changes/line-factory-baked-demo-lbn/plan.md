@@ -69,22 +69,22 @@ announces a boss wave. Class: fix.
   `{ lives, gold, wave, totalWaves, paused, speed, livesDanger }`. That turns it red unless
   the expected object gains `bossWave: false`. That one property is the only edit to the
   file, and the test still proves what it proved: the whole model of a new game.
-  `reproduces:` locks only test/boss.test.js, which this print writes red first, so no
-  locked test is edited.
+  test/boss.test.js is left out of this list: the signed `reproduces:` block locks it, and
+  the fix may not edit the test that proves it. It stays held by `reproduces:` alone.
 
 touches:
   - src/waves.js
   - src/game.js
   - src/hud.js
   - src/render.js
-  - test/boss.test.js
   - test/waves.test.js
   - test/hud.test.js
 
 The suite these test paths match: `test/**` (.hydraflow/layout.yaml), run with
 `node --test`.
 
-`reproduces:` stays as signed: test/boss.test.js, new and written red first.
+`reproduces:` stays as signed: test/boss.test.js, new and written red first (step 1), and
+named there, not in the amended `touches:`.
 
 Every other suite stays unedited and must pass as it stands. I checked each one that
 reaches what changes:
