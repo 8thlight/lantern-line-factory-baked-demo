@@ -1,18 +1,18 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "acb4e64cab908569123814b34f209025922d02a8e4b2a21b1186afdaef2dac43",
+  "digest": "74d3adaec5f276f78003b6781f4188459b75f70bb8cfab47a3a01dae100b3424",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] missing test: the brief says the difficulty row must sit clear of the Start button and the start steps. test/difficulty-choice.test.js only checks for overlap with START_BUTTON and between the three buttons. Nothing checks that the row at CANVAS_HEIGHT-36 stays below the last START_STEPS line, which render.js draws at hintY + 38 + 22*i. If the hint or steps move, or more steps are added, the text could run into the buttons without any test failing.",
-        "[P2] style: render.js inserts DIFFICULTY_BUTTONS into the hud.js import between START_BUTTON and hudModel, which breaks the list's alphabetical order. src/main.js keeps its import list in that order."
+        "OUTCOME met: main.js boots createGame({ status: 'ready', difficulty: 'normal' }). chooseDifficulty rebuilds a ready game from state.options with the new difficulty, so restart keeps it, and it returns any non-ready state as given. hud.js adds DIFFICULTY_BUTTONS (96x28, 8 apart, centred, bottom at CANVAS_HEIGHT - 8), difficultyButtonAt and a case-insensitive difficultyKey. main.js routes start-screen clicks and E/N/H presses (non-repeat) to chooseDifficulty, with Start checked first and Enter/Space unchanged. drawStartScreen draws the row only when difficulty !== null, with the chosen button filled.",
+        "CONSTRUCTION sound: test/difficulty-choice.test.js covers every acceptance criterion. It also checks that restart keeps the difficulty, that the row clears the start steps and the Start button, and the full main.js flow. The only existing test edited is test/pause-speed.test.js, to expect the priced 'Lantern N' HUD, which operator ruling q-8ea7b2c1 (a) explicitly sanctioned and the touches list names."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
