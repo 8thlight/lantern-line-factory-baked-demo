@@ -6,7 +6,7 @@ import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
 import { towerById } from './tower.js';
-import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -470,14 +470,13 @@ const START_STEPS = [
 // shows faintly behind, the title at 35% height and the Start button at 60%. The tagline hangs
 // from the title, and the hint and steps from the button, so they move with them.
 function drawStartScreen(ctx) {
-  const canvasHeight = HUD_HEIGHT + HEIGHT;
   const centre = WIDTH / 2;
-  const titleY = Math.round(0.35 * canvasHeight);
+  const titleY = Math.round(0.35 * CANVAS_HEIGHT);
   const { x, y, width, height } = START_BUTTON;
   const hintY = y + height + 16;
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
-  ctx.fillRect(0, 0, WIDTH, canvasHeight);
+  ctx.fillRect(0, 0, WIDTH, CANVAS_HEIGHT);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.font = 'bold 40px system-ui, sans-serif';

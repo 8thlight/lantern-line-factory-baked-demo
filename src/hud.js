@@ -10,7 +10,7 @@ export const HUD_HEIGHT = 40; // design/hud.md --hud-height; the board is drawn 
 export const HUD_PAD = 8; // design/hud.md --hud-pad: the bar's inset from the canvas edge
 export const LIVES_DANGER = 3; // lives at or below this turn the HUD's lives red
 const WIDTH = COLS * TILE;
-const CANVAS_HEIGHT = HUD_HEIGHT + ROWS * TILE;
+export const CANVAS_HEIGHT = HUD_HEIGHT + ROWS * TILE; // the bar, then the whole board below it
 
 // Right-aligned buttons, 28 tall, --hud-pad from the edge and --hud-gap apart.
 export const SPEED_BUTTON = Object.freeze({ x: WIDTH - HUD_PAD - 40, y: 6, width: 40, height: 28 });
