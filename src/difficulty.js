@@ -1,5 +1,5 @@
 // The difficulties a game may be made with: the gold and lives it starts with, and how many
-// times tougher its ghosts are than the waves table says (src/waves.js). Pure data, no DOM.
+// times tougher its ghosts are than the waves table says (src/waves.js), and the lookup that refuses any other key. No DOM.
 
 export const DIFFICULTIES = Object.freeze({
   easy: Object.freeze({ name: 'Easy', health: 1, gold: 50, lives: 10 }),
