@@ -1,0 +1,83 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { advanceEnemy, createEnemy, slowEnemy } from '../src/enemy.js';
+import { createGame, placeTower, placementError, spawnEnemy, step } from '../src/game.js';
+import { WAYPOINTS } from '../src/path.js';
+import { FROST, LANTERN, createTower, kindForKey } from '../src/tower.js';
+
+// A game with no automatic spawning, so each test controls its enemies.
+function quietGame(options) {
+  const game = createGame(options);
+  game.spawnTimer = Infinity;
+  return game;
+}
+
+const ghost = () => createEnemy({ id: 1, waypoints: WAYPOINTS });
+
+test('a ghost hit by frost covers half the distance in the next second', () => {
+  const hit = ghost();
+  const unhit = ghost();
+  slowEnemy(hit, FROST.slow, FROST.slowFor);
+  advanceEnemy(hit, WAYPOINTS, 1);
+  advanceEnemy(unhit, WAYPOINTS, 1);
+  assert.equal(hit.distance, unhit.distance / 2);
+});
+
+test('after slowFor seconds without another hit the ghost is back to full speed', () => {
+  const enemy = ghost();
+  slowEnemy(enemy, FROST.slow, FROST.slowFor);
+  advanceEnemy(enemy, WAYPOINTS, FROST.slowFor);
+  assert.equal(enemy.slow, 1);
+  assert.equal(enemy.slowLeft, 0);
+  const before = enemy.distance;
+  advanceEnemy(enemy, WAYPOINTS, 1);
+  assert.equal(enemy.distance - before, enemy.speed * 1);
+});
+
+test('two frost hits in a row leave the slow factor, not its square', () => {
+  const enemy = ghost();
+  slowEnemy(enemy, FROST.slow, FROST.slowFor);
+  advanceEnemy(enemy, WAYPOINTS, 0.5);
+  slowEnemy(enemy, FROST.slow, FROST.slowFor);
+  assert.equal(enemy.slow, FROST.slow);
+  assert.equal(enemy.slowLeft, FROST.slowFor);
+  const before = enemy.distance;
+  advanceEnemy(enemy, WAYPOINTS, 1);
+  assert.equal(enemy.distance - before, enemy.speed * 0.5);
+});
+
+test('a frost tower costs 40 gold and is refused when gold is short', () => {
+  assert.equal(FROST.cost, 40);
+  const poor = quietGame({ gold: 30 });
+  assert.equal(placementError(poor, 1, 0, FROST), 'gold');
+  assert.equal(placeTower(poor, 1, 0, FROST), false);
+  assert.equal(poor.towers.length, 0);
+  assert.equal(poor.gold, 30);
+
+  const game = quietGame();
+  assert.equal(placementError(game, 1, 0, FROST), null);
+  assert.equal(placeTower(game, 1, 0, FROST), true);
+  assert.equal(game.gold, 10);
+});
+
+test('a frost tower in the game loop slows a ghost and does not kill it', () => {
+  const game = quietGame();
+  placeTower(game, 1, 1, FROST); // just below the first stretch of path
+  const enemy = spawnEnemy(game);
+  step(game, 0.1);
+  assert.deepEqual(game.enemies, [enemy]);
+  assert.equal(enemy.slow, FROST.slow);
+  assert.equal(game.kills, 0);
+  assert.equal(game.shots.length, 1);
+  assert.equal(game.shots[0].frost, true);
+});
+
+test('key 3 picks frost, key 1 the lantern, and another key keeps the kind', () => {
+  assert.equal(kindForKey('3', LANTERN), FROST);
+  assert.equal(kindForKey('1', FROST), LANTERN);
+  assert.equal(kindForKey('x', FROST), FROST);
+  const tower = createTower(1, 0, FROST);
+  assert.equal(tower.kind, FROST);
+  assert.equal(tower.slow, FROST.slow);
+  assert.equal(tower.slowFor, FROST.slowFor);
+});
