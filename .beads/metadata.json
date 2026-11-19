@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "lantern_line_factory_baked_demo",
+  "project_id": "3fead5f5-32bb-4a9b-ad3c-e332295c1d10"
+}
