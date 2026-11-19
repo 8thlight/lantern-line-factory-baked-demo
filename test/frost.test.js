@@ -20,13 +20,13 @@ function frostBeside(kind) {
   return { game, ghost };
 }
 
-// A context that records each call with the fillStyle set when it was made.
+// A context that records each call with the fillStyle and font set when it was made.
 function recordingContext() {
   const calls = [];
   const ctx = new Proxy(
     {},
     {
-      get: (target, name) => (name in target ? target[name] : (...args) => calls.push({ name, args, fillStyle: target.fillStyle })),
+      get: (target, name) => (name in target ? target[name] : (...args) => calls.push({ name, args, fillStyle: target.fillStyle, font: target.font })),
     },
   );
   return { ctx, calls };
@@ -72,7 +72,7 @@ test('a ghost hit by frost covers half the distance in the next second that an u
   step(free.game, TICK);
   assert.deepEqual([slowed.ghost.slow, slowed.ghost.slowLeft], [FROST.slow, FROST.slowFor]);
   const from = [slowed.ghost.distance, free.ghost.distance];
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 1 / TICK; i++) {
     step(slowed.game, TICK);
     step(free.game, TICK);
   }
@@ -191,13 +191,15 @@ test('the HUD names the kind draw is handed', () => {
   assert.deepEqual(texts(LANTERN).slice(-3, -2).map((c) => c.args[0]), ['Lantern']);
 });
 
-// No text is measured, so the bound is a whole em per letter of the 16px HUD font, wider than any
-// letter in these names: every kind's name ends before the Pause button starts.
+// No text is measured, so the bound is a whole em per letter of the font the name is drawn in,
+// wider than any letter in these names: every kind's name ends before the Pause button starts.
 test('every kind name in the HUD ends before the Pause button', () => {
   const { ctx, calls } = recordingContext();
   draw(ctx, createGame(), null, SPRITES, FROST);
   const value = calls.filter((c) => c.name === 'fillText' && c.args[0] === FROST.name);
   assert.deepEqual(value.map((c) => c.args[1]), [HUD_KIND.valueX]);
-  const ends = [LANTERN, BRAZIER, FROST].map((kind) => HUD_KIND.valueX + kind.name.length * 16 <= PAUSE_BUTTON.x);
+  const em = parseFloat(value[0].font);
+  assert.equal(em > 0, true);
+  const ends = [LANTERN, BRAZIER, FROST].map((kind) => HUD_KIND.valueX + kind.name.length * em <= PAUSE_BUTTON.x);
   assert.deepEqual(ends, [true, true, true]);
 });
