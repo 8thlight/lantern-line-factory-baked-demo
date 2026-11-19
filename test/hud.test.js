@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { HUD_BUTTONS, hudButtonAt, hudButtonForKey, hudModel } from '../src/hud.js';
+import { HUD_BUTTONS, HUD_HEIGHT, clickHud, hudButtonAt, hudButtonForKey, hudModel, keyHud } from '../src/hud.js';
 import { START_GOLD, START_LIVES, TOTAL_WAVES, createGame } from '../src/game.js';
 
 test('hudModel on a new game shows full lives, starting gold, wave 1 of the total, running at 1x', () => {
@@ -60,4 +60,32 @@ test('hudButtonForKey names the button P and F press, either case, and null for 
   assert.equal(hudButtonForKey('f'), 'speed');
   assert.equal(hudButtonForKey('F'), 'speed');
   assert.equal(hudButtonForKey('1'), null);
+});
+
+test('clickHud presses the button under a click, and takes any click on the bar so the board under it places nothing', () => {
+  const { pause, speed } = HUD_BUTTONS;
+  const game = createGame();
+  assert.equal(clickHud(game, pause.x, pause.y), true);
+  assert.equal(game.paused, true);
+  assert.equal(clickHud(game, speed.x, speed.y), true);
+  assert.equal(game.speed, 2);
+  // On the bar beside the buttons: taken, and nothing toggles.
+  assert.equal(clickHud(game, 0, 0), true);
+  assert.equal(clickHud(game, pause.x + pause.width, HUD_HEIGHT - 1), true);
+  assert.deepEqual({ paused: game.paused, speed: game.speed }, { paused: true, speed: 2 });
+  // Below the bar the click reaches the board.
+  assert.equal(clickHud(game, pause.x, HUD_HEIGHT), false);
+  assert.deepEqual({ paused: game.paused, speed: game.speed }, { paused: true, speed: 2 });
+});
+
+test('keyHud presses Pause on P and Speed on F, and a held key repeating presses nothing more', () => {
+  const game = createGame();
+  assert.equal(keyHud(game, 'P'), 'pause');
+  assert.equal(game.paused, true);
+  assert.equal(keyHud(game, 'f'), 'speed');
+  assert.equal(game.speed, 2);
+  assert.equal(keyHud(game, 'p', true), null);
+  assert.equal(keyHud(game, 'F', true), null);
+  assert.equal(keyHud(game, '1'), null);
+  assert.deepEqual({ paused: game.paused, speed: game.speed }, { paused: true, speed: 2 });
 });

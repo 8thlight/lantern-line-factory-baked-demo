@@ -1,10 +1,10 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
+import { createGame, hoverAt, placeTower, restart, step } from './game.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { drawFrame } from './render.js';
-import { hudButtonAt, hudButtonForKey } from './hud.js';
+import { HUD_HEIGHT, clickHud, keyHud } from './hud.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -27,21 +27,15 @@ function cellAt(event) {
   return { col: Math.floor(x / TILE), row: Math.floor(y / TILE) };
 }
 
-const HUD_ACTIONS = { pause: togglePause, speed: toggleSpeed };
-
 // Once the round is over, a click starts a fresh one rather than placing a lantern.
-// In play, a click on the HUD's Pause or Speed button toggles it and places nothing.
+// In play, a click on the HUD bar presses its Pause or Speed button and places nothing.
 canvas.addEventListener('click', (event) => {
   if (state.status !== 'playing') {
     state = restart(state);
     return;
   }
   const { x, y } = pointAt(event);
-  const button = hudButtonAt(x, y);
-  if (button) {
-    HUD_ACTIONS[button](state);
-    return;
-  }
+  if (clickHud(state, x, y)) return;
   const { col, row } = cellAt(event);
   placeTower(state, col, row, kind);
 });
@@ -56,12 +50,16 @@ canvas.addEventListener('contextmenu', (event) => {
 
 // P pauses and resumes, F moves between 1x and 2x; 1 and 2 choose the kind a click places.
 window.addEventListener('keydown', (event) => {
-  const button = hudButtonForKey(event.key);
-  if (button) HUD_ACTIONS[button](state);
+  keyHud(state, event.key, event.repeat);
   kind = kindForKey(event.key, kind);
 });
 
+// Over the HUD bar there is no cell to place on, so no hover is shown under it.
 canvas.addEventListener('mousemove', (event) => {
+  if (pointAt(event).y < HUD_HEIGHT) {
+    hover = null;
+    return;
+  }
   const { col, row } = cellAt(event);
   hover = hoverAt(state, col, row, kind);
 });

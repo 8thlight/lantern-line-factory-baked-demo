@@ -2,6 +2,7 @@
 // Pure logic, no DOM: safe to import from tests.
 
 import { COLS, TILE } from './path.js';
+import { togglePause, toggleSpeed } from './game.js';
 
 export const DANGER_LIVES = 3; // at this many lives or fewer, the lives pill turns danger red
 
@@ -38,4 +39,24 @@ const HUD_KEYS = { p: 'pause', f: 'speed' };
 
 export function hudButtonForKey(key) {
   return HUD_KEYS[key.toLowerCase()] ?? null;
+}
+
+const HUD_ACTIONS = { pause: togglePause, speed: toggleSpeed };
+
+// A click in play at a board point. The bar covers the board's top row, so it takes every click
+// that lands on it, pressing the button under it if there is one: true when the bar took the
+// click and the board under it places nothing, false when the click is below the bar.
+export function clickHud(state, x, y) {
+  if (y >= HUD_HEIGHT) return false;
+  const button = hudButtonAt(x, y);
+  if (button) HUD_ACTIONS[button](state);
+  return true;
+}
+
+// A key press: P or F presses its button and names it. A held key's repeats press nothing,
+// so where pause or speed stops does not hang on how long the key was held.
+export function keyHud(state, key, repeat = false) {
+  const button = repeat ? null : hudButtonForKey(key);
+  if (button) HUD_ACTIONS[button](state);
+  return button;
 }
