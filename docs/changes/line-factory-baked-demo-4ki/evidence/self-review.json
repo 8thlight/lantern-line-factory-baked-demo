@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-4ki",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 1\n- `test/brazier.test.js:122`: the test writes the brazier's side as `TILE * 0.6`, which `BRAZIER_SIDE` in `src/render.js:158` already holds, so the same fact appears twice. I left it as it is. The square's size is the thing that test checks, and reading the value from the source would mean the test checks the code against itself. It is one constant in the reproducer, and moving it would cost more than it saves.\n\nAll other checks came up clean:\n- **Planned files:** all five source files and `test/brazier.test.js` are in the diff, and nothing outside the signed `touches:` list changed.\n- **Tests:** every guard has a test that fails if the guard is removed. That covers `splash ?? 0`, the `splash > 0` choice in `step`, the brazier skipping the lantern pool in `draw`, kills counted once, and keys 1 and 2 through `kindForKey`.\n- **Comments:** they match what the code does. The plan's `PALETTE` entries became `THEME` colours, because main had already removed `PALETTE`, and the comment says that.\n\nGATES green (`npm test` 59/59; no Makefile in this clone, so `npm test` was the check, as the attempt notes say). The tree is committed and clean, and this pass made no edits.",
+  "gates": "green",
+  "finding": null
+}
