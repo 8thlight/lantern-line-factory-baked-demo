@@ -1,0 +1,12 @@
+{
+  "print_id": "24",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/game-over.test.js",
+    "test/render.test.js"
+  ],
+  "said": "FOUND 2\n- `test/render.test.js:167`: the check that a fresh game draws no ghost would pass on an empty board even if `draw` never drew ghosts, so it couldn't fail. The test now spawns a ghost and asserts `drawGhost` is called once. fixed (ebc2b45)\n- `test/game-over.test.js:38,75,79`: the test wrote out 10 lives (and 9 and 8) even though `START_LIVES` already holds that number. It now reads `START_LIVES`. fixed (ffd25b7)\n\nGATES green: `node --test test/game-over.test.js test/render.test.js test/enemy.test.js test/game.test.js` gave 34 pass, 0 fail, and the tree is committed. This clone has no Makefile, so I used `node --test` instead of `make check-build` and noted that in the attempt notes.",
+  "gates": "green",
+  "finding": null
+}

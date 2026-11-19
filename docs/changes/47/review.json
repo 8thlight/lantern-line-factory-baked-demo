@@ -1,0 +1,21 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "05d48f0b4fc0937c91f682102b44a3e29dbd928f30f6d0f36baca7004b810d88",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The outcome matches the brief. src/tower.js adds FROST with cost 40, damage 0.5 (below the lantern's 1), slow 0.5 and slowFor 2. createTower now carries slow and slowFor, defaulting both to 0 for other kinds, and kindForKey maps '3' to FROST.",
+        "The slow is handled correctly. In src/game.js, step calls slowEnemy only on ghosts the frost tower hits and does not kill. slowEnemy sets the factor and restarts slowLeft without multiplying, so two 0.5 hits leave the ghost at 0.5, not 0.25. When a step outlasts the slow, advanceEnemy splits it into a slowed part and a full-speed part, then puts slow back to 1 once slowLeft reaches 0. Repeated floating-point subtraction can leave a tiny slowLeft, but the next step's Math.min clamps it to exactly 0, so no ghost stays slowed forever.",
+        "The P1 from the review of record is fixed: the HUD names the kind from boot. src/main.js keeps kind = LANTERN at boot and passes it on every frame with draw(ctx, state, hover, SPRITES, kind). draw adds the 'Tower' label and kind name only when it is handed a kind, so existing render expectations still hold. test/pause-speed.test.js checks the name at boot and after pressing 1, 2 and 3.",
+        "Frost has its own colours and drawing. src/theme.js adds the frostBody, frostCore and ghostSlowed tokens. In src/render.js, a single bodySprite function picks the frost diamond and keeps frost from casting a lantern pool. drawGhost tints a ghost while its slowLeft is above 0.",
+        "Each of the four acceptance criteria has a test in test/frost.test.js. Half the distance in the next second is checked end to end through step. Return to full speed after slowFor is checked directly and with a step split where the slow runs out. Two hits leaving the factor rather than its square is checked directly and through step. The 40-gold cost is checked, and placementError refuses frost at 39 gold. test/brazier.test.js now expects key '3' to give FROST."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}

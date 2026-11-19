@@ -1,0 +1,11 @@
+{
+  "print_id": "54",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/boss.test.js"
+  ],
+  "said": "FOUND 1\n- `src/game.js:189`: the code that keeps the boss as the wave's last spawn, even when one long tick spawns several ghosts at once, had no test that failed when it was removed. I added a test to `test/boss.test.js` that spawns all of wave 5 in one tick and expects 9 plain ghosts, then the boss, exactly once. It passes as written and fails when that code is swapped for a plain `spawned === count` check. fixed (4221bcc)\n- Nothing else found. All 7 changed source and test files are in the signed `touches:` list. The comments match what the code does. `test/game.test.js` is unedited. No new negative-only assertion was added. One change goes against the plan: `leakEnemies` now returns the lives its leaks cost, where the plan said it would keep returning the number of ghosts. That was the fix for a P1 finding from the review of record (fb1e7ac), so I left it.\n\nGATES green: the 9 suites this change touches (`node --test` on boss, waves, hud, game, render, game-over, pause-speed, gold, enemy) pass 85/85. This clone's `package.json` uses `node --test` and has no `check-build` target. Following the guardrail, I did not run the whole suite again. The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}
