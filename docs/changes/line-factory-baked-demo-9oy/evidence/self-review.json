@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-9oy",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/difficulty.js"
+  ],
+  "said": "FOUND 2\n- `src/difficulty.js:14`: the refusal message spelled out \"easy, normal or hard\" by hand, so the key list existed twice: once in `DIFFICULTIES` and once in the message. The message now builds that list from `Object.keys(DIFFICULTIES)`, and the text is unchanged. Fixed.\n- `src/difficulty.js:2`: the header said \"Pure data\", but the module also holds the `difficultyEntry` lookup. It now says so. Fixed.\n\nGATES green: this clone has no `check-build` target and `package.json`'s test script is `node --test`, so I ran `node --test` on `test/difficulty.test.js` and the 8 other suites the change affects (98 pass, 0 fail). Everything is committed and the tree is clean.",
+  "gates": "green",
+  "finding": null
+}

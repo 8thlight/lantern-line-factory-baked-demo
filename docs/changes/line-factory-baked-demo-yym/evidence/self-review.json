@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-yym",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/upgrade.test.js"
+  ],
+  "said": "FOUND 3\n- `test/upgrade.test.js:82,120,144`: the gold left after placing a lantern was written as a bare `80` where `100 - LANTERN.cost` already holds it. Fixed in 85c01e2.\n- `test/upgrade.test.js:65`: the test title said the tower \"knows its kind\", but since towers stopped holding a reference to their kind object, the test checks only the kind's name. Fixed in 85c01e2: the title now says it carries the kind's name.\n- `src/main.js:51` (the restart branch): nothing tests that restarting a round clears the selected tower. Left: `main.js` does not expose the game, and the click and key handlers alone cannot end a round without stepping hundreds of frames. The commit message for c4559e4 and the attempt notes say so.\n\nGATES green: `npm --prefix . run test` passes 149 of 149 and the tree is committed and clean. This clone's Makefile has no `check-build` target, so the line's own test command was the check (the `make lint`/`make types`/`uv run pytest` fallback is for Python and does not apply to this JavaScript repository).",
+  "gates": "green",
+  "finding": null
+}
