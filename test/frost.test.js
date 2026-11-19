@@ -4,6 +4,7 @@ import { advanceEnemy, createEnemy, slowEnemy } from '../src/enemy.js';
 import { createGame, placeTower, placementError, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS } from '../src/path.js';
 import { FROST, LANTERN, createTower, kindForKey } from '../src/tower.js';
+import { SPRITES, draw } from '../src/render.js';
 
 // A game with no automatic spawning, so each test controls its enemies.
 function quietGame(options) {
@@ -80,4 +81,15 @@ test('key 3 picks frost, key 1 the lantern, and another key keeps the kind', () 
   assert.equal(tower.kind, FROST);
   assert.equal(tower.slow, FROST.slow);
   assert.equal(tower.slowFor, FROST.slowFor);
+});
+
+test('draw names the kind it is handed, by name and cost, and names none when handed no kind', () => {
+  const texts = [];
+  const ctx = new Proxy({}, { get: (target, name) => (name === 'fillText' ? (text) => texts.push(text) : () => ctx) });
+  const game = quietGame();
+  draw(ctx, game, null, SPRITES, FROST);
+  const named = texts.slice();
+  texts.length = 0;
+  draw(ctx, game, null);
+  assert.deepEqual(named, [...texts, `${FROST.name} (${FROST.cost})`]);
 });
