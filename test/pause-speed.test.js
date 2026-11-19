@@ -1,7 +1,8 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { START_GOLD, START_LIVES, TOTAL_WAVES, createGame, placeTower, spawnEnemy, step, togglePause, toggleSpeed } from '../src/game.js';
-import { FROST, LANTERN } from '../src/tower.js';
+import { BRAZIER, FROST, LANTERN } from '../src/tower.js';
+import { CHALLENGES } from '../src/difficulty.js';
 import { HUD_HEIGHT, PAUSE_BUTTON, SPEED_BUTTON } from '../src/hud.js';
 import { ROWS, TILE } from '../src/path.js';
 import { THEME } from '../src/theme.js';
@@ -155,8 +156,10 @@ async function boot() {
 
 const textsOf = (calls) => calls.filter((c) => c.name === 'fillText').map((c) => c.args[0]);
 const fillsIn = (calls, colour) => calls.filter((c) => c.name.startsWith('fill') && c.fillStyle === colour);
-// The bar's texts; the kind a click places is named from boot, a lantern until a key changes it.
-const hudAt = (gold, pause = 'Pause', speed = '1x', kind = 'Lantern') =>
+// The bar's texts; the kind a click places is named from boot, a lantern until a key changes it,
+// with its price on the normal game main.js boots: its cost plus a step for each tower placed.
+const priced = (kind, placed = 0) => `${kind.name} ${kind.cost + CHALLENGES.normal.priceStep * placed}`;
+const hudAt = (gold, pause = 'Pause', speed = '1x', kind = priced(LANTERN)) =>
   ['Lives', String(START_LIVES), 'Gold', String(gold), 'Wave', `1 / ${TOTAL_WAVES}`, 'Tower', kind, pause, speed];
 const centreOf = (rect) => [rect.x + rect.width / 2, rect.y + rect.height / 2];
 
@@ -176,7 +179,7 @@ test('a click on the bar never places a tower', async () => {
   assert.deepEqual(fillsIn(calls, THEME.lanternPaper), []);
 
   game.click(5, HUD_HEIGHT + 5);
-  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - LANTERN.cost));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - LANTERN.cost, 'Pause', '1x', priced(LANTERN, 1)));
 });
 
 test('a click on Pause or 1x toggles them and places nothing', async () => {
@@ -211,10 +214,10 @@ test('the HUD names the kind from boot, and 1, 2 and 3 change it', async () => {
   const game = await boot();
   assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD));
   game.key('3');
-  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', 'Frost'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', priced(FROST)));
   game.key('2');
-  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', 'Brazier'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', priced(BRAZIER)));
   game.key('3');
   game.click(5, HUD_HEIGHT + 5);
-  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - FROST.cost, 'Pause', '1x', 'Frost'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - FROST.cost, 'Pause', '1x', priced(FROST, 1)));
 });

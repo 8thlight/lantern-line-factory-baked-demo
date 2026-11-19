@@ -1,5 +1,5 @@
 // Enemies ("ghosts") drift along the path at their speed, slowed while frost holds them, and pay
-// their bounty when banished.
+// their bounty when banished. Some come armoured, and shrug off part of each hit.
 
 import { pathLength, pointAlong } from './path.js';
 
@@ -7,15 +7,17 @@ export const ENEMY_SPEED = 60; // pixels per second
 export const ENEMY_HEALTH = 3; // hits of 1 to banish a ghost
 export const ENEMY_BOUNTY = 5; // gold paid when a ghost is banished
 
-export function createEnemy({ id, waypoints, speed = ENEMY_SPEED, health = ENEMY_HEALTH, bounty = ENEMY_BOUNTY }) {
+export function createEnemy({ id, waypoints, speed = ENEMY_SPEED, health = ENEMY_HEALTH, bounty = ENEMY_BOUNTY, armour = 0 }) {
   const { x, y } = pointAlong(waypoints, 0);
-  return { id, x, y, distance: 0, speed, slow: 1, slowLeft: 0, reachedEnd: false, health, maxHealth: health, bounty };
+  return { id, x, y, distance: 0, speed, slow: 1, slowLeft: 0, reachedEnd: false, health, maxHealth: health, bounty, armour };
 }
 
 // Lower an enemy's health by `amount`, never below 0. Mutates it.
-// Returns true when the hit leaves it dead.
+// An armoured ghost takes its armour off each hit, but never less than 0.5; a ghost with no
+// `armour` field takes the full amount. Returns true when the hit leaves it dead.
 export function damageEnemy(enemy, amount) {
-  enemy.health = Math.max(0, enemy.health - amount);
+  const taken = (enemy.armour ?? 0) > 0 ? Math.max(0.5, amount - enemy.armour) : amount;
+  enemy.health = Math.max(0, enemy.health - taken);
   return enemy.health === 0;
 }
 

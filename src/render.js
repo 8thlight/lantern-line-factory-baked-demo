@@ -5,7 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { DIFFICULTIES } from './difficulty.js';
-import { rangePreview } from './game.js';
+import { rangePreview, towerPrice } from './game.js';
 import { towerById } from './tower.js';
 import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
@@ -18,7 +18,8 @@ const HEIGHT = ROWS * TILE;
 // diamond; neither casts a pool.
 // The board sits below the HUD bar, drawn in its own coordinates moved down by HUD_HEIGHT,
 // so no cell is ever under the bar; the end card veils the board and the bar stays readable.
-// `kind`, when handed, is the kind a click places, and the bar names it. `selected`, when it is a
+// `kind`, when handed, is the kind a click places, and the bar names it; on a game with a
+// difficulty the bar names it with its current price. `selected`, when it is a
 // placed tower's id, rings that tower and draws its card above the ghosts and beams.
 // An upgraded tower wears its level marks over its body.
 // While the game is ready, the start screen covers the whole canvas, bar included; a playing,
@@ -47,7 +48,7 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   if (chosen) drawTowerCard(ctx, chosen, model, state.gold);
   if (state.status === 'won' || state.status === 'lost') drawEndCard(ctx, state.status);
   ctx.restore();
-  drawHud(ctx, hudModel(state), kind);
+  drawHud(ctx, hudModel(state), kind && (state.difficulty ? `${kind.name} ${towerPrice(state, kind)}` : kind.name));
   if (state.status === 'ready') drawStartScreen(ctx, best, state.difficulty);
 }
 
@@ -249,7 +250,8 @@ function fillRounded(ctx, colour, x, y, width, height, radius) {
 
 // The artboard's ghost symbol (32x36 units around its centre): a round head, a hem of
 // curved points, a sheen and two eyes with shine; its health bar floats above it.
-// A ghost frost is slowing is tinted frost. A boss is the same ghost, drawn BOSS_SCALE larger.
+// A ghost frost is slowing is tinted frost, and an armoured ghost's outline is THEME.armour, 2
+// pixels. A boss is the same ghost, drawn BOSS_SCALE larger.
 const GHOST_SCALE = 0.94;
 export const BOSS_SCALE = 1.6;
 
@@ -263,8 +265,8 @@ export function drawGhost(ctx, enemy) {
   ctx.lineCap = 'round';
 
   ctx.fillStyle = enemy.slowLeft > 0 ? THEME.ghostSlowed : THEME.ghostBody;
-  ctx.strokeStyle = THEME.ghostEdge;
-  ctx.lineWidth = 1.6;
+  ctx.strokeStyle = enemy.armour > 0 ? THEME.armour : THEME.ghostEdge;
+  ctx.lineWidth = enemy.armour > 0 ? 2 : 1.6;
   ctx.beginPath();
   ctx.moveTo(-12, 12);
   ctx.lineTo(-12, -2);
@@ -350,7 +352,7 @@ export const HUD_KIND = { label: 'Tower', labelX: 300, valueX: 348 };
 export const HUD_BOSS_X = 420;
 const BUTTON_RADIUS = 6;
 
-function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger, bossWave }, kind) {
+function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger, bossWave }, kindText) {
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
@@ -368,11 +370,11 @@ function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDange
     ctx.fillStyle = values[i][1];
     ctx.fillText(values[i][0], valueX, HUD_HEIGHT / 2);
   });
-  if (kind) {
+  if (kindText) {
     ctx.fillStyle = THEME.hudMuted;
     ctx.fillText(HUD_KIND.label, HUD_KIND.labelX, HUD_HEIGHT / 2);
     ctx.fillStyle = THEME.hudInk;
-    ctx.fillText(kind.name, HUD_KIND.valueX, HUD_HEIGHT / 2);
+    ctx.fillText(kindText, HUD_KIND.valueX, HUD_HEIGHT / 2);
   }
   if (bossWave) {
     ctx.fillStyle = THEME.hudDanger;
