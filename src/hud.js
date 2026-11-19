@@ -12,16 +12,16 @@ export function hudModel({ lives, gold, wave, totalWaves, paused, speed }) {
 // The bar across the top of the board, and its two buttons at the right end
 // (design/screens/Main.dc.html, HudStates.dc.html), so render.js draws them where main.js hit-tests them.
 export const HUD_HEIGHT = 40;
-const PAD = 10;
-const GAP = 8;
+export const HUD_PAD = 10; // the bar's padding at either end
+export const HUD_GAP = 8; // between neighbouring pills, and between the two buttons
 const SPEED_WIDTH = 68;
 const PAUSE_WIDTH = 32;
 const BUTTON_HEIGHT = 28;
 const BUTTON_TOP = (HUD_HEIGHT - BUTTON_HEIGHT) / 2;
-const SPEED_LEFT = COLS * TILE - PAD - SPEED_WIDTH;
+const SPEED_LEFT = COLS * TILE - HUD_PAD - SPEED_WIDTH;
 
 export const HUD_BUTTONS = Object.freeze({
-  pause: Object.freeze({ x: SPEED_LEFT - GAP - PAUSE_WIDTH, y: BUTTON_TOP, width: PAUSE_WIDTH, height: BUTTON_HEIGHT }),
+  pause: Object.freeze({ x: SPEED_LEFT - HUD_GAP - PAUSE_WIDTH, y: BUTTON_TOP, width: PAUSE_WIDTH, height: BUTTON_HEIGHT }),
   speed: Object.freeze({ x: SPEED_LEFT, y: BUTTON_TOP, width: SPEED_WIDTH, height: BUTTON_HEIGHT }),
 });
 

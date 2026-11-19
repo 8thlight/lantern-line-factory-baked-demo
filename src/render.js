@@ -5,7 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
-import { HUD_BUTTONS, HUD_HEIGHT, hudModel } from './hud.js';
+import { HUD_BUTTONS, HUD_GAP, HUD_HEIGHT, HUD_PAD, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -303,9 +303,9 @@ export function drawHud(ctx, hud) {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
 
-  let x = 10;
-  x = drawLivesPill(ctx, x, hud) + 8;
-  x = drawGoldPill(ctx, x, hud) + 8;
+  let x = HUD_PAD;
+  x = drawLivesPill(ctx, x, hud) + HUD_GAP;
+  x = drawGoldPill(ctx, x, hud) + HUD_GAP;
   drawWavePill(ctx, x, hud);
   drawPauseButton(ctx, HUD_BUTTONS.pause, hud.paused);
   drawSpeedControl(ctx, HUD_BUTTONS.speed, hud.speed);
