@@ -1,0 +1,20 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "70b60f6cdf4637c335d1e37af357ea77489f785404da101ffa35a6f4b6d06deb",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The change meets the brief. src/hud.js now holds the card's rectangle (cardRect, 300x108, kept CARD_INSET inside the board and moved down by HUD_HEIGHT). It exports cardButtons(tower), which gives Upgrade and Sell side by side, each 136x28, at card.x+10 and card.x+154, card.y+70. That leaves 10px of padding on the right and at the bottom, so neither button overlaps the other or leaves the card, and the card stays inside the canvas wherever the tower is. It also exports cardButtonAt(tower, x, y), which returns 'upgrade', 'sell' or null, and null when there is no tower.",
+        "What is drawn is what is pressed. drawTowerCard in src/render.js draws the card and both buttons from cardRect and cardButtons, moving each rectangle up by HUD_HEIGHT for the board's translated coordinates. Upgrade's text is dimmed (hudMuted) whenever model.refusal is set. The key lines and the refusal line are unchanged.",
+        "src/main.js checks cardButtonAt for the selected tower after the HUD and before boardCellAt/clickCell, then returns. Upgrade calls upgradeTower, so a refused upgrade changes nothing. Sell calls sellTower and sets selected to null. Neither reaches clickCell. If the selected id no longer matches a tower, towerById gives undefined and cardButtonAt returns null, so the click goes to the board as before.",
+        "test/card-buttons.test.js covers every acceptance item. It checks the corner and mid-board rectangles, the cardButtonAt results, and the drawn Upgrade and Sell texts with the dim colour. It also boots main.js against stand-in DOM to prove three things: an upgrade raises the level and costs 25 gold, a refused click changes nothing, and Sell pays 22 gold, removes the card and leaves gold at 27, which proves no lantern was bought on cell (7,2) under the button. It would fail before the fix, because cardRect and cardButtons did not exist. In sell.test.js and upgrade.test.js the only changes are the height (69 to 108) and the two added button texts, so what those tests prove is unchanged."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
