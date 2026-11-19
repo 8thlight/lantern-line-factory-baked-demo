@@ -124,22 +124,21 @@ left unchanged.
   (`test/game-over.test.js`, `test/pause-speed.test.js`, `test/gold.test.js`,
   `test/waves.test.js`, `test/brazier.test.js`, `test/hud.test.js`). They were written against
   a tree that already had M1 to M3. Writing them here would create suites with nothing to test.
-  The fix needs only the source files, the reproducer and the one existing suite that steps a
-  fresh game.
+  The fix needs only the three source files and the one existing suite that steps a fresh game.
 
 touches:
   - src/game.js
   - src/render.js
   - src/main.js
-  - test/start-screen.test.js
   - test/game.test.js
 
 reproduces:
   - test/start-screen.test.js
 
 The suite is `node --test` over `test/`, the line's test paths, run as `npm --prefix . run test`.
-No existing test is locked by `reproduces:`. The only locked test is the new
-`test/start-screen.test.js`, which stays in both lists.
+`test/start-screen.test.js` is held by `reproduces:` alone and is left out of `touches:`. The
+fix may not edit the test that proves it. The reproducer is written red first under
+`reproduces:`, and the fix's own paths are the four files above.
 
 ## Not in this change
 
