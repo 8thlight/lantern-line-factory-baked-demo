@@ -1,33 +1,85 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, placeTower, step } from './game.js';
-import { canPlace } from './tower.js';
-import { draw } from './render.js';
+import { clickCell, createGame, hoverAt, restart, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
+import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey } from './hud.js';
+import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
+import { SPRITES, draw } from './render.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
-canvas.height = ROWS * TILE;
+canvas.height = HUD_HEIGHT + ROWS * TILE; // the HUD bar, then the whole board below it
 const ctx = canvas.getContext('2d');
 
-const state = createGame();
+let state = createGame();
 let hover = null;
+let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
+let selected = null; // the id of the tower the card shows, chosen by a click on it
 
-function cellAt(event) {
+const TOGGLES = { pause: togglePause, speed: toggleSpeed };
+
+// The pointer's point on the canvas, in canvas pixels however the page has scaled it.
+function pointAt(event) {
   const rect = canvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * canvas.width;
   const y = ((event.clientY - rect.top) / rect.height) * canvas.height;
-  return { col: Math.floor(x / TILE), row: Math.floor(y / TILE) };
+  return { x, y };
 }
 
+const cellAt = (event) => {
+  const { x, y } = pointAt(event);
+  return boardCellAt(x, y);
+};
+
+// Once the round is over, a click starts a fresh one rather than placing a lantern.
+// A click on a HUD button toggles it; anywhere else on the bar does nothing.
+// On the board, a click on a placed tower selects it for its card; anywhere else places a tower
+// and clears the selection.
 canvas.addEventListener('click', (event) => {
-  const { col, row } = cellAt(event);
-  placeTower(state, col, row);
+  if (state.status !== 'playing') {
+    state = restart(state);
+    selected = null;
+    return;
+  }
+  const { x, y } = pointAt(event);
+  const button = hudButtonAt(x, y);
+  if (button) {
+    TOGGLES[button](state);
+    return;
+  }
+  const cell = boardCellAt(x, y);
+  if (cell) selected = clickCell(state, cell.col, cell.row, kind);
 });
 
+// A right-click switches the tower under the cursor between nearest and first;
+// the browser's own menu never opens over the board.
+canvas.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+  const cell = cellAt(event);
+  if (cell) toggleModeAt(state, cell.col, cell.row);
+});
+
+// 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses, F changes
+// speed and U upgrades the selected tower (paused or not), once per press. Escape clears the selection.
+window.addEventListener('keydown', (event) => {
+  kind = kindForKey(event.key, kind);
+  const action = hudKey(event.key);
+  if (action === 'deselect') {
+    selected = null;
+    return;
+  }
+  if (!action || state.status !== 'playing' || event.repeat) return;
+  if (action === 'upgrade') {
+    if (selected !== null) upgradeTower(state, selected);
+    return;
+  }
+  TOGGLES[action](state);
+});
+
+// Over the bar there is no cell, so no hover.
 canvas.addEventListener('mousemove', (event) => {
-  const { col, row } = cellAt(event);
-  hover = { col, row, ok: canPlace(state, col, row) };
+  const cell = cellAt(event);
+  hover = cell ? hoverAt(state, cell.col, cell.row, kind) : null;
 });
 
 canvas.addEventListener('mouseleave', () => {
@@ -36,11 +88,11 @@ canvas.addEventListener('mouseleave', () => {
 
 let last = performance.now();
 function frame(now) {
-  const dt = Math.min(0.05, (now - last) / 1000); // clamp after a hidden tab
+  const dt = Math.min(0.05, (now - last) / 1000); // clamp after a hidden tab; at 2x, step runs two ticks of it
   last = now;
   step(state, dt);
-  if (hover) hover.ok = canPlace(state, hover.col, hover.row);
-  draw(ctx, state, hover);
+  if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
+  draw(ctx, state, hover, SPRITES, kind, selected);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

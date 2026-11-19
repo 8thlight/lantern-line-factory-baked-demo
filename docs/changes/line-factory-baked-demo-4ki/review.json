@@ -1,0 +1,18 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "8498385eb9b6bacf7dd74dae621ae2026c7c460d03a99d821525b3dd9552a1ec",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "OUTCOME: the change does everything the brief asked. In src/tower.js, BRAZIER (range 80, cooldown 1.2, splash 40) has a shorter range and a slower cooldown than LANTERN (range 100, cooldown 0.6), and createTower now copies splash across, defaulting to 0. splashTargets in src/targeting.js uses distance <= radius, so an enemy exactly on the edge is included. In step(), a tower with splash damages every ghost from splashTargets around its target. The target is always in that list because its distance to itself is 0. Each ghost is damaged once, and kills are counted by dead.length, so no kill is counted twice. placeTower accepts a kind and still defaults to LANTERN. main.js sets the kind from kindForKey when keys 1 and 2 are pressed. render.js draws a brazier as a square in THEME's orange lanternPaper, and draws no lantern light pool under it.",
+        "ACCEPTANCE: test/brazier.test.js covers every point of the criterion. It checks a splashTargets edge case at exactly 50 (included) and 50.1 (excluded). It checks that createTower(1,1,BRAZIER) carries range, cooldown and splash. It checks that a brazier damages all three ghosts in a bunched group while a lantern in the same spot damages one. It also checks that kills are counted once and that the drawing behaves as described."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}

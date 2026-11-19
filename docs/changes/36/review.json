@@ -1,0 +1,18 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "adfce54986275a54c29d198a24c33e6bf3ab6bacfdc4606dc18e13ee422434d3",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The change does what the brief asks. src/game.js adds START_GOLD = 50 and a `gold` option to createGame, and copies it into `options` and `state.gold`. Because `options` now carries gold, restart() can rebuild the game with its starting gold, and a test checks that. src/enemy.js adds ENEMY_BOUNTY = 5 and gives createEnemy a `bounty` value next to `health`. In step, the dead-ghost branch adds `dead.reduce((sum, e) => sum + e.bounty, 0)` once per tower shot, right after the dead ghosts are filtered out of `state.enemies`. Each ghost is removed when it dies, so a later tower in the same step cannot hit it again, and a splash that kills several ghosts pays each one once. leakEnemies is not touched, so a ghost that leaks earns nothing.",
+        "test/gold.test.js is new and written for main's current behaviour, as the brief asks. It keeps games quiet with createGame({ waveSize: 0 }) and either sets ghosts to 1 health or lets a lantern take three shots, checking gold reads [50, 50, 55] across them. It covers 50 starting gold, +5 for one kill, no gold and one life lost for a leak, and +10 when a brazier splash kills two ghosts in one step, with no second payment on the next step. It also covers a custom bounty and restart restoring the starting gold. Every acceptance criterion has a test."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
