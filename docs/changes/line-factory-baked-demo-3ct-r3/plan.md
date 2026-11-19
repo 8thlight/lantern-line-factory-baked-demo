@@ -45,13 +45,7 @@ player clicks Start or presses Enter or Space. A restart brings the start screen
 
 ## Who meets it
 
-- person: the player opening the game, on the StartScreen artboard
-  (design/screens/StartScreen.png, source design/screens/StartScreen.dc.html). The page opens
-  on the board veiled in the HUD's dark green, with the lantern, "Lantern Line" in gold, "Light
-  the lanterns. Stop the ghosts before they reach the gate.", a gold Start button with "or
-  press Enter or Space" under it, and the three numbered steps. No ghost moves. A click on
-  Start, or Enter or Space, lifts the screen and wave 1 begins. A click anywhere else does
-  nothing. When a round is won or lost, a click on the end card brings the start screen back.
+- person: the player opening the game, on the StartScreen artboard drawn at design/screens/StartScreen.png (source design/screens/StartScreen.dc.html, listed in design/screens.yaml). The page opens on the board veiled in the HUD's dark green, with the lantern, "Lantern Line" in gold, "Light the lanterns. Stop the ghosts before they reach the gate.", a gold Start button with "or press Enter or Space" under it, and the three numbered steps. No ghost moves. A click on Start, or Enter or Space, lifts the screen and wave 1 begins. A click anywhere else does nothing. When a round is won or lost, a click on the end card brings the start screen back.
 
 ## Refusals
 
