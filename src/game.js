@@ -7,6 +7,7 @@ import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 
 export const START_LIVES = 10;
+export const START_GOLD = 50;
 export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
 export const WAVE_SIZE = 5; // ghosts per wave
 export const TOTAL_WAVES = 5; // waves to hold for the round to be won
@@ -17,10 +18,11 @@ export function createGame({
   spawnInterval = SPAWN_INTERVAL,
   waveSize = WAVE_SIZE,
   lives = START_LIVES,
+  gold = START_GOLD,
   totalWaves = TOTAL_WAVES,
 } = {}) {
   return {
-    options: { waypoints, spawnInterval, waveSize, lives, totalWaves },
+    options: { waypoints, spawnInterval, waveSize, lives, gold, totalWaves },
     status: 'playing', // then 'won' or 'lost', and the round is over
     waypoints,
     path: pathCells(waypoints),
@@ -32,6 +34,7 @@ export function createGame({
     towers: [],
     shots: [],
     lives,
+    gold,
     kills: 0,
   };
 }
@@ -99,12 +102,13 @@ export function step(state, dt) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });
-    // A splash takes in its own target, so each ghost is hit once and each kill counted once.
+    // A splash takes in its own target, so each ghost is hit once and each kill counted and paid once.
     const hit = tower.splash > 0 ? splashTargets(target, state.enemies, tower.splash) : [target];
     const dead = hit.filter((enemy) => damageEnemy(enemy, tower.damage));
     if (dead.length) {
       state.enemies = state.enemies.filter((e) => !dead.includes(e));
       state.kills += dead.length;
+      state.gold += dead.reduce((sum, e) => sum + e.bounty, 0);
     }
   }
 
