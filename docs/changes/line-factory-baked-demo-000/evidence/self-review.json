@@ -2,10 +2,8 @@
   "print_id": "line-factory-baked-demo-000",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [
-    "test/range-preview.test.js"
-  ],
-  "said": "FOUND 1\n- `test/range-preview.test.js:67`: the test for `null` on a path cell, off the map, or with no hover had only negative assertions, so a `rangePreview` that always returned `null` would still pass it. It now first asserts that the same game shows a range for a grass cell. Fixed in 3eded0e.\nGATES green (`node --test test/range-preview.test.js` 8/8 after the fix. Before it, the other files that import `game.js` or `render.js` (`render.test.js`, `game.test.js`, `brazier.test.js`, `game-over.test.js`) passed 47/47; the fix only touched the test file. The clone has no Makefile, so I used `node --test`. I couldn't reproduce the earlier merge-red on hydraflow/verify, because the forge kept no failed log for it.)",
+  "edited": [],
+  "said": "FOUND 0\n- `git log origin/print/line-factory-baked-demo-000..HEAD` is empty: this attempt committed nothing, so there is no diff of its own to review. I also re-read the print's whole change against main (`src/game.js`, `src/render.js`, `src/theme.js`, `test/range-preview.test.js`). Every file the plan names is there, and every acceptance criterion has a positive assertion. Every null or zero check sits next to a positive one in the same test. The ring matches the Board artboard. Nothing in the diff falls outside the signed touches, so nothing needed fixing.\n- The last gate finding (a red merge on hydraflow/verify with no failed log kept) still doesn't reproduce from any lane in this repo. The attempt notes in `/scratch/attempt-notes.md` say why: the likeliest cause is that the verify sandbox lacks `hydraflow` on PATH, or that main has moved and this container can't fetch it. The next attempt should get the verify lane's log before changing any code.\n\nGATES green: `npm --prefix . run test` passes 67 of 67 and the tree is clean. This clone has no Makefile, so there is no `check-build` target to run.",
   "gates": "green",
   "finding": null
 }
