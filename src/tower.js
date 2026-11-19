@@ -1,15 +1,18 @@
-// The one tower type today: the Lantern. It fires a beam at the nearest enemy.
+// Two tower kinds. The Lantern fires a beam at the nearest enemy; the Brazier reaches less far
+// and fires more slowly, but its shot splashes onto every ghost around its target.
 
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
 import { nearestInRange } from './targeting.js';
 
 export const LANTERN = { range: 100, cooldown: 0.6, damage: 1 }; // pixels, seconds, health
+export const BRAZIER = { range: 80, cooldown: 1.2, damage: 1, splash: 40 }; // pixels, seconds, health, pixels
 
-// A kind with no damage of its own hits for the lantern's, so its beams always land.
+// A kind with no damage of its own hits for the lantern's, so its beams always land;
+// a kind with no splash hits its target alone.
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
   const damage = kind.damage ?? LANTERN.damage;
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, reload: 0 };
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, reload: 0 };
 }
 
 // A tower may stand on any in-bounds cell that is not path and not taken.

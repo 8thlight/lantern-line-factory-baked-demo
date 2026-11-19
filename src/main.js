@@ -2,7 +2,7 @@
 
 import { COLS, ROWS, TILE } from './path.js';
 import { createGame, placeTower, restart, step } from './game.js';
-import { canPlace } from './tower.js';
+import { BRAZIER, LANTERN, canPlace } from './tower.js';
 import { draw } from './render.js';
 
 const canvas = document.getElementById('board');
@@ -12,6 +12,7 @@ const ctx = canvas.getContext('2d');
 
 let state = createGame();
 let hover = null;
+let kind = LANTERN; // the kind a click places: 1 for a lantern, 2 for a brazier
 
 function cellAt(event) {
   const rect = canvas.getBoundingClientRect();
@@ -27,7 +28,13 @@ canvas.addEventListener('click', (event) => {
     return;
   }
   const { col, row } = cellAt(event);
-  placeTower(state, col, row);
+  placeTower(state, col, row, kind);
+});
+
+// Any key other than 1 or 2 leaves the chosen kind as it is.
+window.addEventListener('keydown', (event) => {
+  if (event.key === '1') kind = LANTERN;
+  else if (event.key === '2') kind = BRAZIER;
 });
 
 canvas.addEventListener('mousemove', (event) => {
