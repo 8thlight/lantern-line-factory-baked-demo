@@ -57,13 +57,7 @@ so the same work fits in it. Class: fix.
 
 ## Who meets it
 
-- person: the player, opening the game, on the StartScreen artboard
-  (design/screens/StartScreen.png, source design/screens/StartScreen.dc.html). The page
-  loads to the board under a dark veil, with the title "Lantern Line", the line "Light the
-  lanterns. Stop the ghosts before they reach the gate.", a gold Start button, "or press
-  Enter or Space", and the three how-to-play steps. No ghost moves. A click on Start, or
-  Enter or Space, takes the veil away and wave 1 begins. After a won or lost round, a click
-  restarts the game and the start screen shows again.
+- person: the player, opening the game on the start screen drawn at design/screens/StartScreen.png (source design/screens/StartScreen.dc.html, listed in design/screens.yaml), meets the board under a dark veil, with the title "Lantern Line", the line "Light the lanterns. Stop the ghosts before they reach the gate.", a gold Start button, "or press Enter or Space", and the three how-to-play steps. No ghost moves. A click on Start, or Enter or Space, takes the veil away and wave 1 begins. After a won or lost round, a click restarts the game and the start screen shows again.
 
 ## Refusals
 
