@@ -1,0 +1,14 @@
+{
+  "print_id": "line-factory-baked-demo-aic",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/hud.js",
+    "src/main.js",
+    "src/render.js",
+    "test/hud.test.js"
+  ],
+  "said": "FOUND 2\n- `src/render.js:510`: the font family `'Inter, system-ui, sans-serif'` was written out three times (`HUD_FONT` plus the end card's two fonts). It is now one `FONT` constant used for both the HUD and the end card. Fixed in 612c2df.\n- `src/main.js:58`: the P and F keys were checked inside the keydown handler, where no test can reach them. An earlier print got a review finding for exactly this with keys 1 and 2. I added a pure `hudButtonForKey` to `src/hud.js`, and main.js now calls it. The new test in `test/hud.test.js` failed before the function existed and passes now. Fixed in 0afb619.\n\nGATES green. `node --test` passed 27 of 27 on `test/hud.test.js`, `test/render.test.js`, `test/pause-speed.test.js` and `test/range-preview.test.js`. There is no Makefile, so `check-build` isn't available and `node --test` is the runner. Both commits stay inside the signed touches, and the tree is clean and committed.",
+  "gates": "green",
+  "finding": null
+}
