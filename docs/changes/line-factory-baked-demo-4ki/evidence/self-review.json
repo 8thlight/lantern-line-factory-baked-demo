@@ -3,9 +3,9 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "test/brazier.test.js"
+    "src/render.js"
   ],
-  "said": "FOUND 3\n- `src/game.js:86`: no test failed if the `tower.splash > 0 ? \u2026 : [target]` guard was removed, because a splash of radius 0 still hits the target. Added a test in `test/brazier.test.js` where a lantern fires with two ghosts on the same spot and only one takes damage. With the guard removed it fails. Fixed.\n- `src/render.js:15`: no test failed if the check that keeps a brazier from casting a lantern pool was removed. Added a `draw` test that counts how often each tower part is drawn for one brazier and one lantern. With the check removed it fails. Fixed.\n- `test/brazier.test.js:88`: the `drawBrazier` test repeated the tower's centre as a fixed `60`. It now reads `tower.x` and `tower.y`. Fixed.\n- Not changed: the brazier is drawn in the existing theme colours (`THEME.lanternPaper` and `THEME.lanternCore`), not the new orange the plan named. `test/render.test.js` from main forbids colour literals in `src/render.js`, and `src/theme.js` is outside the signed touches. The commit message already explains this.\n\nGATES green: `npm --prefix . run test` ran 58 tests, 58 passed, 0 failed. Tree committed and clean.",
+  "said": "FOUND 1\n- `src/render.js:155`: the comment said lantern paper is \"THEME's one orange\", which is wrong because `glowInner` and `glowMid` are also orange. I reworded it to say THEME has no brazier colours yet, so the square borrows the lantern's orange paper and lighter core. Fixed and committed.\n- Checked and left alone: all five planned source files and `test/brazier.test.js` are in the diff, and every acceptance clause has a test whose assertion could fail. The planned `PALETTE` colours were replaced with THEME colours, and that change is explained. Review P1 (proving the square is orange) was already answered at HEAD. The two P2s, a kind-selection indicator and an explicit kind field, are outside this brief. The pull request's red check kept no log; I could not reproduce it, and nothing else in the diff points to it.\n- GATES green: `npm --prefix . run test` passed 58 of 58, and the four touched or named test files passed 34 of 34. The tree is committed and clean.",
   "gates": "green",
   "finding": null
 }
