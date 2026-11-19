@@ -1,9 +1,11 @@
 // The HUD's model and where the pointer lands on the canvas. Pure logic, no DOM: render.js
 // draws the bar from hudModel and the selected tower's card from selectedModel, and main.js asks
-// these which button or cell a pointer is on, the start screen's Start and difficulty buttons among them.
+// these which button or cell a pointer is on, the start screen's Start and difficulty buttons
+// among them.
 
 import { COLS, ROWS, TILE } from './path.js';
 import { MAX_LEVEL, towerById } from './tower.js';
+import { DIFFICULTIES } from './difficulty.js';
 import { upgradeError } from './game.js';
 
 export const HUD_HEIGHT = 40; // design/hud.md --hud-height; the board is drawn below the bar
@@ -21,7 +23,7 @@ export const START_BUTTON = Object.freeze({ x: WIDTH / 2 - 80, y: Math.round(0.6
 
 // The start screen's difficulty row: Easy, Normal, Hard, each 96 by 28 and 8 apart, centred
 // across the canvas with its bottom 8 above the canvas's bottom edge, below the start steps.
-const DIFFICULTY_ORDER = ['easy', 'normal', 'hard'];
+const DIFFICULTY_ORDER = Object.keys(DIFFICULTIES);
 const DIFFICULTY_WIDTH = 96;
 const DIFFICULTY_HEIGHT = 28;
 const DIFFICULTY_GAP = 8;
