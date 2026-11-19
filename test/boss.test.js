@@ -168,3 +168,13 @@ test('a boss is drawn larger than a ghost', () => {
   assert.deepEqual(boss, ghost.map((s) => s * BOSS_SCALE));
   assert.equal(BOSS_SCALE > 1, true);
 });
+
+test("a boss's health bar floats above its larger head", () => {
+  const barTop = (enemy) => {
+    const ctx = recordingContext();
+    drawGhost(ctx, enemy);
+    return ctx.calls.find((c) => c.name === 'fillRect' && c.fillStyle === THEME.healthTrack).args[1];
+  };
+  const above = (top) => 100 - top;
+  assert.equal(above(barTop({ x: 100, y: 100, boss: true })), above(barTop({ x: 100, y: 100 })) * BOSS_SCALE);
+});
