@@ -5,6 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
+import { HUD_BUTTONS, HUD_HEIGHT, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -23,7 +24,7 @@ export function draw(ctx, state, hover, sprites = SPRITES) {
   }
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
-  drawLives(ctx, state.lives);
+  drawHud(ctx, hudModel(state));
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
 }
 
@@ -286,13 +287,208 @@ export function drawBeam(ctx, from, to) {
   ctx.restore();
 }
 
-function drawLives(ctx, lives) {
+// The HUD bar across the top, drawn from hudModel alone (design/screens/Main.dc.html, and
+// HudStates.dc.html for danger lives, Resume and 2x): three pills on the left, Pause and Speed on the right.
+const HUD_FONT = 'Inter, system-ui, sans-serif';
+const PILL_HEIGHT = 26;
+const PILL_TOP = (HUD_HEIGHT - PILL_HEIGHT) / 2;
+const HUD_MID = HUD_HEIGHT / 2;
+
+export function drawHud(ctx, hud) {
   ctx.save();
-  ctx.fillStyle = THEME.text;
-  ctx.font = '16px system-ui, sans-serif';
+  ctx.fillStyle = THEME.hudBg;
+  ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
+  ctx.fillStyle = THEME.hudLine;
+  ctx.fillRect(0, HUD_HEIGHT - 1, WIDTH, 1);
   ctx.textAlign = 'left';
-  ctx.fillText(`Lives: ${lives}`, 8, 20);
+  ctx.textBaseline = 'middle';
+
+  let x = 10;
+  x = drawLivesPill(ctx, x, hud) + 8;
+  x = drawGoldPill(ctx, x, hud) + 8;
+  drawWavePill(ctx, x, hud);
+  drawPauseButton(ctx, HUD_BUTTONS.pause, hud.paused);
+  drawSpeedControl(ctx, HUD_BUTTONS.speed, hud.speed);
   ctx.restore();
+}
+
+// Text's width as the context measures it, or an estimate where it measures none.
+function textWidth(ctx, text, size) {
+  const width = ctx.measureText(text)?.width;
+  return typeof width === 'number' ? width : text.length * size * 0.6;
+}
+
+function hudText(ctx, text, x, colour, font, size) {
+  ctx.font = `${font} ${size}px ${HUD_FONT}`;
+  ctx.fillStyle = colour;
+  ctx.fillText(text, x, HUD_MID);
+  return x + textWidth(ctx, text, size);
+}
+
+// A pill's contents are laid out first to learn its width, then the pill is drawn under them.
+function drawPill(ctx, x, fill, ring, layout) {
+  const right = layout(true);
+  fillRounded(ctx, fill, x, PILL_TOP, right - x, PILL_HEIGHT, PILL_HEIGHT / 2);
+  if (ring) {
+    ctx.strokeStyle = ring;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(x + 0.5, PILL_TOP + 0.5, right - x - 1, PILL_HEIGHT - 1, PILL_HEIGHT / 2);
+    ctx.stroke();
+  }
+  layout(false);
+  return right;
+}
+
+// Measuring draws nothing: the layout runs once with this stand-in, then on the real context.
+function measuring(ctx) {
+  return {
+    set font(value) {
+      ctx.font = value;
+    },
+    fillText() {},
+    measureText: (text) => ctx.measureText(text),
+  };
+}
+
+function drawLivesPill(ctx, left, { lives, livesDanger }) {
+  const heart = livesDanger ? THEME.hudDangerHeart : THEME.hudHeart;
+  const value = livesDanger ? THEME.hudDangerValue : THEME.hudInk;
+  const label = livesDanger ? THEME.hudDangerLabel : THEME.hudMuted;
+  const fill = livesDanger ? THEME.hudDangerPill : THEME.hudPill;
+  const ring = livesDanger ? THEME.hudDangerRing : null;
+  return drawPill(ctx, left, fill, ring, (measure) => {
+    const c = measure ? measuring(ctx) : ctx;
+    let x = left + 8;
+    if (!measure) drawHeart(ctx, x + 7.5, HUD_MID, heart);
+    x += 15 + 6;
+    x = hudText(c, String(lives), x, value, 700, 15) + 6;
+    return hudText(c, 'lives', x, label, 400, 11) + 10;
+  });
+}
+
+function drawGoldPill(ctx, left, { gold }) {
+  return drawPill(ctx, left, THEME.hudPill, null, (measure) => {
+    const c = measure ? measuring(ctx) : ctx;
+    let x = left + 8;
+    if (!measure) drawCoin(ctx, x + 7.5, HUD_MID);
+    x += 15 + 6;
+    x = hudText(c, String(gold), x, THEME.hudAccent, 700, 15) + 6;
+    return hudText(c, 'gold', x, THEME.hudMuted, 400, 11) + 10;
+  });
+}
+
+// "Wave", then current / total, then one pip per wave, lit up to the current one.
+const PIP_WIDTH = 4;
+const PIP_HEIGHT = 12;
+const PIP_GAP = 2;
+
+function drawWavePill(ctx, left, { wave, totalWaves }) {
+  return drawPill(ctx, left, THEME.hudPill, null, (measure) => {
+    const c = measure ? measuring(ctx) : ctx;
+    let x = left + 10;
+    x = hudText(c, 'Wave', x, THEME.hudMuted, 400, 11) + 8;
+    x = hudText(c, `${wave} / ${totalWaves}`, x, THEME.hudWave, 700, 15) + 8;
+    for (let i = 1; i <= totalWaves; i++) {
+      if (!measure) {
+        ctx.fillStyle = i <= wave ? THEME.hudWave : THEME.hudPipDim;
+        ctx.fillRect(x, HUD_MID - PIP_HEIGHT / 2, PIP_WIDTH, PIP_HEIGHT);
+      }
+      x += PIP_WIDTH + PIP_GAP;
+    }
+    return x - PIP_GAP + 10;
+  });
+}
+
+// The artboard's 24-unit heart, scaled to 15px around its centre.
+function drawHeart(ctx, cx, cy, colour) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(15 / 24, 15 / 24);
+  ctx.translate(-12, -12);
+  ctx.fillStyle = colour;
+  ctx.beginPath();
+  ctx.moveTo(12, 21);
+  ctx.bezierCurveTo(12, 21, 4.5, 16.4, 2.4, 11.8);
+  ctx.bezierCurveTo(0.9, 8.4, 3, 4.5, 6.7, 4.5);
+  ctx.bezierCurveTo(8.8, 4.5, 10.2, 5.6, 12, 7.6);
+  ctx.bezierCurveTo(13.8, 5.6, 15.2, 4.5, 17.3, 4.5);
+  ctx.bezierCurveTo(21, 4.5, 23.1, 8.4, 21.6, 11.8);
+  ctx.bezierCurveTo(19.5, 16.4, 12, 21, 12, 21);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// The artboard's coin: a gold disc with a darker rim ring and a stroke down its middle.
+function drawCoin(ctx, cx, cy) {
+  const unit = 15 / 24;
+  ctx.save();
+  ctx.fillStyle = THEME.hudAccent;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 9.5 * unit, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = THEME.hudCoinRim;
+  ctx.lineWidth = 1.6 * unit;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 6.5 * unit, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = 1.8 * unit;
+  ctx.lineCap = 'round';
+  line(ctx, cx, cy - 3.5 * unit, cx, cy + 3.5 * unit);
+  ctx.restore();
+}
+
+// A button's rounded outline, over its fill when it has one.
+function outlineButton(ctx, { x, y, width, height }, fill, edge) {
+  if (fill) fillRounded(ctx, fill, x, y, width, height, 7);
+  ctx.strokeStyle = edge;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(x + 0.5, y + 0.5, width - 1, height - 1, 7);
+  ctx.stroke();
+}
+
+// Pause shows two bars; while paused it shows Resume, a play triangle in accent.
+function drawPauseButton(ctx, button, paused) {
+  const cx = button.x + button.width / 2;
+  const cy = button.y + button.height / 2;
+  if (paused) {
+    outlineButton(ctx, button, THEME.hudResumeBg, THEME.hudAccent);
+    ctx.fillStyle = THEME.hudAccent;
+    ctx.beginPath();
+    ctx.moveTo(cx - 3, cy - 4.4);
+    ctx.lineTo(cx + 4.4, cy);
+    ctx.lineTo(cx - 3, cy + 4.4);
+    ctx.closePath();
+    ctx.fill();
+    return;
+  }
+  outlineButton(ctx, button, THEME.hudButtonBg, THEME.hudButtonEdge);
+  ctx.fillStyle = THEME.hudInk;
+  ctx.fillRect(cx - 4, cy - 5, 3, 10);
+  ctx.fillRect(cx + 1, cy - 5, 3, 10);
+}
+
+// One segmented control: 1x and 2x, the active one filled (2x in accent).
+function drawSpeedControl(ctx, button, speed) {
+  outlineButton(ctx, button, null, THEME.hudButtonEdge);
+  const half = button.width / 2;
+  ctx.font = `600 12px ${HUD_FONT}`;
+  ctx.textAlign = 'center';
+  for (const [i, value] of [1, 2].entries()) {
+    const active = speed === value;
+    const left = button.x + i * half;
+    if (active) {
+      ctx.fillStyle = value === 2 ? THEME.hudAccent : THEME.hudButtonActive;
+      ctx.beginPath();
+      ctx.roundRect(left + 1, button.y + 1, half - 2, button.height - 2, 6);
+      ctx.fill();
+    }
+    ctx.fillStyle = !active ? THEME.hudMuted : value === 2 ? THEME.hudOnAccent : THEME.hudInk;
+    ctx.fillText(`${value}x`, left + half / 2, button.y + button.height / 2);
+  }
+  ctx.textAlign = 'left';
 }
 
 const END_TITLES = { lost: 'The ghosts got through', won: 'The path is safe' };

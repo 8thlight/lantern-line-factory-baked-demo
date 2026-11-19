@@ -87,6 +87,7 @@ test('every colour draw paints with is a THEME colour', () => {
   draw(ctx, game, { col: 0, row: 2, ok: false });
   draw(ctx, { ...game, status: 'lost' }, null);
   draw(ctx, { ...game, status: 'won' }, null);
+  draw(ctx, { ...game, paused: true, speed: 2, lives: 3 }, null);
   const theme = new Set(Object.values(THEME));
   assert.deepEqual(
     ctx.colours.filter((colour) => !theme.has(colour)),
@@ -177,13 +178,33 @@ test('draw on a fresh game draws the path once and no ghost', () => {
 test('a finished round draws its end card, and a round in play draws none', () => {
   const lost = recordingContext();
   draw(lost, { ...createGame(), status: 'lost' }, null);
-  assert.deepEqual(texts(lost).slice(1), ['The ghosts got through', 'Click to play again']);
+  assert.deepEqual(texts(lost).slice(-2), ['The ghosts got through', 'Click to play again']);
 
   const won = recordingContext();
   draw(won, { ...createGame(), status: 'won' }, null);
-  assert.deepEqual(texts(won).slice(1), ['The path is safe', 'Click to play again']);
+  assert.deepEqual(texts(won).slice(-2), ['The path is safe', 'Click to play again']);
 
   const playing = recordingContext();
   draw(playing, createGame(), null);
-  assert.deepEqual(texts(playing), ['Lives: 10']);
+  assert.deepEqual(texts(playing), ['10', 'lives', '50', 'gold', 'Wave', '1 / 5', '1x', '2x']);
+});
+
+test('the HUD draws danger lives, the resume icon and a filled 2x from hudModel', () => {
+  const textStyle = (ctx, text) => named(ctx, 'fillText').find((c) => c.args[0] === text).fillStyle;
+
+  const danger = recordingContext();
+  draw(danger, { ...createGame(), lives: 3, paused: true, speed: 2 }, null);
+  assert.equal(textStyle(danger, '3'), THEME.hudDangerValue);
+  assert.equal(textStyle(danger, '2x'), THEME.hudOnAccent);
+  // The 2x text sits over the last fill drawn before it: the accent-filled segment.
+  const twoX = danger.calls.findIndex((c) => c.name === 'fillText' && c.args[0] === '2x');
+  assert.equal(danger.calls.slice(0, twoX).filter((c) => c.name === 'fill').at(-1).fillStyle, THEME.hudAccent);
+  // While paused the pause button is Resume: a triangle filled in accent over the accent wash.
+  assert.equal(named(danger, 'fill').filter((c) => c.fillStyle === THEME.hudResumeBg).length, 1);
+
+  const calm = recordingContext();
+  draw(calm, { ...createGame(), lives: 4 }, null);
+  assert.equal(textStyle(calm, '4'), THEME.hudInk);
+  assert.equal(textStyle(calm, '1x'), THEME.hudInk);
+  assert.equal(textStyle(calm, '2x'), THEME.hudMuted);
 });

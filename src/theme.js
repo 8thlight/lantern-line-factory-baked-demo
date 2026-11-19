@@ -1,4 +1,5 @@
-// The board's colours by name, as the Board artboard (design/screens/Board.dc.html) paints them.
+// The board's colours by name, as the Board artboard (design/screens/Board.dc.html) paints them,
+// and the HUD bar's, as the Main and HudStates artboards paint it.
 // Every colour render.js draws with is one of these; an opacity the artboard sets is folded into rgba().
 
 export const THEME = Object.freeze({
@@ -45,4 +46,25 @@ export const THEME = Object.freeze({
   hoverBad: 'rgba(230, 90, 90, 0.35)',
   text: '#f4efe1',
   dim: 'rgba(7, 19, 13, 0.7)', // #07130d at 0.7
+  // HUD bar (design/screens/Main.dc.html, HudStates.dc.html)
+  hudBg: 'rgba(10, 22, 16, 0.78)', // #0a1610 at 0.78
+  hudLine: 'rgba(244, 239, 225, 0.08)', // #f4efe1 at 0.08
+  hudPill: 'rgba(244, 239, 225, 0.06)', // #f4efe1 at 0.06
+  hudInk: '#f4efe1',
+  hudMuted: '#b8c4b0',
+  hudAccent: '#f2c14e',
+  hudOnAccent: '#12241c',
+  hudCoinRim: '#b9861f',
+  hudHeart: '#e65a5a',
+  hudWave: '#c3a8ff',
+  hudPipDim: 'rgba(195, 168, 255, 0.22)', // #c3a8ff at 0.22
+  hudDangerPill: 'rgba(230, 90, 90, 0.16)', // #e65a5a at 0.16
+  hudDangerRing: 'rgba(230, 90, 90, 0.6)', // #e65a5a at 0.6
+  hudDangerHeart: '#ff7a7a',
+  hudDangerValue: '#ff8f8f',
+  hudDangerLabel: '#ffb3b3',
+  hudButtonEdge: 'rgba(184, 196, 176, 0.45)', // #b8c4b0 at 0.45
+  hudButtonBg: 'rgba(244, 239, 225, 0.04)', // #f4efe1 at 0.04
+  hudButtonActive: 'rgba(244, 239, 225, 0.16)', // #f4efe1 at 0.16
+  hudResumeBg: 'rgba(242, 193, 78, 0.14)', // #f2c14e at 0.14
 });
