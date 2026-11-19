@@ -30,6 +30,7 @@ export const THEME = Object.freeze({
   ghostSheen: 'rgba(217, 201, 255, 0.55)', // #d9c9ff at 0.55
   ghostEyes: '#1c1233',
   ghostEyeShine: '#f4efe1',
+  armour: '#c9ced6', // an armoured ghost's outline (no artboard yet: a pale steel beside the ghost's tones)
   // frost tower and a slowed ghost (no artboard yet: icy tones beside the board's)
   frostBody: '#7fc8e8',
   frostCore: '#e6f7ff',
