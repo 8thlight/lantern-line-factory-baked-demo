@@ -116,11 +116,13 @@ test('the card of a selected lantern placed for 20 gold ends with Press S to sel
   placeTower(game, 1, 1, LANTERN);
   const ctx = recordingContext();
   draw(ctx, game, null, SPRITES, null, 1);
-  assert.deepEqual(texts(ctx).slice(0, 5).map((c) => [c.args[0], c.fillStyle]), [
+  assert.deepEqual(texts(ctx).slice(0, 7).map((c) => [c.args[0], c.fillStyle]), [
     ['Lantern · level 1', THEME.hudAccent],
     ['Range 2.5 tiles · 1 damage · targets nearest', THEME.hudInk],
     ['Press U to upgrade: 25 gold', THEME.hudAccent],
     ['Press S to sell: 10 gold', THEME.hudInk],
+    ['Upgrade', THEME.hudInk],
+    ['Sell', THEME.hudInk],
     ['Lives', THEME.hudMuted],
   ]);
 });
@@ -135,7 +137,7 @@ test('the card grows by one line and its whole rectangle lies inside the canvas'
     const [x, y, width, height] = ctx.calls.find((c) => c.name === 'roundRect' && c.fillStyle === THEME.hudBg).args;
     return [height, x >= 0, x + width <= COLS * TILE, y + HUD_HEIGHT >= 0, y + HUD_HEIGHT + height <= CANVAS_HEIGHT];
   });
-  assert.deepEqual(cards, Array(4).fill([69, true, true, true, true]));
+  assert.deepEqual(cards, Array(4).fill([108, true, true, true, true]));
 });
 
 // src/main.js against stand-ins for the DOM, as test/upgrade.test.js boots it: the canvas

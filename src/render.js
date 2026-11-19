@@ -7,7 +7,7 @@ import { THEME } from './theme.js';
 import { DIFFICULTIES } from './difficulty.js';
 import { rangePreview, sellValue, towerPrice } from './game.js';
 import { towerById } from './tower.js';
-import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, cardButtons, cardRect, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -385,8 +385,9 @@ function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDange
   ctx.restore();
 }
 
-// A HUD button: outlined in the muted ink, or filled with the accent while it is active.
-function drawButton(ctx, { x, y, width, height }, text, active) {
+// A HUD button: outlined in the muted ink, or filled with the accent while it is active; its text
+// in `ink` when handed one, the card's dimmed Upgrade.
+function drawButton(ctx, { x, y, width, height }, text, active, ink = active ? THEME.hudAccentInk : THEME.hudInk) {
   ctx.beginPath();
   if (active) {
     ctx.fillStyle = THEME.hudAccent;
@@ -398,7 +399,7 @@ function drawButton(ctx, { x, y, width, height }, text, active) {
     ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
     ctx.stroke();
   }
-  ctx.fillStyle = active ? THEME.hudAccentInk : THEME.hudInk;
+  ctx.fillStyle = ink;
   ctx.textAlign = 'center';
   ctx.fillText(text, x + width / 2, y + height / 2);
 }
@@ -418,21 +419,21 @@ export function drawLevelMarks(ctx, tower) {
 
 // The selected tower's card, as the Main artboard's tower card (design/screens/Main.dc.html:49-52):
 // a dark panel edged in the ring's gold beside the tower, its name and level, its reach and
-// damage, and what U and S do. Fixed sizes, no text measured, kept CARD_INSET inside the board.
-const CARD = { width: 300, height: 69, radius: 6, pad: 10, line: 15 };
-const CARD_INSET = 4;
+// damage, and what U and S do; then its Upgrade and Sell buttons, Upgrade dimmed when U would be
+// refused; the rectangles are src/hud.js's, so what is drawn is what is pressed. Fixed sizes, no
+// text measured; drawn under the board's HUD_HEIGHT shift, so each rectangle moves up by it.
+const CARD = { radius: 6, pad: 10, line: 15 };
 const REFUSAL_INK = { gold: 'hudDanger', max: 'hudMuted', missing: 'hudMuted' };
-const clamp = (value, low, high) => Math.min(Math.max(value, low), high);
+const onBoard = ({ x, y, width, height }) => ({ x, y: y - HUD_HEIGHT, width, height });
 
 function drawTowerCard(ctx, tower, model, gold) {
-  const x = clamp(tower.x + TILE * 0.6, CARD_INSET, WIDTH - CARD_INSET - CARD.width);
-  const y = clamp(tower.y - TILE - 14, CARD_INSET, HEIGHT - CARD_INSET - CARD.height);
+  const { x, y, width, height } = onBoard(cardRect(tower));
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.strokeStyle = THEME.rangeRing;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.roundRect(x, y, CARD.width, CARD.height, CARD.radius);
+  ctx.roundRect(x, y, width, height, CARD.radius);
   ctx.fill();
   ctx.stroke();
   ctx.font = '11px system-ui, sans-serif';
@@ -448,6 +449,9 @@ function drawTowerCard(ctx, tower, model, gold) {
     ctx.fillStyle = colour;
     ctx.fillText(text, x + CARD.pad, y + CARD.pad + i * CARD.line + 2);
   });
+  const { upgrade, sell } = cardButtons(tower);
+  drawButton(ctx, onBoard(upgrade), 'Upgrade', false, model.refusal ? THEME.hudMuted : THEME.hudInk);
+  drawButton(ctx, onBoard(sell), 'Sell', false);
   ctx.restore();
 }
 
