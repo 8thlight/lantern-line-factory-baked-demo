@@ -35,10 +35,10 @@ function recordingContext() {
   );
 }
 
-// The fill styles of every fillRect drawn exactly over cell (col, row).
-function cellFills(ctx, col, row) {
+// The fill style of the last fillRect drawn exactly over cell (col, row): the grass first, then the hover.
+function lastCellFill(ctx, col, row) {
   const rect = JSON.stringify([col * TILE, row * TILE, TILE, TILE]);
-  return ctx.calls.filter((c) => c.name === 'fillRect' && JSON.stringify(c.args) === rect).map((c) => c.fillStyle);
+  return ctx.calls.filter((c) => c.name === 'fillRect' && JSON.stringify(c.args) === rect).at(-1)?.fillStyle;
 }
 
 test('a lantern costs 20 and a brazier 30', () => {
@@ -106,10 +106,10 @@ test('draw paints a free cell the player cannot afford in the refusal colour', (
   assert.deepEqual(hover, { col: 3, row: 1, kind: LANTERN, ok: false });
   const refused = recordingContext();
   draw(refused, poor, hover);
-  assert.deepEqual(cellFills(refused, 3, 1), [THEME.hoverBad]);
+  assert.equal(lastCellFill(refused, 3, 1), THEME.hoverBad);
 
   const rich = quietGame();
   const welcome = recordingContext();
   draw(welcome, rich, hoverAt(rich, 3, 1, LANTERN));
-  assert.deepEqual(cellFills(welcome, 3, 1), [THEME.hover]);
+  assert.equal(lastCellFill(welcome, 3, 1), THEME.hover);
 });

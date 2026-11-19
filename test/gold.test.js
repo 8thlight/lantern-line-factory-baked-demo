@@ -34,7 +34,7 @@ test('killing one ghost with bounty 5 raises gold by exactly 5', () => {
   assert.equal(placeTower(game, 1, 1, LANTERN), true);
   ghostsBeside(game, 1);
   step(game, 0.01);
-  assert.deepEqual([game.kills, game.enemies.length, game.gold], [1, 0, 55]);
+  assert.deepEqual([game.kills, game.enemies.length, game.gold], [1, 0, 35]);
 });
 
 test('a ghost that takes three lantern shots pays its bounty once, on the shot that banishes it', () => {
@@ -47,7 +47,7 @@ test('a ghost that takes three lantern shots pays its bounty once, on the shot t
     step(game, LANTERN.cooldown);
     golds.push(game.gold);
   }
-  assert.deepEqual(golds, [50, 50, 55]);
+  assert.deepEqual(golds, [30, 30, 35]);
 });
 
 test('a ghost reaching the end leaves gold unchanged', () => {
@@ -62,9 +62,9 @@ test('two ghosts killed in the same step each pay their bounty exactly once', ()
   assert.equal(placeTower(game, 1, 1, BRAZIER), true);
   ghostsBeside(game, 2);
   step(game, 0.01);
-  assert.deepEqual([game.kills, game.enemies.length, game.shots.length, game.gold], [2, 0, 1, 60]);
+  assert.deepEqual([game.kills, game.enemies.length, game.shots.length, game.gold], [2, 0, 1, 30]);
   step(game, 0.01);
-  assert.equal(game.gold, 60);
+  assert.equal(game.gold, 30);
 });
 
 test('a ghost pays its own bounty', () => {
@@ -73,7 +73,7 @@ test('a ghost pays its own bounty', () => {
   const [ghost] = ghostsBeside(game, 1);
   ghost.bounty = 12;
   step(game, 0.01);
-  assert.equal(game.gold, 62);
+  assert.equal(game.gold, 42);
 });
 
 test('restart puts gold back to the game\'s start', () => {
@@ -81,6 +81,6 @@ test('restart puts gold back to the game\'s start', () => {
   assert.equal(placeTower(game, 1, 1, LANTERN), true);
   ghostsBeside(game, 1);
   step(game, 0.01);
-  assert.equal(game.gold, 25);
+  assert.equal(game.gold, 5);
   assert.equal(restart(game).gold, 20);
 });

@@ -2,7 +2,7 @@
 
 import { WAYPOINTS, cellCenter, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
-import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
+import { LANTERN, canPlace, cellError, createTower, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 import { WAVES } from './waves.js';
@@ -51,10 +51,24 @@ export function createGame({
   };
 }
 
+// Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or
+// 'taken') first, then 'gold' when the gold held is below the kind's cost; null when it may.
+// A kind with no cost is free.
+export function placementError(state, col, row, kind = LANTERN) {
+  return cellError(state, col, row) ?? (state.gold < (kind.cost ?? 0) ? 'gold' : null);
+}
+
+// Place a tower of `kind` and pay its cost, unless placementError refuses it.
 export function placeTower(state, col, row, kind = LANTERN) {
-  if (!canPlace(state, col, row)) return false;
+  if (placementError(state, col, row, kind) !== null) return false;
+  state.gold -= kind.cost ?? 0;
   state.towers.push(createTower(col, row, kind));
   return true;
+}
+
+// The hover the pointer shows on a cell: `ok` when a tower of `kind` may be placed there now.
+export function hoverAt(state, col, row, kind = LANTERN) {
+  return { col, row, kind, ok: placementError(state, col, row, kind) === null };
 }
 
 // The tower standing on a cell, or null.
