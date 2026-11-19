@@ -1,7 +1,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { START_GOLD, START_LIVES, TOTAL_WAVES, createGame, placeTower, spawnEnemy, step, togglePause, toggleSpeed } from '../src/game.js';
-import { LANTERN } from '../src/tower.js';
+import { FROST, LANTERN } from '../src/tower.js';
 import { HUD_HEIGHT, PAUSE_BUTTON, SPEED_BUTTON } from '../src/hud.js';
 import { ROWS, TILE } from '../src/path.js';
 import { THEME } from '../src/theme.js';
@@ -154,7 +154,9 @@ async function boot() {
 
 const textsOf = (calls) => calls.filter((c) => c.name === 'fillText').map((c) => c.args[0]);
 const fillsIn = (calls, colour) => calls.filter((c) => c.name.startsWith('fill') && c.fillStyle === colour);
-const hudAt = (gold, pause = 'Pause', speed = '1x') => ['Lives', String(START_LIVES), 'Gold', String(gold), 'Wave', `1 / ${TOTAL_WAVES}`, pause, speed];
+// The bar's texts; the kind a click places is named from boot, a lantern until a key changes it.
+const hudAt = (gold, pause = 'Pause', speed = '1x', kind = 'Lantern') =>
+  ['Lives', String(START_LIVES), 'Gold', String(gold), 'Wave', `1 / ${TOTAL_WAVES}`, 'Tower', kind, pause, speed];
 const centreOf = (rect) => [rect.x + rect.width / 2, rect.y + rect.height / 2];
 
 test('the canvas is tall enough for the bar and the whole board', async () => {
@@ -202,4 +204,16 @@ test('P and F reach the toggles while the round is playing', async () => {
   game.key('p', true);
   game.key('f', true);
   assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume', '2x'));
+});
+
+test('the HUD names the kind from boot, and 1, 2 and 3 change it', async () => {
+  const game = await boot();
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD));
+  game.key('3');
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', 'Frost'));
+  game.key('2');
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Pause', '1x', 'Brazier'));
+  game.key('3');
+  game.click(5, HUD_HEIGHT + 5);
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - FROST.cost, 'Pause', '1x', 'Frost'));
 });

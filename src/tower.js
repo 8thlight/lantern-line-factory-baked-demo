@@ -1,26 +1,29 @@
-// Two tower kinds. The Lantern fires a beam; the Brazier reaches less far and fires more slowly,
-// but its shot splashes onto every ghost around its target. Either shoots the nearest ghost by
-// default, or the one furthest along the path once switched to first.
+// Three tower kinds. The Lantern fires a beam; the Brazier reaches less far and fires more slowly,
+// but its shot splashes onto every ghost around its target; Frost hits lightly but slows the ghost
+// it hits for a while. Each shoots the nearest ghost by default, or the one furthest along the
+// path once switched to first.
 
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
 import { pickTarget } from './targeting.js';
 
-export const LANTERN = { range: 100, cooldown: 0.6, damage: 1, cost: 20 }; // pixels, seconds, health, gold
-export const BRAZIER = { range: 80, cooldown: 1.2, damage: 1, splash: 40, cost: 30 }; // pixels, seconds, health, pixels, gold
+export const LANTERN = { name: 'Lantern', range: 100, cooldown: 0.6, damage: 1, cost: 20 }; // pixels, seconds, health, gold
+export const BRAZIER = { name: 'Brazier', range: 80, cooldown: 1.2, damage: 1, splash: 40, cost: 30 }; // pixels, seconds, health, pixels, gold
+export const FROST = { name: 'Frost', range: 90, cooldown: 0.8, damage: 0.5, slow: 0.5, slowFor: 2, cost: 40 }; // pixels, seconds, health, factor, seconds, gold
 
-// The kind a key chooses: 1 the lantern, 2 the brazier; any other key keeps `current`.
+// The kind a key chooses: 1 the lantern, 2 the brazier, 3 frost; any other key keeps `current`.
 export function kindForKey(key, current) {
   if (key === '1') return LANTERN;
   if (key === '2') return BRAZIER;
+  if (key === '3') return FROST;
   return current;
 }
 
 // A kind with no damage of its own hits for the lantern's, so its beams always land;
-// a kind with no splash hits its target alone.
+// a kind with no splash hits its target alone, and a kind with no slow slows nothing.
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
   const damage = kind.damage ?? LANTERN.damage;
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, reload: 0, mode: 'nearest' };
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0, slow: kind.slow ?? 0, slowFor: kind.slowFor ?? 0, reload: 0, mode: 'nearest' };
 }
 
 // The mode a toggle switches to: 'first' gives 'nearest', anything else gives 'first'.
