@@ -95,14 +95,15 @@ export function boardCellAt(x, y) {
   return { col: Math.floor(x / TILE), row: Math.floor((y - HUD_HEIGHT) / TILE) };
 }
 
-// The action a key reaches: P pauses, F changes speed, U upgrades the selected tower, either
-// case; Escape clears the selection; any other key, null.
+// The action a key reaches: P pauses, F changes speed, U upgrades the selected tower, S sells
+// the selected tower, either case; Escape clears the selection; any other key, null.
 export function hudKey(key) {
   if (key === 'Escape') return 'deselect';
   const lower = key.toLowerCase();
   if (lower === 'p') return 'pause';
   if (lower === 'f') return 'speed';
   if (lower === 'u') return 'upgrade';
+  if (lower === 's') return 'sell';
   return null;
 }
 

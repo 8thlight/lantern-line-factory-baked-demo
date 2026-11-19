@@ -1,7 +1,7 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { chooseDifficulty, clickCell, createGame, hoverAt, restart, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
+import { chooseDifficulty, clickCell, createGame, hoverAt, restart, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
 import { HUD_HEIGHT, boardCellAt, difficultyButtonAt, difficultyKey, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
@@ -76,7 +76,8 @@ canvas.addEventListener('contextmenu', (event) => {
 });
 
 // 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses, F changes
-// speed and U upgrades the selected tower (paused or not), once per press. Escape clears the selection.
+// speed, U upgrades the selected tower and S sells it and clears the selection (paused or not),
+// once per press. Escape clears the selection.
 // On the start screen, E, N or H chooses easy, normal or hard, and Enter or Space begins wave 1,
 // once per press.
 window.addEventListener('keydown', (event) => {
@@ -100,6 +101,11 @@ window.addEventListener('keydown', (event) => {
   if (!action || state.status !== 'playing' || event.repeat) return;
   if (action === 'upgrade') {
     if (selected !== null) upgradeTower(state, selected);
+    return;
+  }
+  if (action === 'sell') {
+    if (selected !== null) sellTower(state, selected);
+    selected = null;
     return;
   }
   TOGGLES[action](state);
