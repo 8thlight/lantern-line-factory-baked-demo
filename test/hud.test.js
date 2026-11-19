@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { hudModel } from '../src/hud.js';
+import { HUD_BUTTONS, hudButtonAt, hudModel } from '../src/hud.js';
 import { START_GOLD, START_LIVES, TOTAL_WAVES, createGame } from '../src/game.js';
 
 test('hudModel on a new game shows full lives, starting gold, wave 1 of the total, running at 1x', () => {
@@ -43,4 +43,13 @@ test('hudModel does not change the state it reads', () => {
   const second = hudModel(game);
   assert.deepEqual(snapshot(), before);
   assert.deepEqual(second, first);
+});
+
+test('hudButtonAt names the button under a point, and null beside or below them', () => {
+  const { pause, speed } = HUD_BUTTONS;
+  assert.equal(hudButtonAt(pause.x, pause.y), 'pause');
+  assert.equal(hudButtonAt(speed.x + speed.width - 1, speed.y + speed.height - 1), 'speed');
+  assert.equal(hudButtonAt(pause.x + pause.width, pause.y), null); // the gap between them
+  assert.equal(hudButtonAt(speed.x, speed.y + speed.height), null); // the board below the bar
+  assert.equal(hudButtonAt(0, 0), null);
 });

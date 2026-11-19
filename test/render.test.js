@@ -207,4 +207,7 @@ test('the HUD draws danger lives, the resume icon and a filled 2x from hudModel'
   assert.equal(textStyle(calm, '4'), THEME.hudInk);
   assert.equal(textStyle(calm, '1x'), THEME.hudInk);
   assert.equal(textStyle(calm, '2x'), THEME.hudMuted);
+  // Unpaused, the button is Pause over its plain wash, with no Resume wash drawn.
+  assert.equal(named(calm, 'fill').filter((c) => c.fillStyle === THEME.hudButtonBg).length, 1);
+  assert.equal(named(calm, 'fill').filter((c) => c.fillStyle === THEME.hudResumeBg).length, 0);
 });
