@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-000",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/range-preview.test.js"
+  ],
+  "said": "FOUND 1\n- `src/game.js:37`: the comment on `rangePreview` says it returns null for a cell off the map, but no test checked that. Fixed: I added an off-map assertion (`{ col: -1 }` \u2192 `null`) to `test/range-preview.test.js` and committed it as ab74ae4. I made the commit as HydraFlow, the same author as the earlier commits, because the container has no git identity set.\n- Nothing else to fix:\n  - **Planned files and criteria:** every file the plan names is in the diff, and every acceptance criterion has a test that fails when the feature is missing.\n  - **Leftover palette:** nothing in `src/` or `test/` still uses `PALETTE`.\n  - **Scope:** the diff stays inside the triage's touches.\n  - **Repeated values:** the ring's radius comes from `tower.range` or `LANTERN.range`, and no colour is copied out of `THEME`.\n\nGATES green: `node --test test/range-preview.test.js` 6/6, `npm --prefix . run test` 21/21. I ran these because the Makefile has no `check-build` target and this is a node project with no lint or type step. The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}
