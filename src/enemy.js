@@ -25,11 +25,11 @@ export function healthFraction(enemy) {
   return enemy.maxHealth > 0 ? enemy.health / enemy.maxHealth : 0;
 }
 
-// Slow an enemy to `factor` of its speed for `duration` seconds. A second hit sets the factor
-// again and restarts the time, and never multiplies, so two hits leave it at the factor.
-// Mutates and returns it.
+// Slow an enemy to `factor` of its speed for `duration` seconds. A second hit restarts the time
+// and never multiplies, so two hits leave it at the factor; while a slow still runs, the stronger
+// of the two factors holds, so a weaker slow never lifts a stronger one. Mutates and returns it.
 export function slowEnemy(enemy, factor, duration) {
-  enemy.slow = factor;
+  enemy.slow = (enemy.slowLeft ?? 0) > 0 ? Math.min(enemy.slow ?? 1, factor) : factor;
   enemy.slowLeft = duration;
   return enemy;
 }

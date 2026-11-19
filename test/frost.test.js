@@ -4,8 +4,8 @@ import { BRAZIER, FROST, LANTERN, createTower, kindForKey } from '../src/tower.j
 import { ENEMY_HEALTH, ENEMY_SPEED, advanceEnemy, createEnemy, slowEnemy } from '../src/enemy.js';
 import { createGame, placeTower, placementError, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS } from '../src/path.js';
-import { HUD_HEIGHT } from '../src/hud.js';
-import { SPRITES, draw, drawGhost } from '../src/render.js';
+import { HUD_HEIGHT, PAUSE_BUTTON } from '../src/hud.js';
+import { HUD_KIND, SPRITES, draw, drawGhost } from '../src/render.js';
 import { THEME } from '../src/theme.js';
 
 // Ticks of 1/16 s and a slowFor of 2 keep every distance below exact in floating point.
@@ -81,7 +81,7 @@ test('a ghost hit by frost covers half the distance in the next second that an u
   assert.deepEqual([slowed.game.enemies.length, slowed.ghost.health], [1, ENEMY_HEALTH - 2 * FROST.damage]);
 });
 
-test('slowEnemy then a second: half the distance', () => {
+test('one frost hit, then a second of travel: half the distance', () => {
   const e = createEnemy({ id: 1, waypoints: WAYPOINTS });
   slowEnemy(e, FROST.slow, FROST.slowFor);
   advanceEnemy(e, WAYPOINTS, 1);
@@ -133,6 +133,15 @@ test('a refreshed slow restarts its time left', () => {
   assert.equal(e.slowLeft, FROST.slowFor);
 });
 
+test('while a slow runs, a weaker one refreshes the time and keeps the stronger factor', () => {
+  const e = slowEnemy(createEnemy({ id: 1, waypoints: WAYPOINTS }), FROST.slow, FROST.slowFor);
+  slowEnemy(e, 0.75, 1);
+  assert.deepEqual([e.slow, e.slowLeft], [FROST.slow, 1]);
+  advanceEnemy(e, WAYPOINTS, 1);
+  slowEnemy(e, 0.75, 1);
+  assert.deepEqual([e.slow, e.slowLeft], [0.75, 1]);
+});
+
 test('only frost slows', () => {
   const { game, ghost } = frostBeside(LANTERN);
   step(game, TICK);
@@ -180,4 +189,15 @@ test('the HUD names the kind draw is handed', () => {
     [THEME.hudMuted, HUD_HEIGHT / 2, THEME.hudInk, HUD_HEIGHT / 2],
   );
   assert.deepEqual(texts(LANTERN).slice(-3, -2).map((c) => c.args[0]), ['Lantern']);
+});
+
+// No text is measured, so the bound is a whole em per letter of the 16px HUD font, wider than any
+// letter in these names: every kind's name ends before the Pause button starts.
+test('every kind name in the HUD ends before the Pause button', () => {
+  const { ctx, calls } = recordingContext();
+  draw(ctx, createGame(), null, SPRITES, FROST);
+  const value = calls.filter((c) => c.name === 'fillText' && c.args[0] === FROST.name);
+  assert.deepEqual(value.map((c) => c.args[1]), [HUD_KIND.valueX]);
+  const ends = [LANTERN, BRAZIER, FROST].map((kind) => HUD_KIND.valueX + kind.name.length * 16 <= PAUSE_BUTTON.x);
+  assert.deepEqual(ends, [true, true, true]);
 });

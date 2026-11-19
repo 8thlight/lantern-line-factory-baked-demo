@@ -21,14 +21,10 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null) {
   ctx.save();
   ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);
-  for (const tower of state.towers) if (isLantern(tower)) sprites.drawLanternLight(ctx, tower);
+  for (const tower of state.towers) if (bodySprite(tower) === 'drawLanternBody') sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
   drawRangeRing(ctx, rangePreview(state, hover));
-  for (const tower of state.towers) {
-    if (tower.splash > 0) sprites.drawBrazier(ctx, tower);
-    else if (tower.slow > 0) sprites.drawFrost(ctx, tower);
-    else sprites.drawLanternBody(ctx, tower);
-  }
+  for (const tower of state.towers) sprites[bodySprite(tower)](ctx, tower);
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
@@ -36,9 +32,12 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null) {
   drawHud(ctx, hudModel(state), kind);
 }
 
-// A tower that neither splashes nor slows is a lantern, and only a lantern casts a pool.
-function isLantern(tower) {
-  return !(tower.splash > 0) && !(tower.slow > 0);
+// The one place a tower's kind is read for drawing: the sprite that draws its body. A tower that
+// neither splashes nor slows is a lantern, and only a lantern casts a pool.
+function bodySprite(tower) {
+  if (tower.splash > 0) return 'drawBrazier';
+  if (tower.slow > 0) return 'drawFrost';
+  return 'drawLanternBody';
 }
 
 // Grass as alternating tiles with a few blades, then the path as layered stone:
@@ -325,7 +324,7 @@ const HUD_ITEMS = [
   { label: 'Gold', labelX: 96, valueX: 138 },
   { label: 'Wave', labelX: 190, valueX: 236 },
 ];
-const HUD_KIND = { label: 'Tower', labelX: 300, valueX: 348 };
+export const HUD_KIND = { label: 'Tower', labelX: 300, valueX: 348 };
 const BUTTON_RADIUS = 6;
 
 function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }, kind) {
