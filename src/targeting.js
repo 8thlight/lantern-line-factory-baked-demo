@@ -21,3 +21,8 @@ export function nearestInRange(tower, enemies) {
   }
   return best;
 }
+
+// Every enemy within `radius` of `center`, an enemy exactly on the edge included.
+export function splashTargets(center, enemies, radius) {
+  return enemies.filter((enemy) => distance(center, enemy) <= radius);
+}
