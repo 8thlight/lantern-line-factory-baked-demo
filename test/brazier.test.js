@@ -144,3 +144,15 @@ test('draw gives a brazier its square and no lantern pool, and a lantern its poo
   draw(ctx, game, null, sprites);
   assert.deepEqual(counts, { drawLanternLight: 1, drawLanternBody: 1, drawBrazier: 1 });
 });
+
+test('draw gives a frost tower its diamond and no lantern pool, and a lantern its pool and body', () => {
+  const counts = { drawLanternLight: 0, drawLanternBody: 0, drawBrazier: 0, drawFrost: 0 };
+  const sprites = { ...SPRITES };
+  for (const name of Object.keys(counts)) sprites[name] = () => (counts[name] += 1);
+  const game = createGame({ waveSize: 0, gold: 100 });
+  placeTower(game, 1, 1, FROST);
+  placeTower(game, 3, 1, LANTERN);
+  const ctx = new Proxy({}, { get: (target, name) => (name in target ? target[name] : () => ctx) });
+  draw(ctx, game, null, sprites);
+  assert.deepEqual(counts, { drawLanternLight: 1, drawLanternBody: 1, drawBrazier: 0, drawFrost: 1 });
+});
