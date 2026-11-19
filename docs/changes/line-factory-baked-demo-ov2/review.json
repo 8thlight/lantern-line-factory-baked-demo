@@ -1,16 +1,17 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "c950da7b54b05d8ebbd57c38f3419ce7efc1808b67c4ca26ba92afe6f8904357",
+  "digest": "4e7c7fbfe498fccf109cb449c5c2c04fdfa00f16d499e637056df873d109de01",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] test-fragility: the quietGame helper in test/game-over.test.js (and busyGame in test/render.test.js) sets game.spawnTimer = Infinity to stop automatic spawning, but step now spawns from state.spawner via updateWave and never reads spawnTimer. The helper does nothing. The lose and restart tests pass only because every extra ghost spawned during step(game, WALK) also leaks or is ignored. They do not control their ghosts the way the comment says, so the setup should pause state.spawner or the stale helper should be removed.",
-        "[P1] contract-drift: drawGhost no longer calls healthFraction from src/enemy.js. It works out the bar's share inline from ghost.health / ghost.maxHealth instead. This matches the brief's wording, but if enemy.js stores health under different fields or changes how healthFraction is computed, the bar silently shows full. No test draws a real createEnemy ghost after it takes damage, so that drift would go unnoticed.",
-        "[P2] behaviour: once the round ends, step returns before shots' ttl counts down, so any beams on screen at the moment of loss or win stay drawn for good under the end-of-round card. Expiring shots, or not drawing them when status is not 'playing', would keep the end screens clean."
+        "[P2] design fidelity: drawGhost draws its hem with straight lineTo segments (src/render.js, the hem loop over [[8,8],[4,13],[0,8],[-4,13],[-8,8]]), and its own comment calls it a 'zig-zag hem'. Issue #4 asks for 'a wavy hem'. The acceptance test passes because the head is an arc, but the hem is jagged, not wavy like the Board/Main artboards. Drawing it with quadraticCurveTo or bezierCurveTo would match the design.",
+        "[P1] invariant placement: the game-over guard lives only in main.js's click handler. placeTower in src/game.js still accepts towers on a 'lost' or 'won' game, and test/game-over.test.js depends on that when it places a tower after the round ends. Any future caller other than main.js can change a finished round. Gating placeTower on state.status === 'playing' would keep the rule that 'a finished round changes nothing' inside game.js.",
+        "[P1] missing test: nothing tests main.js's new behaviour, where a click on a finished round calls restart and does not place a tower, and the frame loop then uses the reassigned `let state`. A regression there (for example, a loop that keeps the old state) would pass CI.",
+        "[P2] naming: render.js keeps `export const PALETTE = THEME` only so older health-bar tests can still import it. That leaves two names for the same token set. The tests could import THEME directly and the alias could go."
       ],
       "seat": "review",
       "verdict": "changes-required"
