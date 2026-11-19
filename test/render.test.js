@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createGame, placeTower, spawnEnemy } from '../src/game.js';
+import { createEnemy, damageEnemy, healthFraction } from '../src/enemy.js';
+import { WAYPOINTS } from '../src/path.js';
 import { THEME } from '../src/theme.js';
 import { draw, drawBeam, drawGhost, drawLantern, drawPath } from '../src/render.js';
 
@@ -45,7 +47,6 @@ const barWidth = (calls) => named(calls, 'fillRect').find((c) => HEALTH.has(c.fi
 
 function busyGame(status) {
   const game = createGame();
-  game.spawnTimer = Infinity;
   placeTower(game, 1, 1);
   placeTower(game, 3, 4);
   spawnEnemy(game);
@@ -114,6 +115,17 @@ test('drawGhost draws a curved body, two eyes and a health bar that shortens as 
   const bare = fakeContext();
   drawGhost(bare.ctx, { x: 100, y: 100 });
   assert.equal(barWidth(bare.calls), barWidth(full.calls));
+});
+
+test('drawGhost draws a real ghost bar at the share of health enemy.js says it has left', () => {
+  const ghost = createEnemy({ id: 1, waypoints: WAYPOINTS });
+  const whole = fakeContext();
+  drawGhost(whole.ctx, ghost);
+  damageEnemy(ghost, 1);
+  const hit = fakeContext();
+  drawGhost(hit.ctx, ghost);
+  assert.ok(healthFraction(ghost) < 1);
+  assert.ok(Math.abs(barWidth(hit.calls) - barWidth(whole.calls) * healthFraction(ghost)) < 1e-9);
 });
 
 test('drawBeam strokes lantern centre to target centre with a glow', () => {

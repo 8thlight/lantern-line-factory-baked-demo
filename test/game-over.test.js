@@ -6,10 +6,10 @@ import { WAYPOINTS, pathLength } from '../src/path.js';
 
 const WALK = pathLength(WAYPOINTS) / ENEMY_SPEED + 0.1; // seconds for a ghost to reach the gate
 
-// A game with no automatic spawning, so the test controls its ghosts.
+// A game whose wave never spawns on its own, so the test controls its ghosts.
 function quietGame(options) {
   const game = createGame(options);
-  game.spawnTimer = Infinity;
+  game.spawner.timer = Infinity;
   return game;
 }
 
@@ -33,6 +33,25 @@ test('losing the last life sets status to lost', () => {
   step(game, WALK);
   assert.equal(game.lives, 0);
   assert.equal(game.status, 'lost');
+  assert.equal(game.spawner.spawned, 0);
+});
+
+test('a quiet game spawns no ghost of its own however long it is stepped', () => {
+  const game = quietGame({ lives: 3 });
+  step(game, WALK * 4);
+  assert.deepEqual(game.enemies, []);
+  assert.equal(game.lives, 3);
+  assert.equal(game.status, 'playing');
+});
+
+test('the beams on the board when a round ends are cleared with it', () => {
+  const game = quietGame({ lives: 1 });
+  game.shots.push({ from: { x: 60, y: 60 }, to: { x: 100, y: 100 }, ttl: 10 });
+  spawnEnemy(game);
+  step(game, WALK);
+  assert.equal(game.status, 'lost');
+  assert.deepEqual(game.shots, []);
+  assert.equal(game.lives, 0);
 });
 
 test('clearing every wave with lives left sets status to won', () => {

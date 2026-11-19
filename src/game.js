@@ -60,6 +60,13 @@ export function restart(state) {
   return createGame(state.options);
 }
 
+// End the round, clearing the beams so none stays drawn under the end-of-round card.
+function endRound(state, status) {
+  state.status = status;
+  state.shots = [];
+  return state;
+}
+
 // Advance the whole game by `dt` seconds. A round that is over stays as it is.
 export function step(state, dt) {
   if (state.status !== 'playing') return state;
@@ -69,10 +76,7 @@ export function step(state, dt) {
 
   for (const enemy of state.enemies) advanceEnemy(enemy, state.waypoints, dt);
   leakEnemies(state);
-  if (state.lives === 0) {
-    state.status = 'lost';
-    return state;
-  }
+  if (state.lives === 0) return endRound(state, 'lost');
 
   for (const shot of state.shots) shot.ttl -= dt;
   state.shots = state.shots.filter((s) => s.ttl > 0);
@@ -92,10 +96,7 @@ export function step(state, dt) {
   // the next. Every wave is the same size for now.
   // A wave of no ghosts is spawned out from the start, so it is kept from counting waves up on an empty board.
   if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
-    if (state.wave >= state.totalWaves) {
-      state.status = 'won';
-      return state;
-    }
+    if (state.wave >= state.totalWaves) return endRound(state, 'won');
     const { count, interval } = state.spawner;
     state.wave += 1;
     state.spawner = createWave({ count, interval });

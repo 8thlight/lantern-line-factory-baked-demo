@@ -1,6 +1,7 @@
 // Canvas drawing only. Reads game state; never changes it.
 // Each sprite is its own function taking a context, drawn to design/screens/Board.
 
+import { healthFraction } from './enemy.js';
 import { COLS, ROWS, TILE, cellKey } from './path.js';
 import { THEME } from './theme.js';
 
@@ -188,8 +189,7 @@ export function drawGhost(ctx, ghost) {
     ctx.fill();
   }
 
-  const { health, maxHealth } = ghost;
-  const share = health == null || !maxHealth ? 1 : Math.max(0, Math.min(1, health / maxHealth));
+  const share = ghost.health == null || ghost.maxHealth == null ? 1 : healthFraction(ghost);
   drawHealthBar(ctx, 0, -26, share);
   ctx.restore();
 }
