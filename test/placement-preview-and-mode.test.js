@@ -78,6 +78,7 @@ function cardLines(game, id) {
 test('a playing game draws the pointed cell and its range ring', () => {
   const ctx = drawn(quietGame('playing'), { col: 3, row: 1, ok: true });
   assert.deepEqual([hoverFills(ctx), ringArcs(ctx)], [[[120, 40, 40, 40]], [[140, 60, LANTERN.range]]]);
+  assert.deepEqual(hoverFills(drawn(quietGame('playing'), { col: 2, row: 2, ok: false })), [[80, 80, 40, 40]]);
 });
 
 test('a ready, won or lost game draws neither, whatever cell is pointed', () => {
