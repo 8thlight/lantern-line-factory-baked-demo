@@ -2,11 +2,8 @@
   "print_id": "line-factory-baked-demo-dli",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [
-    "src/game.js",
-    "test/sell.test.js"
-  ],
-  "said": "FOUND 2\n- `src/game.js:93`, `src/game.js:120`, `src/game.js:125`: no test failed when the `tower.spent ?? 0` fallbacks were removed, even though `test/boss.test.js:128` builds towers by hand with no `spent`. I added a test to `test/sell.test.js` that sells a hand-built tower for 0, then upgrades it to `spent` 25 and a sell value of 12. With the fallbacks taken out it fails (11 pass, 1 fail); with them back it passes. fixed\n- `src/game.js:109`: the comment line I extended above `upgradeTower` ran past the file's wrap width, so I rewrapped it. fixed\n\nGATES green: there is no Makefile in this clone, so I ran `node --test` on the 15 files that the change touches or that place, upgrade, price or draw towers (150 pass, 0 fail). The tree is committed and clean.",
+  "edited": [],
+  "said": "FOUND 1\n- `src/render.js:445`: the colour test `status === 'playing'` repeats the check that `sellLine` already makes at `src/hud.js:82`, so \"is the round in play\" is now decided in two places. Left as is: it follows the existing upgrade line, where `render.js` picks the ink from `model.refusal` and `upgradeLine` writes the text. Taking it out would mean changing what `sellLine` returns, which is a refactor of correct code. Nothing else turned up:\n  - Every path in the diff is inside the signed `touches:`.\n  - The edit to `test/sell.test.js` is allowed: the base `origin/print/line-factory-baked-demo-dli` does not have that file.\n  - The new won/lost test checks the exact list of card lines and their ink, and would fail if `sellLine`'s guard were removed.\n  - The `hud.js` comments say only what the code does.\n  - The baseline rule is kept: no new `notEqual`, `ok(!\u2026)` or substring checks were added.\nGATES green: `node --test` on `sell`, `upgrade`, `hud`, `render`, `placement-preview-and-mode` and `game-over` passed 62/62 and the tree is clean. This clone has no Makefile, so these files were run with `node --test` directly, and the attempt notes say so.",
   "gates": "green",
   "finding": null
 }

@@ -1,15 +1,15 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "34b69c2f9cab4f08b4d20b845ad33123a303a06cb629dc3c1a1154c12b7db044",
+  "digest": "269f629546578826caa2cbea733b534959084dd080b85c2fe9e926b5174e4f25",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P2] scope/dead code: src/hud.js adds and exports SELL_REFUSALS, which the brief did not ask for. Nothing in src reads it: main.js throws away sellTower's return value. Only test/sell.test.js pins its strings, so it is an unused contract that will need maintaining. Either drop it or have the sell key's refusal show it the way upgrade refusals are shown.",
-        "[P2] note (outcome met): every brief item is implemented and tested. placeTower records spent as the price towerPrice asked; upgradeTower adds the upgrade cost to spent; sellValue is floor(spent/2), giving 10 and then 22. sellTower checks 'over' before 'missing' and on 'missing' changes nothing; on success it filters the tower out, pays its value and returns null. The tests show the cell frees and the normal-difficulty price drops from 30 to 25. hudKey handles s and S. In main.js, S sells only on a fresh press, works while paused and clears the selection. The card grows from 54 to 69 (one 15-high line), ends with 'Press S to sell: N gold' and stays inside the canvas when the tower is at any of the four corners. The edit to test/upgrade.test.js only adds the new card line, which the brief allows."
+        "[P2] scope/contract drift: the brief says the card's last line is `Press S to sell: N gold`. sellLine in src/hud.js and drawTowerCard in src/render.js instead show SELL_REFUSALS.over ('The round is not in play: start a round before selling') in muted ink when the status is not 'playing'. That behaviour was not asked for. It is harmless, since sellTower refuses then and the end card is drawn over the board, but it goes beyond the signed brief and adds a user-facing string nobody specified.",
+        "[P2] dead code: SELL_REFUSALS.missing in src/hud.js is exported and pinned by a test, but nothing in src reads it. main.js ignores sellTower's return value and the card only ever uses the 'over' entry, so the string can never reach the player."
       ],
       "seat": "review",
       "verdict": "changes-required"
