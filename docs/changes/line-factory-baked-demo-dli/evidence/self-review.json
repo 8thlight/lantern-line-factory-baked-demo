@@ -1,0 +1,12 @@
+{
+  "print_id": "line-factory-baked-demo-dli",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/game.js",
+    "test/sell.test.js"
+  ],
+  "said": "FOUND 2\n- `src/game.js:93`, `src/game.js:120`, `src/game.js:125`: no test failed when the `tower.spent ?? 0` fallbacks were removed, even though `test/boss.test.js:128` builds towers by hand with no `spent`. I added a test to `test/sell.test.js` that sells a hand-built tower for 0, then upgrades it to `spent` 25 and a sell value of 12. With the fallbacks taken out it fails (11 pass, 1 fail); with them back it passes. fixed\n- `src/game.js:109`: the comment line I extended above `upgradeTower` ran past the file's wrap width, so I rewrapped it. fixed\n\nGATES green: there is no Makefile in this clone, so I ran `node --test` on the 15 files that the change touches or that place, upgrade, price or draw towers (150 pass, 0 fail). The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}
