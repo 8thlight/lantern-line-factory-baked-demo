@@ -1,25 +1,14 @@
 // Canvas drawing only. Reads game state; never changes it.
 
+import { rangePreview } from './game.js';
 import { COLS, ROWS, TILE, cellKey } from './path.js';
-
-export const PALETTE = {
-  grassA: '#1d3a2e',
-  grassB: '#214234',
-  path: '#c9a66b',
-  pathEdge: '#a8854f',
-  lantern: '#f2c14e',
-  lanternCore: '#fff4c9',
-  ghost: '#8e6bd8',
-  ghostEdge: '#4d3586',
-  beam: '#fff4c9',
-  hover: 'rgba(255, 244, 201, 0.25)',
-  hoverBad: 'rgba(230, 90, 90, 0.35)',
-  text: '#f4efe1',
-};
+import { THEME } from './theme.js';
 
 export function draw(ctx, state, hover) {
   drawMap(ctx, state);
   if (hover) drawHover(ctx, state, hover);
+  const ring = rangePreview(state, hover);
+  if (ring) drawRange(ctx, ring);
   for (const tower of state.towers) drawTower(ctx, tower);
   for (const enemy of state.enemies) drawGhost(ctx, enemy);
   drawShots(ctx, state.shots);
@@ -30,10 +19,10 @@ function drawMap(ctx, { path }) {
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       const onPath = path.has(cellKey(col, row));
-      ctx.fillStyle = onPath ? PALETTE.path : (col + row) % 2 ? PALETTE.grassA : PALETTE.grassB;
+      ctx.fillStyle = onPath ? THEME.path : (col + row) % 2 ? THEME.grassA : THEME.grassB;
       ctx.fillRect(col * TILE, row * TILE, TILE, TILE);
       if (onPath) {
-        ctx.strokeStyle = PALETTE.pathEdge;
+        ctx.strokeStyle = THEME.pathEdge;
         ctx.strokeRect(col * TILE + 0.5, row * TILE + 0.5, TILE - 1, TILE - 1);
       }
     }
@@ -41,16 +30,29 @@ function drawMap(ctx, { path }) {
 }
 
 function drawHover(ctx, state, { col, row, ok }) {
-  ctx.fillStyle = ok ? PALETTE.hover : PALETTE.hoverBad;
+  ctx.fillStyle = ok ? THEME.hover : THEME.hoverBad;
   ctx.fillRect(col * TILE, row * TILE, TILE, TILE);
 }
 
+// The faint dashed reach circle, as the Board artboard draws it.
+function drawRange(ctx, { x, y, radius }) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = THEME.rangeFill;
+  ctx.fill();
+  ctx.strokeStyle = THEME.rangeRing;
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
 function drawTower(ctx, { x, y }) {
-  ctx.fillStyle = PALETTE.lantern;
+  ctx.fillStyle = THEME.lantern;
   ctx.beginPath();
   ctx.arc(x, y, TILE * 0.35, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = PALETTE.lanternCore;
+  ctx.fillStyle = THEME.lanternCore;
   ctx.beginPath();
   ctx.arc(x, y, TILE * 0.15, 0, Math.PI * 2);
   ctx.fill();
@@ -58,8 +60,8 @@ function drawTower(ctx, { x, y }) {
 
 function drawGhost(ctx, { x, y }) {
   const r = TILE * 0.3;
-  ctx.fillStyle = PALETTE.ghost;
-  ctx.strokeStyle = PALETTE.ghostEdge;
+  ctx.fillStyle = THEME.ghost;
+  ctx.strokeStyle = THEME.ghostEdge;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(x, y - r);
@@ -72,7 +74,7 @@ function drawGhost(ctx, { x, y }) {
 }
 
 function drawShots(ctx, shots) {
-  ctx.strokeStyle = PALETTE.beam;
+  ctx.strokeStyle = THEME.beam;
   ctx.lineWidth = 3;
   for (const { from, to } of shots) {
     ctx.beginPath();
@@ -83,7 +85,7 @@ function drawShots(ctx, shots) {
 }
 
 function drawLives(ctx, lives) {
-  ctx.fillStyle = PALETTE.text;
+  ctx.fillStyle = THEME.text;
   ctx.font = '16px system-ui, sans-serif';
   ctx.fillText(`Lives: ${lives}`, 8, 20);
 }

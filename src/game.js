@@ -1,8 +1,8 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
-import { WAYPOINTS, pathCells } from './path.js';
+import { WAYPOINTS, cellCenter, pathCells } from './path.js';
 import { advanceEnemy, createEnemy } from './enemy.js';
-import { canPlace, createTower, updateTower } from './tower.js';
+import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
 
 export const START_LIVES = 10;
 export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
@@ -27,6 +27,23 @@ export function placeTower(state, col, row) {
   if (!canPlace(state, col, row)) return false;
   state.towers.push(createTower(col, row));
   return true;
+}
+
+// The tower standing on a cell, or null.
+export function towerAt(state, col, row) {
+  return state.towers.find((t) => t.col === col && t.row === row) ?? null;
+}
+
+// The reach to show for the hovered cell, as { x, y, radius }: the tower there,
+// or the lantern that would be placed on empty grass. Null on path, off the map
+// or with no hover.
+export function rangePreview(state, hover) {
+  if (!hover) return null;
+  const { col, row } = hover;
+  const tower = towerAt(state, col, row);
+  if (tower) return { x: tower.x, y: tower.y, radius: tower.range };
+  if (!canPlace(state, col, row)) return null;
+  return { ...cellCenter({ col, row }), radius: LANTERN.range };
 }
 
 export function spawnEnemy(state) {
