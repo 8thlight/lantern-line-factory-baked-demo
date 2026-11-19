@@ -123,18 +123,14 @@ export function drawLantern(ctx, tower) {
 // The soft radial pool of light a lantern casts on the grass.
 const POOL_RADIUS = TILE * 1.5;
 
-// A context that hands back no gradient (a recording fake) gets the pool's middle colour, flat.
 export function drawLanternLight(ctx, { x, y }) {
   const pool = ctx.createRadialGradient(x, y, 0, x, y, POOL_RADIUS);
-  const graded = typeof pool?.addColorStop === 'function';
-  if (graded) {
-    pool.addColorStop(0, THEME.glowInner);
-    pool.addColorStop(0.35, THEME.glowMid);
-    pool.addColorStop(1, THEME.glowOuter);
-  }
+  pool.addColorStop(0, THEME.glowInner);
+  pool.addColorStop(0.35, THEME.glowMid);
+  pool.addColorStop(1, THEME.glowOuter);
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
-  ctx.fillStyle = graded ? pool : THEME.glowMid;
+  ctx.fillStyle = pool;
   ctx.beginPath();
   ctx.arc(x, y, POOL_RADIUS, 0, Math.PI * 2);
   ctx.fill();
