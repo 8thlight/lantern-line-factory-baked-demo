@@ -20,6 +20,15 @@ export function hudModel({ lives, gold, wave, totalWaves, paused, speed }) {
   return { lives, gold, wave, totalWaves, paused, speed, livesDanger: lives <= LIVES_DANGER };
 }
 
+// The banner render draws while a boss wave's boss is still to come.
+export const BOSS_WARNING = 'Boss wave: a great ghost follows this wave';
+
+// The boss-wave announcement, read from the state and never written to it: BOSS_WARNING while a
+// round in play has a boss still to come this wave, null otherwise.
+export function bossWarning({ status, spawner }) {
+  return status === 'playing' && spawner.bossLeft > 0 ? BOSS_WARNING : null;
+}
+
 // What the card says in place of the upgrade line when upgradeError refuses, by its reason;
 // {cost} and {gold} are the upgrade's cost and the gold held, {max} is MAX_LEVEL.
 export const UPGRADE_REFUSALS = Object.freeze({

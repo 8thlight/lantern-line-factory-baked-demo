@@ -5,7 +5,7 @@ import { advanceEnemy, createEnemy, damageEnemy, slowEnemy } from './enemy.js';
 import { LANTERN, MAX_LEVEL, canPlace, cellError, createTower, towerById, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
-import { WAVES } from './waves.js';
+import { BOSS_LIVES, WAVES } from './waves.js';
 
 export const START_LIVES = 10;
 export const START_GOLD = 50;
@@ -17,10 +17,12 @@ function waveEntry(wave) {
   return WAVES[Math.min(wave, WAVES.length) - 1];
 }
 
-// A wave's spawner: its entry's count and interval, unless the game was made with its own.
+// A wave's spawner: its entry's count and interval, unless the game was made with its own, and
+// the entry's boss, still to come after the last ghost, whatever count the game was made with.
 function createSpawner({ waveSize, spawnInterval }, wave) {
   const entry = waveEntry(wave);
-  return createWave({ count: waveSize ?? entry.count, interval: spawnInterval ?? entry.interval });
+  const spawner = createWave({ count: waveSize ?? entry.count, interval: spawnInterval ?? entry.interval });
+  return { ...spawner, bossLeft: entry.boss ? 1 : 0 };
 }
 
 // `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave.
@@ -134,10 +136,20 @@ export function spawnEnemy(state) {
   return enemy;
 }
 
-// Lose one life per enemy that reached the end, and remove those enemies.
+// The current wave's boss, as tough, fast and rich as its entry declares, marked so render
+// draws it larger and a leak takes BOSS_LIVES.
+export function spawnBoss(state) {
+  const { health, speed, bounty } = waveEntry(state.wave).boss;
+  const enemy = { ...createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed, bounty }), boss: true };
+  state.enemies.push(enemy);
+  return enemy;
+}
+
+// Lose one life per ghost that reached the end, BOSS_LIVES for a boss, and remove them.
 export function leakEnemies(state) {
   const leaked = state.enemies.filter((e) => e.reachedEnd);
-  state.lives = Math.max(0, state.lives - leaked.length);
+  const lost = leaked.reduce((sum, e) => sum + (e.boss ? BOSS_LIVES : 1), 0);
+  state.lives = Math.max(0, state.lives - lost);
   state.enemies = state.enemies.filter((e) => !e.reachedEnd);
   return leaked.length;
 }
@@ -172,6 +184,11 @@ export function step(state, dt) {
 function tick(state, dt) {
   const due = updateWave(state.spawner, dt);
   for (let i = 0; i < due; i++) spawnEnemy(state);
+  // The boss follows the wave's last ghost by one interval, once.
+  if (state.spawner.bossLeft > 0 && waveDone(state.spawner) && state.spawner.timer <= 0) {
+    state.spawner.bossLeft = 0;
+    spawnBoss(state);
+  }
 
   for (const enemy of state.enemies) advanceEnemy(enemy, state.waypoints, dt);
   leakEnemies(state);
@@ -199,11 +216,11 @@ function tick(state, dt) {
     }
   }
 
-  // The next wave starts once this one has spawned out and the board is clear,
+  // The next wave starts once this one has spawned out, its boss too, and the board is clear,
   // whether its ghosts were banished or leaked, and reads its entry in the table.
   // A wave of no ghosts is spawned out from the start, so it is kept from counting waves up on an empty board.
   // Clearing the last wave wins the round; lives are above 0 here, since a loss returned above.
-  if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
+  if (state.spawner.count > 0 && waveDone(state.spawner) && state.spawner.bossLeft === 0 && state.enemies.length === 0) {
     if (state.wave >= state.totalWaves) {
       state.status = 'won';
       return state;

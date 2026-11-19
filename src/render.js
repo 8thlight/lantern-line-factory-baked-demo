@@ -6,7 +6,7 @@ import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
 import { towerById } from './tower.js';
-import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, bossWarning, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -19,7 +19,8 @@ const HEIGHT = ROWS * TILE;
 // so no cell is ever under the bar; the end card veils the board and the bar stays readable.
 // `kind`, when handed, is the kind a click places, and the bar names it. `selected`, when it is a
 // placed tower's id, rings that tower and draws its card above the ghosts and beams.
-// An upgraded tower wears its level marks over its body.
+// An upgraded tower wears its level marks over its body. While a boss is still to come, its
+// banner is drawn over the board, under the bar.
 export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
   const model = selectedModel(state, selected);
   const chosen = model && towerById(state, selected);
@@ -40,6 +41,8 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind);
+  const warning = bossWarning(state);
+  if (warning) drawBossBanner(ctx, warning);
 }
 
 // The one place a tower's kind is read for drawing: the sprite that draws its body. A tower that
@@ -240,14 +243,17 @@ function fillRounded(ctx, colour, x, y, width, height, radius) {
 
 // The artboard's ghost symbol (32x36 units around its centre): a round head, a hem of
 // curved points, a sheen and two eyes with shine; its health bar floats above it.
-// A ghost frost is slowing is tinted frost.
-const GHOST_SCALE = 0.94;
+// A ghost frost is slowing is tinted frost. A boss is drawn BOSS_SCALE times as large, its
+// health bar as much higher.
+export const GHOST_SCALE = 0.94;
+export const BOSS_SCALE = 1.5;
 
 export function drawGhost(ctx, enemy) {
   const { x, y } = enemy;
+  const size = enemy.boss ? BOSS_SCALE : 1;
   ctx.save();
   ctx.translate(x, y);
-  ctx.scale(GHOST_SCALE, GHOST_SCALE);
+  ctx.scale(GHOST_SCALE * size, GHOST_SCALE * size);
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
 
@@ -291,7 +297,7 @@ export function drawGhost(ctx, enemy) {
 
   // A ghost handed in with no health of its own is drawn at full health.
   const fraction = enemy.maxHealth === undefined ? 1 : healthFraction(enemy);
-  drawHealthBar(ctx, x, y - 29, fraction);
+  drawHealthBar(ctx, x, y - 29 * size, fraction);
 }
 
 // The Board artboard's bar: a 26x4 track whose fill shortens and reddens with each hit.
@@ -382,6 +388,29 @@ function drawButton(ctx, { x, y, width, height }, text, active) {
   ctx.fillStyle = active ? THEME.hudAccentInk : THEME.hudInk;
   ctx.textAlign = 'center';
   ctx.fillText(text, x + width / 2, y + height / 2);
+}
+
+// The boss-wave banner: a --hud-bg overlay panel edged and lettered in the accent, centred on
+// the board just under the bar. Fixed size, no text measured.
+const BANNER = { width: 340, height: 28, radius: 6 };
+
+function drawBossBanner(ctx, text) {
+  const x = (WIDTH - BANNER.width) / 2;
+  const y = HUD_HEIGHT + HUD_PAD;
+  ctx.save();
+  ctx.fillStyle = THEME.hudBg;
+  ctx.strokeStyle = THEME.hudAccent;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(x, y, BANNER.width, BANNER.height, BANNER.radius);
+  ctx.fill();
+  ctx.stroke();
+  ctx.font = '14px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = THEME.hudAccent;
+  ctx.fillText(text, WIDTH / 2, y + BANNER.height / 2);
+  ctx.restore();
 }
 
 // An upgraded tower's level: one small accent square per level in a row under its body, a mark

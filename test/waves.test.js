@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { WAVES } from '../src/waves.js';
+import { BOSS_LIVES, WAVES } from '../src/waves.js';
 import { TOTAL_WAVES, createGame, restart, step } from '../src/game.js';
 
 // Step a game by half a second until `done` holds, at most `limit` times.
@@ -8,12 +8,21 @@ function stepUntil(game, done, limit = 2000) {
   for (let i = 0; i < limit && !done(game); i++) step(game, 0.5);
 }
 
-test('the table holds ten waves, each with a positive count, interval, health and speed', () => {
+test('the table holds ten waves, each with a positive count, interval, health and speed, and a boss on waves 5 and 10 alone', () => {
   assert.equal(WAVES.length, 10);
   for (const wave of WAVES) {
     const { count, interval, health, speed } = wave;
     assert.deepEqual([count > 0, interval > 0, health > 0, speed > 0], [true, true, true, true]);
-    assert.deepEqual(Object.keys(wave).sort(), ['count', 'health', 'interval', 'speed']);
+    const keys = ['count', 'health', 'interval', 'speed', ...(wave.boss === undefined ? [] : ['boss'])];
+    assert.deepEqual(Object.keys(wave).sort(), keys.sort());
+  }
+  assert.deepEqual(
+    WAVES.flatMap((w, i) => (w.boss === undefined ? [] : [i + 1])),
+    [5, 10],
+  );
+  for (const { boss } of WAVES.filter((w) => w.boss !== undefined)) {
+    assert.deepEqual(Object.keys(boss).sort(), ['bounty', 'health', 'speed']);
+    assert.deepEqual([boss.bounty > 0, boss.health > 0, boss.speed > 0], [true, true, true]);
   }
 });
 
@@ -58,7 +67,8 @@ test('clearing the last entry wins the round', () => {
   const game = createGame({ lives: 1000 });
   stepUntil(game, (g) => g.status !== 'playing', 20000);
   const total = WAVES.reduce((sum, w) => sum + w.count, 0);
-  assert.deepEqual([game.status, game.wave, game.lives], ['won', WAVES.length, 1000 - total]);
+  const bosses = WAVES.filter((w) => w.boss !== undefined).length;
+  assert.deepEqual([game.status, game.wave, game.lives], ['won', WAVES.length, 1000 - total - BOSS_LIVES * bosses]);
 });
 
 test('explicit waveSize and spawnInterval still override the table, in every wave', () => {
