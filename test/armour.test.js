@@ -54,12 +54,17 @@ test('on normal the eight plain ghosts of wave 4 have armour 0, 0, 1, 0, 0, 1, 0
 
 test("on normal the tick sends wave 4's ghosts armoured in spawn order", () => {
   const game = atWave(4, { difficulty: 'normal' });
-  for (let i = 0; i < 2000 && game.spawner.spawned < 8; i++) step(game, 0.01);
-  assert.equal(game.spawner.spawned, 8);
+  const count = ARMOURED_WAVE_4.length;
+  for (let i = 0; i < 2000 && game.spawner.spawned < count; i++) step(game, 0.01);
+  assert.equal(game.spawner.spawned, count);
   assert.deepEqual(
     game.enemies.map((e) => e.armour),
     ARMOURED_WAVE_4,
   );
+});
+
+test('on hard the plain ghosts of wave 4 are armoured as on normal, and none of wave 3', () => {
+  assert.deepEqual([plainArmour({ difficulty: 'hard' }, 3), plainArmour({ difficulty: 'hard' }, 4)], [zeros(3), ARMOURED_WAVE_4]);
 });
 
 test('on normal no ghost of waves 1 to 3 has armour', () => {

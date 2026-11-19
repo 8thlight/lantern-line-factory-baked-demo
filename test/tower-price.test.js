@@ -54,6 +54,14 @@ test('on normal a lantern costs 20, then 25, then 30, and a brazier stays 30 bes
   assert.equal(towerPrice(game, BRAZIER), 30);
 });
 
+test('on hard a lantern costs 20, then 25, as on normal', () => {
+  const game = createGame({ difficulty: 'hard', gold: 1000 });
+  const prices = [towerPrice(game, LANTERN)];
+  assert.equal(placeTower(game, 0, 0, LANTERN), true);
+  prices.push(towerPrice(game, LANTERN));
+  assert.deepEqual(prices, [20, 25]);
+});
+
 test('on normal a second lantern with 24 gold is refused for gold and changes nothing', () => {
   const game = createGame({ difficulty: 'normal' });
   assert.equal(placeTower(game, 0, 0, LANTERN), true);

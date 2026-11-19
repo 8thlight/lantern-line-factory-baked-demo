@@ -79,7 +79,7 @@ export function towerPrice(state, kind = LANTERN) {
 
 // Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or
 // 'taken') first, then 'gold' when the gold held is below the kind's price; null when it may.
-// A kind with no cost is free.
+// A kind with no cost pays only the difficulty's price step, so with no difficulty it is free.
 export function placementError(state, col, row, kind = LANTERN) {
   return cellError(state, col, row) ?? (state.gold < towerPrice(state, kind) ? 'gold' : null);
 }
