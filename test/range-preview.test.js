@@ -56,6 +56,12 @@ test('rangePreview over empty grass returns that cell centre and the lantern ran
   assert.deepEqual(rangePreview(game, GRASS), { ...cellCenter(GRASS), radius: LANTERN.range });
 });
 
+test('rangePreview over empty grass still returns the lantern range once the round is over', () => {
+  const game = createGame();
+  game.status = 'lost';
+  assert.deepEqual(rangePreview(game, GRASS), { ...cellCenter(GRASS), radius: LANTERN.range });
+});
+
 test('rangePreview over a path cell, off the map, or with no hover, returns null', () => {
   const game = createGame();
   assert.equal(rangePreview(game, PATH), null);
@@ -74,6 +80,8 @@ test('draw strokes the range ring in the theme colour while a tower is hovered',
   const ring = calls.findIndex((c) => c.method === 'arc' && c.args[2] === tower.range);
   const stroke = calls.slice(ring).find((c) => c.method === 'stroke');
   assert.equal(stroke?.style.strokeStyle, THEME.rangeRing);
+  const fill = calls.slice(ring).find((c) => c.method === 'fill');
+  assert.equal(fill?.style.fillStyle, THEME.rangeFill);
 });
 
 test('draw strokes the lantern range ring at the centre of hovered empty grass', () => {

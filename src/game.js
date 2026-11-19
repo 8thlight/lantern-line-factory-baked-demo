@@ -1,6 +1,6 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
-import { WAYPOINTS, cellCenter, pathCells } from './path.js';
+import { COLS, ROWS, WAYPOINTS, cellCenter, cellKey, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
 import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
@@ -49,13 +49,15 @@ export function towerAt(state, col, row) {
 
 // The reach to show for the hovered cell, as { x, y, radius }: the tower there,
 // or the lantern that would be placed on empty grass. Null on path, off the map
-// or with no hover.
+// or with no hover. Grass is the map less the path, not canPlace, so a later
+// rule that stops a placement does not hide the reach a player is weighing.
 export function rangePreview(state, hover) {
   if (!hover) return null;
   const { col, row } = hover;
   const tower = towerAt(state, col, row);
   if (tower) return { x: tower.x, y: tower.y, radius: tower.range };
-  if (!canPlace(state, col, row)) return null;
+  const onMap = col >= 0 && row >= 0 && col < COLS && row < ROWS;
+  if (!onMap || state.path.has(cellKey(col, row))) return null;
   return { ...cellCenter({ col, row }), radius: LANTERN.range };
 }
 
