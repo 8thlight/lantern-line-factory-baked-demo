@@ -1,14 +1,15 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
-import { WAYPOINTS, pathCells } from './path.js';
-import { advanceEnemy, createEnemy } from './enemy.js';
-import { canPlace, createTower, updateTower } from './tower.js';
+import { COLS, ROWS, WAYPOINTS, cellKey, pathCells } from './path.js';
+import { advanceEnemy, createEnemy, slowEnemy } from './enemy.js';
+import { LANTERN, createTower, updateTower } from './tower.js';
 
 export const START_LIVES = 10;
+export const START_GOLD = 50;
 export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
 const SHOT_TTL = 0.1; // how long a beam stays drawn
 
-export function createGame({ waypoints = WAYPOINTS, spawnInterval = SPAWN_INTERVAL, lives = START_LIVES } = {}) {
+export function createGame({ waypoints = WAYPOINTS, spawnInterval = SPAWN_INTERVAL, lives = START_LIVES, gold = START_GOLD } = {}) {
   return {
     waypoints,
     path: pathCells(waypoints),
@@ -19,13 +20,25 @@ export function createGame({ waypoints = WAYPOINTS, spawnInterval = SPAWN_INTERV
     towers: [],
     shots: [],
     lives,
+    gold,
     kills: 0,
   };
 }
 
-export function placeTower(state, col, row) {
-  if (!canPlace(state, col, row)) return false;
-  state.towers.push(createTower(col, row));
+// Why a tower of `kind` may not stand on a cell: 'bounds', 'path', 'taken' or 'gold'.
+// null when it may.
+export function placementError(state, col, row, kind = LANTERN) {
+  if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return 'bounds';
+  if (state.path.has(cellKey(col, row))) return 'path';
+  if (state.towers.some((t) => t.col === col && t.row === row)) return 'taken';
+  if (kind.cost > state.gold) return 'gold';
+  return null;
+}
+
+export function placeTower(state, col, row, kind = LANTERN) {
+  if (placementError(state, col, row, kind) !== null) return false;
+  state.towers.push(createTower(col, row, kind));
+  state.gold -= kind.cost;
   return true;
 }
 
@@ -60,6 +73,12 @@ export function step(state, dt) {
   for (const tower of state.towers) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
+    if (tower.slow) {
+      // Frost slows and does no damage.
+      slowEnemy(target, tower.slow, tower.slowFor);
+      state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL, frost: true });
+      continue;
+    }
     // Today one hit removes a ghost. Enemy health is milestone work (work/m1-01).
     state.enemies = state.enemies.filter((e) => e !== target);
     state.kills += 1;

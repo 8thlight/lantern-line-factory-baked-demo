@@ -1,13 +1,26 @@
-// The one tower type today: the Lantern. It fires a beam at the nearest enemy.
+// Tower kinds. The Lantern fires a beam at the nearest enemy; Frost slows the one it hits.
 
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
 import { nearestInRange } from './targeting.js';
 
-export const LANTERN = { range: 100, cooldown: 0.6 }; // pixels, seconds
+export const LANTERN = { name: 'Lantern', range: 100, cooldown: 0.6, cost: 0 }; // pixels, seconds, gold
+// Frost does no damage: it sets a hit ghost's speed to `slow` times its own for `slowFor` seconds.
+export const FROST = { name: 'Frost', range: 90, cooldown: 1.0, cost: 40, slow: 0.5, slowFor: 2 };
+
+// The tower picker: key 1 the lantern, key 3 frost. Any other key keeps the current kind.
+export function kindForKey(key, current) {
+  if (key === '1') return LANTERN;
+  if (key === '3') return FROST;
+  return current;
+}
 
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, reload: 0 };
+  return {
+    col, row, x, y, kind,
+    range: kind.range, cooldown: kind.cooldown, slow: kind.slow, slowFor: kind.slowFor,
+    reload: 0,
+  };
 }
 
 // A tower may stand on any in-bounds cell that is not path and not taken.
