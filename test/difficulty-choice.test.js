@@ -8,7 +8,7 @@ import { COLS, TILE } from '../src/path.js';
 
 const WIDTH = COLS * TILE;
 
-// A context that records each call with the fillStyle it was made under.
+// A context that records each call with the fillStyle and font it was made under.
 function recordingContext() {
   const calls = [];
   const styles = {};
@@ -19,7 +19,7 @@ function recordingContext() {
         if (name === 'calls') return calls;
         if (name in styles) return styles[name];
         return (...args) => {
-          calls.push({ name, args, fillStyle: styles.fillStyle });
+          calls.push({ name, args, fillStyle: styles.fillStyle, font: styles.font });
           return String(name).startsWith('create') ? { addColorStop() {} } : undefined;
         };
       },
@@ -80,12 +80,17 @@ test('the buttons are 96 by 28, 8 apart, centred, 8 above the bottom, inside the
 });
 
 test('the row sits below the start screen\'s hint and steps, clear of their 12px text', () => {
-  const calls = drawn(createGame({ status: 'ready', difficulty: 'normal' }));
-  const texts = calls.filter((c) => c.name === 'fillText');
   // Every text drawn after Start that is not a difficulty label: the hint, then the steps.
-  const below = texts.slice(texts.findIndex((c) => c.args[0] === 'Start') + 1).filter((c) => LABELS.indexOf(c.args[0]) === -1);
-  assert.equal(below.length, 4);
-  const lowest = Math.max(...below.map((c) => c.args[2])) + 12 / 2; // middle-baselined, so half the font below
+  const below = (state) => {
+    const texts = drawn(state).filter((c) => c.name === 'fillText');
+    return texts.slice(texts.findIndex((c) => c.args[0] === 'Start') + 1).filter((c) => LABELS.indexOf(c.args[0]) === -1);
+  };
+  const steps = below(createGame({ status: 'ready', difficulty: 'normal' }));
+  // The same lines a game with no difficulty draws there, and at least one of them.
+  assert.deepEqual(steps.map((c) => c.args[0]), below(createGame({ status: 'ready' })).map((c) => c.args[0]));
+  assert.equal(steps.length > 0, true);
+  // Middle-baselined, so each line reaches half its font's size below its y.
+  const lowest = Math.max(...steps.map((c) => c.args[2] + parseInt(c.font.match(/(\d+)px/)[1], 10) / 2));
   assert.equal(lowest <= Math.min(...DIFFICULTY_BUTTONS.map((b) => b.y)), true);
 });
 
