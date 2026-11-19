@@ -37,7 +37,7 @@ export function towerAt({ towers }, col, row) {
 export function canPlace({ path, towers }, col, row) {
   if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return false;
   if (path.has(cellKey(col, row))) return false;
-  return !towers.some((t) => t.col === col && t.row === row);
+  return towerAt({ towers }, col, row) === null;
 }
 
 // Count the reload down; when ready and an enemy is in range, fire.
