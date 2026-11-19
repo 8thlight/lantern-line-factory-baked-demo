@@ -54,6 +54,8 @@ reproduces:
 touches:
   - src/waves.js
   - src/game.js
+  - src/hud.js
+  - src/render.js
   - test/boss.test.js
   - test/waves.test.js
 
