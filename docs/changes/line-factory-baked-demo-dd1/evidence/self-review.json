@@ -2,8 +2,12 @@
   "print_id": "line-factory-baked-demo-dd1",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [],
-  "said": "I found nothing to fix in this review pass, so nothing changed and the tree is clean and committed. I checked the diff against `origin/main` because the print branch takes main in, and only the four files the triage lists changed: `src/best.js`, `src/render.js`, `src/main.js` and `test/best.test.js`. The other changes, under `docs/changes/\u2026`, are the printer's own chain commits.\n\nThe last gate finding was a red verify on 962006a with no failed log kept. On that head the only recorded red is `review.json`'s \"changes-required\" verdict and its two P1s. Commit 7f4e2fc answers both: the end-of-run save now goes through `bestAfterStep` and is tested on the real step loop, and `writeBest` refuses a wave that is not a whole number of at least 1. Since that log is gone, I can't be certain the red check was that review and not something else.\n\nEach acceptance criterion has a test that could fail:\n- **The four guards:** every one has a test that turns red if the guard is removed:\n  - `isWave` in `writeBest`: the test passes 0, NaN, 2.5 and `'9'`.\n  - `isWave` in `readBest`: the `'seven'` test.\n  - `before === 'playing'` in `bestAfterStep`: the test where the step starts from `'lost'`.\n  - `best !== null` in `drawStartScreen`: the test that draws with no best.\n- **The one negative assertion** (no \"Best\" text) sits beside positive checks on the same draw.\n- **Comments:** they match what the code does.\n\n- FOUND 0\n- GATES green (`npm test` 192/192; the six test files that touch this change, 73/73, run with `node --test`. This clone has no Makefile, so `make check-build` wasn't available.)",
+  "edited": [
+    "src/best.js",
+    "src/main.js",
+    "test/best.test.js"
+  ],
+  "said": "FOUND 1\n- `src/main.js:18`: `globalThis.localStorage` was read outside any `try` when the module loads. In a browser that has storage turned off, that read throws a SecurityError and the game never starts, though the plan says it should run with no best. The read now goes through a new `browserStorage()` in `src/best.js`, which returns nothing when the browser refuses. A new test in `test/best.test.js` covers both a refusing browser and one that allows storage. fixed (committed).\n- GATES green: `npm --prefix . run test` gives 193 passed, 0 failed, and the six touched suites give 74 of 74. This repo has no Makefile or `check-build` target, so I checked with `node --test` and said so in the attempt notes. The working tree is clean.",
   "gates": "green",
   "finding": null
 }

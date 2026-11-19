@@ -1,19 +1,20 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "47ab800c6d3db28d39e16e616fc8971ef161b5eca41decb30b1a70bd63c0660e",
+  "digest": "10aa075ae431c3f5441a3f5527cb4f70d0fb0ac4eec4ad3102400c5e1d8ea718",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] robustness: in src/main.js, `const storage = globalThis.localStorage` runs at module top level, outside any try. Some browsers throw a SecurityError just from reading the `localStorage` property when site data is blocked (for example Chrome with cookies disabled, or some sandboxed iframes). In that setting the whole game would fail to boot, which did not happen before this change. best.js says a storage that throws reads as no best, but it can only catch errors from getItem and setItem, not from this property read. Wrap the read in a try (for example `let storage; try { storage = globalThis.localStorage; } catch { storage = undefined; }`). No test covers this, and normal setups never hit it, so this is a follow-up, not a miss against the brief.",
-        "[P2] scope: best.js adds `bestAfterStep`, a function the brief did not ask for. It puts main.js's 'a run ends on the playing\u2192won/lost step' rule in best.js so it can be tested, which is reasonable. But best.js now encodes knowledge of the game's status values, which is more than the storage-only module the issue describes (`readBest`/`writeBest`).",
-        "[P2] test-structure: the end-to-end loss test (test/best.test.js:133-148) runs the real `step` for up to 2000 frames and assumes a game with 1 life is lost within 100 simulated seconds. If wave timing or the game's balance changes, the test could fail even though best.js is still correct."
+        "OUTCOME: src/best.js adds readBest(storage) and writeBest(storage, wave), and both take the storage object as an argument. readBest returns the saved wave as a number, and null when the value is missing, not a number or not a whole wave. writeBest only ever raises the best, writes over an unreadable value (the test with 'seven' then 3 shows this), and leaves a real best alone when handed an invalid wave.",
+        "OUTCOME: src/main.js saves the wave through bestAfterStep. It writes only on the frame where the status moves from 'playing' to 'won' or 'lost', so each run is saved once, before any restart click. The test that plays a real game to a loss records exactly one write across five more frames. The best is read at boot and passed to draw. Using browserStorage() instead of the bare localStorage global is sound: reading localStorage throws a SecurityError when the browser has storage turned off, and this keeps the game running in that case.",
+        "OUTCOME: src/render.js draws 'Best: wave N' on the existing start screen only when best is not null, between the tagline and the Start button. test/best.test.js uses a recording context to check that the drawn text includes 'Best: wave 7' and that no Best text appears when there is no best. The new best parameter defaults to null, so existing callers of draw are unaffected.",
+        "CONSTRUCTION: no defect found. A storage that is missing or throws reads as no best, and a refused write is swallowed. An invalid wave (0, a fraction, NaN, undefined, or the string '9') is never saved. A playing game draws the same text whether or not a best is passed."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
