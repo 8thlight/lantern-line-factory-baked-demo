@@ -73,7 +73,8 @@ export function step(state, dt) {
 
   // The next wave starts once this one has spawned out and the board is clear,
   // whether its ghosts were banished or leaked. Every wave is the same size for now.
-  if (waveDone(state.spawner) && state.enemies.length === 0) {
+  // A wave of no ghosts never ends, so it cannot count waves up on an empty board.
+  if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
     const { count, interval } = state.spawner;
     state.wave += 1;
     state.spawner = createWave({ count, interval });

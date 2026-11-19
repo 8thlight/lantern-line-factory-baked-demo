@@ -5,6 +5,7 @@ import { WAYPOINTS, pathLength } from '../src/path.js';
 import { LANTERN } from '../src/tower.js';
 
 // A game whose waves hold no ghosts, so each test controls its enemies.
+// Its wave number stays at 1: a wave of no ghosts never ends.
 function quietGame(options) {
   return createGame({ ...options, waveSize: 0 });
 }
@@ -57,6 +58,34 @@ test('the wave number moves from 1 to 2 only after wave 1 has spawned out and it
   assert.equal(game.enemies.length, 0);
   assert.equal(game.lives, START_LIVES - 2);
   assert.equal(game.wave, 2); // both leaked, so the board is clear
+});
+
+test('the wave number moves from 1 to 2 only when the lanterns banish the last ghost of wave 1', () => {
+  const game = createGame({ waveSize: 2, spawnInterval: 1 });
+  // Three lanterns beside the path's start: three beams banish a 3-health ghost in one step.
+  placeTower(game, 0, 1);
+  placeTower(game, 1, 1);
+  placeTower(game, 0, 3);
+
+  step(game, 0.01);
+  assert.equal(game.kills, 1);
+  assert.equal(game.enemies.length, 0);
+  assert.equal(game.wave, 1); // the board is clear, but wave 1 has a ghost still to come
+
+  step(game, 0.5);
+  assert.equal(game.wave, 1);
+
+  step(game, 0.5);
+  assert.equal(game.kills, 2);
+  assert.equal(game.enemies.length, 0);
+  assert.equal(game.lives, START_LIVES);
+  assert.equal(game.wave, 2); // spawned out and banished, so the next wave starts
+});
+
+test('a wave of no ghosts keeps the wave number where it is', () => {
+  const game = quietGame();
+  for (let i = 0; i < 5; i++) step(game, 1);
+  assert.equal(game.wave, 1);
 });
 
 test('towers are refused on the path and on a taken cell', () => {
