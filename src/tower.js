@@ -1,6 +1,6 @@
 // Tower kinds. The Lantern fires a beam at the nearest enemy; Frost slows the one it hits.
 
-import { COLS, ROWS, cellCenter, cellKey } from './path.js';
+import { cellCenter } from './path.js';
 import { nearestInRange } from './targeting.js';
 
 export const LANTERN = { name: 'Lantern', range: 100, cooldown: 0.6, cost: 0 }; // pixels, seconds, gold
@@ -21,13 +21,6 @@ export function createTower(col, row, kind = LANTERN) {
     range: kind.range, cooldown: kind.cooldown, slow: kind.slow, slowFor: kind.slowFor,
     reload: 0,
   };
-}
-
-// A tower may stand on any in-bounds cell that is not path and not taken.
-export function canPlace({ path, towers }, col, row) {
-  if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return false;
-  if (path.has(cellKey(col, row))) return false;
-  return !towers.some((t) => t.col === col && t.row === row);
 }
 
 // Count the reload down; when ready and an enemy is in range, fire.
