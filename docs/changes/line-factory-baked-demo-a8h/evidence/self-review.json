@@ -2,8 +2,11 @@
   "print_id": "line-factory-baked-demo-a8h",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [],
-  "said": "FOUND 0\n\n- I found nothing to fix, so I made no commits. Both beads cover everything in the plan and every acceptance criterion in the triage.\n- Every changed source and test file is in the triage's `touches:` list. The other files in the range are not from build: `.github/workflows/ci.yml` came in with the main merge (`6656e5f`), and `docs/changes/\u2026` came from the chain commits.\n- The two checks in `step()` that decide when the next wave starts are each covered by a test. Removing `state.spawner.count > 0` makes \"a wave of no ghosts keeps the wave number where it is\" fail. Removing `waveDone(state.spawner)` makes \"the wave number moves from 1 to 2 only when the lanterns banish the last ghost of wave 1\" fail.\n- The last gate finding had no failed log to read. The current head, `463de98`, runs the same `npm test` that CI runs and passes 26 of 26.\n- This clone has no Makefile, so there is no `make check-build`. I checked with `npm --prefix . run test` instead and wrote that in the attempt notes.\n\nGATES green",
+  "edited": [
+    "src/game.js",
+    "test/game.test.js"
+  ],
+  "said": "FOUND 1\n- `src/game.js:76` (and the matching comment at `test/game.test.js:8`): both comments said \"a wave of no ghosts never ends\", but the code doesn't work that way. `waveDone` returns true straight away for a wave of no ghosts, and it's the `count > 0` check in `step()` that keeps the wave number from advancing. I reworded both comments to say that. Fixed, and committed.\n\nThe rest of the review turned up nothing. Every planned file is in the diff, and every acceptance criterion has a test whose assertion could fail. The `count > 0` check and the guard that stops `healthFraction` returning NaN each have a test that fails if the guard is removed. Every change is inside the signed touches. The `.github/workflows/ci.yml` change came from the merge of main, not from this print.\n\nGATES green: `npm --prefix . run test` passes all 28 tests and the tree is committed and clean. This clone has no `make check-build` target, and `package.json` declares no lint or type-check script, so the test run was the only check available.",
   "gates": "green",
   "finding": null
 }
