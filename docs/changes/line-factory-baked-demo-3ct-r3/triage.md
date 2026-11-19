@@ -63,6 +63,7 @@ touches:
   - src/render.js
   - src/hud.js
   - src/main.js
-  - test/start-screen.test.js
+  - test/pause-speed.test.js
+  - test/upgrade.test.js
 
 Acceptance criterion: A new test/start-screen.test.js proves each of these, and npm --prefix . run test passes with no existing test file edited: a game created with `{ status: 'ready' }` has status `'ready'` and stepping it spawns nothing; `start` moves it to `'playing'` and the next step spawns the first ghost; `start` on a playing game changes nothing; restarting a game created `'ready'` gives a `'ready'` game; drawing a `'ready'` game draws "Lantern Line" and "Start" while drawing a playing game draws neither.
