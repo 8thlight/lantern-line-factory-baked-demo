@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "5cbbe7d423411ff1ff0995a5a364c495e28a090d096bd50da7b72f876b4fddd4",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "OUTCOME: Every acceptance criterion is met. In src/game.js, towerAt returns the tower on the cell or null via `find(...) ?? null`. rangePreview returns the placed tower's {x, y, radius: range}. On a cell where canPlace allows a tower it returns cellCenter with the range of the selected kind, falling back to LANTERN. It returns null on a path cell, off the board, or with no hover. test/range-preview.test.js covers each criterion: towerAt hit and miss, a placed lantern and brazier (the placed tower takes precedence over the held kind), empty grass with the default and with BRAZIER, and null for path, off-board and no hover.",
+        "OUTCOME: The ring follows the cited artboard line design/screens.html:204, which the brief settles. THEME.rangeRing is '#f2c14e' (an opaque stroke) and THEME.rangeFill is rgba(242,193,78,0.07). drawRangeRing in render.js sets lineWidth 1.5 and setLineDash([6,6]), and both the code comment and the theme comment cite screens.html:204, not Board.dc.html. The opaque stroke is the design's choice, so it is not a defect.",
+        "CONSTRUCTION: No defect found. drawRangeRing wraps its work in save/restore and also resets the dash, and a test checks that no dash state leaks into later draws. The ring is drawn after the hover tile and before the tower bodies, so lantern bodies stay on top. The render.js to game.js import is one-way: game.js does not import render.js, so there is no cycle. main.js now carries the current `kind` on hover, both on mousemove and every frame, so the preview follows the selected tower kind. Caveat: this folder has only the diffs, so I could not check that a `kind` variable is already in scope in main.js or that canPlace ignores gold. I'm relying on the CI lint and tests that already passed for both."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
