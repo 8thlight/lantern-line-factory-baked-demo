@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { firstInRange, nearestInRange, pickTarget } from '../src/targeting.js';
-import { BRAZIER, createTower, nextMode, towerAt, updateTower } from '../src/tower.js';
+import { BRAZIER, createTower, nextMode, toggleModeAt, towerAt, updateTower } from '../src/tower.js';
+import { createGame } from '../src/game.js';
 
 const tower = { x: 0, y: 0, range: 100 };
 const near = { id: 'near', x: 10, y: 0, distance: 50 };
@@ -50,4 +51,18 @@ test('updateTower fires at the first ghost for a tower in mode first', () => {
   const ahead = { x: t.x + 80, y: t.y, distance: 300 };
   assert.equal(updateTower(t, [close, ahead], 0.016), ahead);
   assert.equal(updateTower(createTower(0, 0), [close, ahead], 0.016), close);
+});
+
+test('toggleModeAt flips the tower on a cell while the round is playing, and only then', () => {
+  const state = createGame();
+  const placed = createTower(1, 1);
+  state.towers.push(placed);
+  assert.equal(toggleModeAt(state, 1, 1), placed);
+  assert.equal(placed.mode, 'first');
+  assert.equal(toggleModeAt(state, 1, 1), placed);
+  assert.equal(placed.mode, 'nearest');
+  assert.equal(toggleModeAt(state, 2, 1), null);
+  state.status = 'won';
+  assert.equal(toggleModeAt(state, 1, 1), null);
+  assert.equal(placed.mode, 'nearest');
 });
