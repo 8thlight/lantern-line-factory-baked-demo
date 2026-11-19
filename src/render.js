@@ -467,10 +467,14 @@ const START_STEPS = [
 
 // design/hud.md's Start screen, with the StartScreen artboard's hint and steps
 // (design/screens/StartScreen.dc.html): a veil in --hud-bg over the whole canvas, so the path
-// shows faintly behind, the title at 35% height and the Start button at 60%.
+// shows faintly behind, the title at 35% height and the Start button at 60%. The tagline hangs
+// from the title, and the hint and steps from the button, so they move with them.
 function drawStartScreen(ctx) {
   const canvasHeight = HUD_HEIGHT + HEIGHT;
   const centre = WIDTH / 2;
+  const titleY = Math.round(0.35 * canvasHeight);
+  const { x, y, width, height } = START_BUTTON;
+  const hintY = y + height + 16;
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.fillRect(0, 0, WIDTH, canvasHeight);
@@ -478,11 +482,10 @@ function drawStartScreen(ctx) {
   ctx.textBaseline = 'middle';
   ctx.font = 'bold 40px system-ui, sans-serif';
   ctx.fillStyle = THEME.hudAccent;
-  ctx.fillText('Lantern Line', centre, Math.round(0.35 * canvasHeight));
+  ctx.fillText('Lantern Line', centre, titleY);
   ctx.font = '16px system-ui, sans-serif';
   ctx.fillStyle = THEME.hudMuted;
-  ctx.fillText('Light the lanterns. Stop the ghosts before they reach the gate.', centre, 190);
-  const { x, y, width, height } = START_BUTTON;
+  ctx.fillText('Light the lanterns. Stop the ghosts before they reach the gate.', centre, titleY + 36);
   ctx.beginPath();
   ctx.fillStyle = THEME.hudAccent;
   ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
@@ -492,9 +495,9 @@ function drawStartScreen(ctx) {
   ctx.fillText('Start', x + width / 2, y + height / 2);
   ctx.font = '12px system-ui, sans-serif';
   ctx.fillStyle = THEME.hudMuted;
-  ctx.fillText('or press Enter or Space', centre, 302);
+  ctx.fillText('or press Enter or Space', centre, hintY);
   ctx.fillStyle = THEME.hudInk;
-  START_STEPS.forEach((line, i) => ctx.fillText(line, centre, 340 + 22 * i));
+  START_STEPS.forEach((line, i) => ctx.fillText(line, centre, hintY + 38 + 22 * i));
   ctx.restore();
 }
 
