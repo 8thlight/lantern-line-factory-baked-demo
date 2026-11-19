@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "34de4ff139fcb74625b7f7962a76db3ac187600e17f865ee134bbfec7aedc343",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] missing test: the only code that saves a run's result is the new line in src/main.js frame(), which writes the best when step() moves the status from 'playing' to 'won' or 'lost'. No test covers it. test/best.test.js tests readBest and writeBest directly and passes `best` to draw() by hand. If that check broke (for example a status renamed in game.js, or a run that ends outside step()), the best would silently stop being saved and every test would still pass. Moving the end-of-run check into a small pure helper, or into game.js, would let a test cover it.",
+        "[P1] edge case: writeBest(storage, wave) never checks that `wave` is a positive whole number. If game.js ever passed 0, NaN or a fraction as state.wave, writeBest would store it (for example 'NaN'). readBest then reads that as no best, so the next write would overwrite a real best instead of only ever raising it. game.js was not in the diff, so I could not confirm what state.wave can hold today. Validating `wave` inside writeBest, with the same check readBest uses, would close this.",
+        "[P2] note: the brief's outcome is met. src/best.js takes the storage as an argument. A best is only ever raised. Missing, non-numeric or throwing storage reads as no best, and a write still goes through. main.js saves state.wave once, on the step that ends the run. render.js draws 'Best: wave N' only on the 'ready' start screen, and no Best text when best is null. test/best.test.js covers the 7, 4/9, non-numeric text and start-screen criteria using a plain object as the storage."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}

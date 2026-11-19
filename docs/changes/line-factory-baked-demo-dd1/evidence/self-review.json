@@ -1,0 +1,11 @@
+{
+  "print_id": "line-factory-baked-demo-dd1",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/best.test.js"
+  ],
+  "said": "FOUND 1\n- `test/best.test.js:59`: the draw tests copied the start screen's title, tagline, hint and the `START_STEPS` strings word for word, even though `src/render.js` already declares them. The Best test now compares the screen with a best against the same screen drawn with no best, and the no-best test checks the title and the Start button by position. Fixed and committed.\n\nEverything else in the diff matches the plan:\n- **Files:** all four planned files are there and inside `touches:`.\n- **Acceptance:** each criterion has a test that could fail. If the `best !== null` check is removed, the no-best draw test fails. The save on a lost or won run is also covered.\n- **Comments:** they say what the code does.\n\nGATES green: `npm --prefix . run test` passes 188 of 188, and the six named test files pass 69 of 69 (this repo has no Makefile, so these are its checks).",
+  "gates": "green",
+  "finding": null
+}
