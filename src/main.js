@@ -5,6 +5,7 @@ import { clickCell, createGame, hoverAt, restart, start, step, togglePause, togg
 import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
+import { readBest, writeBest } from './best.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -15,6 +16,8 @@ let state = createGame({ status: 'ready' }); // the start screen, until Start, E
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
 let selected = null; // the id of the tower the card shows, chosen by a click on it
+const storage = globalThis.localStorage; // undefined outside a browser, where best.js reads it as empty
+let best = readBest(storage); // the best wave any run has reached, shown on the start screen
 
 const TOGGLES = { pause: togglePause, speed: toggleSpeed };
 
@@ -102,9 +105,13 @@ let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); // clamp after a hidden tab; at 2x, step runs two ticks of it
   last = now;
+  const before = state.status;
   step(state, dt);
+  // A run ends once, on the step that wins or loses it, so the wave it reached is saved once,
+  // whether or not the player clicks to play again.
+  if (before === 'playing' && (state.status === 'won' || state.status === 'lost')) best = writeBest(storage, state.wave);
   if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
-  draw(ctx, state, hover, SPRITES, kind, selected);
+  draw(ctx, state, hover, SPRITES, kind, selected, best);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
