@@ -10,7 +10,15 @@ import { HUD_BUTTONS, HUD_GAP, HUD_HEIGHT, HUD_PAD, hudModel } from './hud.js';
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
-// Pools first, then the hover and its range ring, then tower bodies, so no lantern's pool lands
+// A whole frame: the board, then the HUD bar over it, then the end card's veil over both
+// once the round is over. The HUD is its own layer, so draw stays the board alone.
+export function drawFrame(ctx, state, hover) {
+  draw(ctx, state, hover);
+  drawHud(ctx, hudModel(state));
+  if (state.status !== 'playing') drawEndCard(ctx, state.status);
+}
+
+// The board. Pools first, then the hover and its range ring, then tower bodies, so no lantern's pool lands
 // on another's body and the ring sits under the lanterns, as the Main artboard layers it.
 // A tower that splashes is a brazier: it casts no pool and is drawn as its square.
 export function draw(ctx, state, hover, sprites = SPRITES) {
@@ -24,8 +32,6 @@ export function draw(ctx, state, hover, sprites = SPRITES) {
   }
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
-  drawHud(ctx, hudModel(state));
-  if (state.status !== 'playing') drawEndCard(ctx, state.status);
 }
 
 // Grass as alternating tiles with a few blades, then the path as layered stone:

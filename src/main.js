@@ -3,7 +3,7 @@
 import { COLS, ROWS, TILE } from './path.js';
 import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
-import { draw } from './render.js';
+import { drawFrame } from './render.js';
 import { hudButtonAt } from './hud.js';
 
 const canvas = document.getElementById('board');
@@ -77,7 +77,7 @@ function frame(now) {
   last = now;
   step(state, dt);
   if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
-  draw(ctx, state, hover);
+  drawFrame(ctx, state, hover);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
