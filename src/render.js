@@ -5,6 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
+import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -12,7 +13,11 @@ const HEIGHT = ROWS * TILE;
 // Pools first, then the hover and its range ring, then tower bodies, so no lantern's pool lands
 // on another's body and the ring sits under the lanterns, as the Main artboard layers it.
 // A tower that splashes is a brazier: it casts no pool and is drawn as its square.
+// The board sits below the HUD bar, drawn in its own coordinates moved down by HUD_HEIGHT,
+// so no cell is ever under the bar; the end card veils the board and the bar stays readable.
 export function draw(ctx, state, hover, sprites = SPRITES) {
+  ctx.save();
+  ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);
   for (const tower of state.towers) if (!(tower.splash > 0)) sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
@@ -23,8 +28,9 @@ export function draw(ctx, state, hover, sprites = SPRITES) {
   }
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
-  drawLives(ctx, state.lives);
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
+  ctx.restore();
+  drawHud(ctx, hudModel(state));
 }
 
 // Grass as alternating tiles with a few blades, then the path as layered stone:
@@ -286,13 +292,54 @@ export function drawBeam(ctx, from, to) {
   ctx.restore();
 }
 
-function drawLives(ctx, lives) {
+// The design/hud.md bar, drawn only from hudModel: Lives, Gold and Wave from the left at fixed
+// offsets (no text is measured), the Pause and Speed buttons on the right.
+const HUD_ITEMS = [
+  { label: 'Lives', labelX: HUD_PAD, valueX: 54 },
+  { label: 'Gold', labelX: 96, valueX: 138 },
+  { label: 'Wave', labelX: 190, valueX: 236 },
+];
+const BUTTON_RADIUS = 6;
+
+function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }) {
   ctx.save();
-  ctx.fillStyle = THEME.text;
+  ctx.fillStyle = THEME.hudBg;
+  ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
   ctx.font = '16px system-ui, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText(`Lives: ${lives}`, 8, 20);
+  ctx.textBaseline = 'middle';
+  const values = [
+    [String(lives), livesDanger ? THEME.hudDanger : THEME.hudInk],
+    [String(gold), THEME.hudAccent],
+    [`${wave} / ${totalWaves}`, THEME.hudGhost],
+  ];
+  HUD_ITEMS.forEach(({ label, labelX, valueX }, i) => {
+    ctx.fillStyle = THEME.hudMuted;
+    ctx.fillText(label, labelX, HUD_HEIGHT / 2);
+    ctx.fillStyle = values[i][1];
+    ctx.fillText(values[i][0], valueX, HUD_HEIGHT / 2);
+  });
+  drawButton(ctx, PAUSE_BUTTON, paused ? 'Resume' : 'Pause', false);
+  drawButton(ctx, SPEED_BUTTON, `${speed}x`, speed === 2);
   ctx.restore();
+}
+
+// A HUD button: outlined in the muted ink, or filled with the accent while it is active.
+function drawButton(ctx, { x, y, width, height }, text, active) {
+  ctx.beginPath();
+  if (active) {
+    ctx.fillStyle = THEME.hudAccent;
+    ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
+    ctx.fill();
+  } else {
+    ctx.strokeStyle = THEME.hudMuted;
+    ctx.lineWidth = 1;
+    ctx.roundRect(x, y, width, height, BUTTON_RADIUS);
+    ctx.stroke();
+  }
+  ctx.fillStyle = active ? THEME.hudAccentInk : THEME.hudInk;
+  ctx.textAlign = 'center';
+  ctx.fillText(text, x + width / 2, y + height / 2);
 }
 
 const END_TITLES = { lost: 'The ghosts got through', won: 'The path is safe' };

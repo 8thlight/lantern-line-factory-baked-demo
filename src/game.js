@@ -48,6 +48,8 @@ export function createGame({
     lives,
     gold,
     kills: 0,
+    paused: false,
+    speed: 1, // 1 or 2: the ticks each step runs
   };
 }
 
@@ -109,10 +111,29 @@ export function restart(state) {
   return createGame(state.options);
 }
 
-// Advance the whole game by `dt` seconds. A finished round stays as it ended.
-export function step(state, dt) {
-  if (state.status !== 'playing') return state;
+// Pause and unpause the round.
+export function togglePause(state) {
+  state.paused = !state.paused;
+  return state;
+}
 
+// Move the round between 1x and 2x.
+export function toggleSpeed(state) {
+  state.speed = state.speed === 2 ? 1 : 2;
+  return state;
+}
+
+// Advance the whole game by `dt` seconds of play, `speed` times over. A finished round stays
+// as it ended, and a paused one as it was. 2x is two ticks of the frame's `dt`, never one tick
+// of twice the `dt`, so a long frame cannot carry a ghost past a tower's reach or fold two
+// reloads into one shot.
+export function step(state, dt) {
+  if (state.status !== 'playing' || state.paused) return state;
+  for (let i = 0; i < state.speed && state.status === 'playing'; i++) tick(state, dt);
+  return state;
+}
+
+function tick(state, dt) {
   const due = updateWave(state.spawner, dt);
   for (let i = 0; i < due; i++) spawnEnemy(state);
 
