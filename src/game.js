@@ -134,7 +134,6 @@ export function step(state, dt) {
 }
 
 function tick(state, dt) {
-
   const due = updateWave(state.spawner, dt);
   for (let i = 0; i < due; i++) spawnEnemy(state);
 

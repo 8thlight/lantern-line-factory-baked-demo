@@ -5,7 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
-import { HUD_HEIGHT, PAUSE_BUTTON, SPEED_BUTTON, hudModel } from './hud.js';
+import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -294,7 +294,6 @@ export function drawBeam(ctx, from, to) {
 
 // The design/hud.md bar, drawn only from hudModel: Lives, Gold and Wave from the left at fixed
 // offsets (no text is measured), the Pause and Speed buttons on the right.
-const HUD_PAD = 8;
 const HUD_ITEMS = [
   { label: 'Lives', labelX: HUD_PAD, valueX: 54 },
   { label: 'Gold', labelX: 96, valueX: 138 },
