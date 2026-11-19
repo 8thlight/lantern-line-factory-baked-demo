@@ -65,6 +65,7 @@ touches:
   - src/game.js
   - src/render.js
   - src/theme.js
+  - src/main.js
   - test/range-preview.test.js
 
 Acceptance criterion: Re-cut of line-factory-baked-demo-000 (issue #6, range ring on hover): add towerAt and rangePreview to src/game.js, add THEME.rangeRing/rangeFill to src/theme.js, and have render.js draw the ring, proven by a new test/range-preview.test.js. The print was retired at landing because its PR read red past 3 verify rounds on a review P1 that called the opaque ring stroke 'not faint'. The design settles it: design/screens.html:204 draws the ring as stroke=#f2c14e (opaque), stroke-width 1.5, dasharray 6 6, fill #f2c14e at fill-opacity 0.07. Build to that and cite design/screens.html:204 (not Board.dc.html, which has no ring) in the plan so review can check it. The prior branch print/line-factory-baked-demo-000 at 32e6af3 has a green implementation to start from.
