@@ -1,0 +1,12 @@
+{
+  "print_id": "line-factory-baked-demo-ywd",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/tower.js",
+    "test/frost.test.js"
+  ],
+  "said": "FOUND 3\n- `src/tower.js:26`: `canPlace` had no callers left, and `placementError` (`src/game.js:30`) repeated its three rules, so the same rules lived in two places. I removed `canPlace` and the imports only it used. The existing `test/game.test.js` refusal cases still cover those rules through `placeTower`. Fixed.\n- `test/frost.test.js:65`: a comment said the tower at (1,1) sits \"just below\" the path, but the path runs along row 2, so row 1 is above it. Fixed.\n- `plan.md` \u00a74 says `canPlace` stays because `main.js` and the tests use it, but neither does after this build. Left as is, because this stage may not commit to `plan.md`. The code now matches the tree rather than that sentence.\nGATES green: `node --test` on `test/frost.test.js`, `test/game.test.js`, `test/path.test.js` and `test/targeting.test.js` passed 21 of 21, and `npm --prefix . run test` passed 21 of 21. This clone's Makefile has no `check-build` target, so I ran `node --test` instead (this line's tests aren't pytest) and noted that in `/scratch/attempt-notes.md`. Tree committed and clean.",
+  "gates": "green",
+  "finding": null
+}
