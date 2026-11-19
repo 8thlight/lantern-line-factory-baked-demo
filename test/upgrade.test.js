@@ -1,8 +1,8 @@
-import { test } from 'node:test';
+import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { BRAZIER, FROST, LANTERN, MAX_LEVEL, createTower, towerById } from '../src/tower.js';
 import { START_GOLD, clickCell, createGame, placeTower, upgradeError, upgradeTower } from '../src/game.js';
-import { UPGRADE_REFUSALS, hudKey, selectedModel, upgradeLine } from '../src/hud.js';
+import { HUD_HEIGHT, UPGRADE_REFUSALS, hudKey, selectedModel, upgradeLine } from '../src/hud.js';
 import { LEVEL_MARK, SPRITES, draw, drawLevelMarks } from '../src/render.js';
 import { THEME } from '../src/theme.js';
 import { COLS, ROWS, TILE } from '../src/path.js';
@@ -251,4 +251,51 @@ test("the selected tower's card stays on the board", () => {
     return [x >= 0, x + width <= COLS * TILE, y >= 0, y + height <= ROWS * TILE];
   });
   assert.deepEqual(cards, Array(3).fill([true, true, true, true]));
+});
+
+// src/main.js against stand-ins for the DOM, as test/pause-speed.test.js boots it: the canvas
+// keeps its handlers, the window its keydown, and each frame is run by hand.
+const savedGlobals = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
+after(() => Object.assign(globalThis, savedGlobals));
+
+let boots = 0;
+async function bootMain() {
+  const handlers = {};
+  const keys = {};
+  const frames = [];
+  let ctx = recordingContext();
+  const canvas = {
+    addEventListener: (type, handler) => (handlers[type] = handler),
+    getBoundingClientRect: () => ({ left: 0, top: 0, width: canvas.width, height: canvas.height }),
+    getContext: () => new Proxy({}, { get: (t, name) => ctx[name], set: (t, name, value) => ((ctx[name] = value), true) }),
+  };
+  globalThis.document = { getElementById: () => canvas };
+  globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
+  globalThis.requestAnimationFrame = (frame) => frames.push(frame);
+  await import(`../src/main.js?upgrade=${++boots}`);
+  return {
+    click: (col, row) => handlers.click({ clientX: col * TILE + TILE / 2, clientY: HUD_HEIGHT + row * TILE + TILE / 2 }),
+    key: (key, repeat = false) => keys.keydown({ key, repeat }),
+    // Run the next queued frame and return the texts it drew.
+    frame() {
+      ctx = recordingContext();
+      frames.shift()(performance.now());
+      return texts(ctx).map((c) => c.args[0]);
+    },
+  };
+}
+
+test('in the browser, a click selects a tower, U upgrades it once per press and Escape clears it', async () => {
+  const game = await bootMain();
+  game.click(1, 1); // places a lantern: 30 gold left, nothing selected
+  assert.equal(game.frame()[0], 'Lives');
+  game.key('u');
+  game.click(1, 1); // selects it
+  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 1', 'Range 2.5 tiles · 1 damage', 'Press U to upgrade: 25 gold']);
+  game.key('u', true); // a held key's repeat does nothing
+  assert.equal(game.frame()[0], 'Lantern · level 1');
+  game.key('U');
+  assert.deepEqual(game.frame().slice(0, 3), ['Lantern · level 2', 'Range 3 tiles · 2 damage', 'Needs 25 gold, you hold 5: banish more ghosts']);
+  game.key('Escape');
+  assert.equal(game.frame()[0], 'Lives');
 });
