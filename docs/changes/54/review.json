@@ -1,19 +1,22 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "fcaf32a84e96c2da7164c3948fe4c8e264215df3cc82fd7f3e9a4ff31337d117",
+  "digest": "f3389c1b2bc058b23b3ad4f7cc74d52848873385623bf5c898e36801ac419ae5",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] contract/test-gap: in src/game.js, waveSpawner gives a boss wave a spawner count of `options.waveSize + 1` when waveSize is set explicitly, and turns the boss off entirely when waveSize is 0. The comment on createGame says an explicit waveSize 'holds for every wave', but on waves 5 and 10 it no longer does. test/boss.test.js relies on the waveSize: 0 case, yet no test pins what an explicit nonzero waveSize does on a boss wave. That leaves the override contract implicit and easy to break.",
-        "[P1] test-gap: leakEnemies still returns leaked.length, the number of ghosts that leaked, while it now takes BOSS_LIVES lives for a boss. So the return value no longer matches the lives lost. No test pins what the return value means after this change, so any caller that reads it as lives lost would be silently off by 2 for each boss.",
-        "[P2] naming/semantics: the brief says the HUD announces a boss wave 'when it starts'. hudModel.bossWave stays true for the whole wave, so 'Boss wave' is still drawn after the boss is banished. The comment in src/hud.js documents this choice, so it is acceptable, but the label lingers after the threat is gone."
+        "The diff meets the brief: in src/waves.js, entries 5 and 10 (and only those) now have a boss entry. Each boss has health, speed and bounty: wave 5 is 40 health, speed 45, bounty 30; wave 10 is 80 health, speed 55, bounty 50. Both are slower and tougher than the wave's plain ghosts, and both pay at least 3 \u00d7 ENEMY_BOUNTY.",
+        "waveSpawner adds one extra spawn only when the wave's entry has a boss and the wave sends at least one ghost. The spawn loop in tick sends that boss last even when one long tick owes several spawns. test/boss.test.js covers this for waves 1\u20134, 5 and 10, and for the long-tick case.",
+        "spawnBoss gives the boss its entry's health, maxHealth, speed and bounty through createEnemy and sets boss: true. The tests prove it takes `health` hits of 1 to defeat and pays its declared gold to state.gold when a tower kills it.",
+        "leakEnemies now takes BOSS_LIVES (3) for a boss and 1 for a plain ghost, and lives still stop at 0. The tests prove this through step and through a direct call, including a boss leak that loses the round.",
+        "hudModel now sets bossWave from spawner.boss, so the flag is on from the start of a boss wave. drawHud writes 'Boss wave' in hudDanger at HUD_BOSS_X, before the Pause and Speed buttons. drawGhost draws a boss BOSS_SCALE times larger and moves its health bar up by the same factor. Tests check the model, the text, the scale and the bar position.",
+        "The two tests the brief named in test/waves.test.js were updated and still prove what they proved before. The key-set test now allows exactly one extra key, 'boss', and only on a boss wave. The win test now expects each wave's ghost count plus BOSS_LIVES per boss wave in lives lost. The new test/hud.test.js line adds bossWave: false to the new-game model."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
