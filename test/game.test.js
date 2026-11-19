@@ -4,11 +4,9 @@ import { START_LIVES, createGame, placeTower, spawnEnemy, step } from '../src/ga
 import { WAYPOINTS, pathLength } from '../src/path.js';
 import { LANTERN } from '../src/tower.js';
 
-// A game with no automatic spawning, so each test controls its enemies.
+// A game whose waves hold no ghosts, so each test controls its enemies.
 function quietGame(options) {
-  const game = createGame(options);
-  game.spawnTimer = Infinity;
-  return game;
+  return createGame({ ...options, waveSize: 0 });
 }
 
 test('a new game starts with full lives and an empty board', () => {
@@ -34,14 +32,31 @@ test('lives never go below zero', () => {
   assert.equal(game.lives, 0);
 });
 
-test('enemies spawn on the interval', () => {
-  const game = createGame({ spawnInterval: 1 });
+test('a wave spawns one ghost at once, then one per interval, and no more than its size', () => {
+  const game = createGame({ waveSize: 2, spawnInterval: 1 });
   step(game, 0.01);
   assert.equal(game.enemies.length, 1);
   step(game, 0.5);
   assert.equal(game.enemies.length, 1);
   step(game, 0.5);
   assert.equal(game.enemies.length, 2);
+  step(game, 1);
+  assert.equal(game.enemies.length, 2);
+});
+
+test('the wave number moves from 1 to 2 only after wave 1 has spawned out and its ghosts are gone', () => {
+  const game = createGame({ waveSize: 2, spawnInterval: 1 });
+  assert.equal(game.wave, 1);
+  step(game, 0.01);
+  assert.equal(game.enemies.length, 1);
+  assert.equal(game.wave, 1); // still spawning
+  step(game, 1);
+  assert.equal(game.enemies.length, 2);
+  assert.equal(game.wave, 1); // spawned out, but its ghosts are on the board
+  step(game, pathLength(WAYPOINTS) / game.enemies[0].speed + 0.1);
+  assert.equal(game.enemies.length, 0);
+  assert.equal(game.lives, START_LIVES - 2);
+  assert.equal(game.wave, 2); // both leaked, so the board is clear
 });
 
 test('towers are refused on the path and on a taken cell', () => {
