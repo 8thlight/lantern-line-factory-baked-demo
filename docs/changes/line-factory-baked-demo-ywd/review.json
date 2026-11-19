@@ -1,16 +1,15 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "16b539c105e8db4d1db6bf70564b4dfbd60626109f60f73cde639a31572f88ce",
+  "digest": "48728a9604426395a9f62b31568e41ef820400c50b2ca0e162b399d5d20fb787",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] outcome/HUD: src/main.js passes `picked` to draw, not the selected `kind`. `picked` starts as null, so at boot the HUD names no kind even though clicks already place a Lantern. The issue asks that the selected kind shows in the HUD, and the brief says main.js passes the selected kind to draw. The kind only appears after the player presses 1, 2 or 3. The brief's 'only when draw is handed a kind' guard exists to keep the existing render.js test expectations, and it does not need main.js to hide the kind at boot. Passing `kind` fixes this; the bootMain test in test/frost.test.js that asserts no kind name before a pick would need updating to match.",
-        "[P2] structure: createTower now stores `kind` on the tower and also copies range, cooldown, damage, splash, slow and slowFor from it. That is two sources for the same values. Lantern and brazier towers also get `slow: undefined` and `slowFor: undefined`, while splash defaults to 0. Defaulting slow to 0 or 1 would be consistent with splash and make the `tower.slow > 0` checks less dependent on undefined.",
-        "[P2] test: the first acceptance test ('covers half the distance in the next second') calls slowEnemy directly instead of using a frost hit. The later step-based test covers the real path, so the first one partly repeats it. Both compare floats with exact equality, which passes today but is fragile if speeds or dt change."
+        "[P1] outcome-gap (HUD): src/main.js passes `picked` to draw, and `picked` stays null until the player presses 1, 2 or 3. The game starts with the lantern selected (`kind = LANTERN`), yet the HUD shows no kind name until a key is pressed. The brief says 'main.js passes the selected kind to draw' and the issue says 'the selected kind shows in the HUD'. The code comment says this keeps existing pause/speed tests passing, which the brief did not ask for. None of the four acceptance criteria covers the HUD, so this is not P0. Follow-up: pass `kind` from boot and update the pause/speed tests that assume the bar holds the HUD alone.",
+        "[P2] layout: drawKind writes the kind name at a fixed KIND_X = 290, between the Wave value (valueX 236) and the HUD buttons. Nothing checks that the name and cost fit before the pause/speed buttons, so a longer name or a 'Wave 10/10' value could overlap. Placing it relative to the button layout in hud.js would be sturdier."
       ],
       "seat": "review",
       "verdict": "changes-required"
