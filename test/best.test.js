@@ -102,9 +102,15 @@ test('the start screen draws "Best: wave 7" between the tagline and the Start bu
 
 test('the start screen draws no Best line when there is no best', () => {
   const texts = startScreenTexts(drawnTexts(createGame({ status: 'ready' }), null));
-  assert.equal(texts[0], 'Lantern Line');
-  assert.equal(texts[2], 'Start');
-  assert.deepEqual(texts.filter((t) => t.startsWith('Best')), []);
+  assert.deepEqual(texts, [
+    'Lantern Line',
+    'Light the lanterns. Stop the ghosts before they reach the gate.',
+    'Start',
+    'or press Enter or Space',
+    '1  Hang lanterns on the grass beside the path',
+    '2  Each one shines on the nearest ghost in range',
+    '3  A ghost that reaches the gate costs a life',
+  ]);
 });
 
 test('a playing game draws the same texts with a best as without one', () => {
