@@ -90,6 +90,7 @@ test('key 3 picks frost, key 1 the lantern, and another key keeps the kind', () 
   assert.equal(tower.kind, FROST);
   assert.equal(tower.slow, FROST.slow);
   assert.equal(tower.slowFor, FROST.slowFor);
+  assert.deepEqual([createTower(1, 0, LANTERN).slow, createTower(1, 0, LANTERN).slowFor], [0, 0]);
 });
 
 test('draw names the kind it is handed, by name and cost, and names none when handed no kind', () => {

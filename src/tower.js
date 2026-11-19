@@ -27,7 +27,7 @@ export function createTower(col, row, kind = LANTERN) {
   return {
     col, row, x, y, kind,
     range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0,
-    slow: kind.slow, slowFor: kind.slowFor,
+    slow: kind.slow ?? 0, slowFor: kind.slowFor ?? 0,
     reload: 0, mode: 'nearest',
   };
 }

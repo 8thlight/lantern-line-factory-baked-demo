@@ -14,7 +14,9 @@ const ctx = canvas.getContext('2d');
 let state = createGame();
 let hover = null;
 let kind = LANTERN; // the kind a click places: 1 for a lantern, 2 for a brazier, 3 for frost
-let picked = null; // the kind the HUD names: none until a key picks one, so the bar at boot is the HUD alone
+// The kind the HUD names: none until a key picks one. The bar at boot and before a pick is the
+// HUD alone, as print 42's pause and speed tests pin it; naming the lantern from boot waits on them.
+let picked = null;
 
 const TOGGLES = { pause: togglePause, speed: toggleSpeed };
 
