@@ -64,6 +64,7 @@ test('rangePreview over empty grass still returns the lantern range once the rou
 
 test('rangePreview over a path cell, off the map, or with no hover, returns null', () => {
   const game = createGame();
+  assert.deepEqual(rangePreview(game, GRASS), { ...cellCenter(GRASS), radius: LANTERN.range });
   assert.equal(rangePreview(game, PATH), null);
   assert.equal(rangePreview(game, { col: -1, row: GRASS.row }), null);
   assert.equal(rangePreview(game, null), null);
