@@ -4,7 +4,7 @@ import { COLS, ROWS, TILE } from './path.js';
 import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
 import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
-import { SPRITES, draw } from './render.js';
+import { draw } from './render.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -78,7 +78,7 @@ function frame(now) {
   last = now;
   step(state, dt);
   if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
-  draw(ctx, state, hover, SPRITES, kind); // the HUD names the selected kind
+  draw(ctx, state, hover);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
