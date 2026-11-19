@@ -97,6 +97,11 @@ reaches what changes:
 - test/pause-speed.test.js `deepEqual`s two games' spawners built the same way. Both carry
   the same `boss: null`.
 - render.test.js's drawGhost test draws an ordinary ghost. Its scale and bar are unchanged.
+- I ran a throwaway prototype of steps 3 and 4 against a copy of every suite, outside the
+  worktree. Exactly three tests went red, all of them planned: hud.test.js 'hudModel on a new
+  game', and waves.test.js's keys test and 'clearing the last entry wins the round'. A full
+  round spawned bosses per wave `[0, 0, 0, 0, 1, 0, 0, 0, 0, 1]` with ordinary ghosts equal
+  to each `count`, and was won with `1000 - 96 - 2 * 3` lives.
 
 ## Build order (red first, then green)
 
@@ -177,18 +182,22 @@ wave ends on one boss of its own health, speed and bounty.
 
 src/game.js:
 - `export const BOSS_LIVES = 3; // lives a boss takes when it reaches the end`.
-- `createSpawner` builds `{ ...createWave({ count: n + (entry.boss ? 1 : 0), interval }),
-  boss: entry.boss ?? null }`, where `n` is `waveSize ?? entry.count`. The boss is one more
-  ghost on top of the wave's own count, including with an explicit `waveSize`.
-  src/wave.js is unchanged.
+- `createSpawner` returns `{ ...createWave({ count, interval }), boss: entry.boss ?? null,
+  bossSent: false }`, with count and interval read as today. The boss is not in the
+  spawner's `count`. It is one more ghost on top of the wave's own, including with an
+  explicit `waveSize`. So waves.test's 'more waves than the table', which pins
+  `spawner.count` to the last entry's `count`, holds unedited. src/wave.js is unchanged.
 - `export function spawnBoss(state, boss = waveEntry(state.wave).boss)`: `createEnemy` with
   the boss's `health`, `speed` and `bounty`, then `enemy.boss = true`, pushed and returned.
   src/enemy.js is unchanged.
-- In `tick`, the spawn loop knows which slot each due ghost fills. `first = spawner.spawned
-  - due`, and the slot `spawner.count - 1` of a spawner with a `boss` is `spawnBoss`;
-  every other slot is `spawnEnemy`. The boss comes last, after the wave's ghosts, even in a
-  backlog. So waves.test's 'more waves than the table' still finds an ordinary ghost at
-  `enemies.at(-1)` after its first step.
+- In `tick`, after the wave's due ghosts spawn, the boss is sent once. That happens when
+  the spawner has a `boss` not yet sent, `waveDone(spawner)`, and `spawner.timer <= 0`,
+  which is one `interval` after the wave's last ghost. It sets `bossSent = true`. The boss
+  comes last in its wave, and its first step still finds an ordinary ghost at
+  `enemies.at(-1)`.
+- The next wave starts only once a boss the wave declares has been sent. The existing
+  condition gains `&& !(spawner.boss && !spawner.bossSent)`, so a board cleared before the
+  boss arrives does not skip it.
 - `leakEnemies` takes `e.boss ? BOSS_LIVES : 1` for each leaked ghost, never below 0, and
   still returns how many ghosts leaked. Its comment says so.
 - A game holding more waves than the table repeats the last entry whole, boss included.
