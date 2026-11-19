@@ -136,6 +136,7 @@ async function boot() {
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   instance += 1;
   await import(`../src/main.js?case=${instance}`);
+  keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
 
   const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, preventDefault() {}, ...extra });
   return {

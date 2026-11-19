@@ -1,8 +1,8 @@
 // The HUD's model and where the pointer lands on the canvas. Pure logic, no DOM: render.js
 // draws the bar from hudModel and the selected tower's card from selectedModel, and main.js asks
-// these which button or cell a pointer is on.
+// these which button or cell a pointer is on, the start screen's Start button among them.
 
-import { COLS, TILE } from './path.js';
+import { COLS, ROWS, TILE } from './path.js';
 import { MAX_LEVEL, towerById } from './tower.js';
 import { upgradeError } from './game.js';
 
@@ -10,10 +10,14 @@ export const HUD_HEIGHT = 40; // design/hud.md --hud-height; the board is drawn 
 export const HUD_PAD = 8; // design/hud.md --hud-pad: the bar's inset from the canvas edge
 export const LIVES_DANGER = 3; // lives at or below this turn the HUD's lives red
 const WIDTH = COLS * TILE;
+const CANVAS_HEIGHT = HUD_HEIGHT + ROWS * TILE;
 
 // Right-aligned buttons, 28 tall, --hud-pad from the edge and --hud-gap apart.
 export const SPEED_BUTTON = Object.freeze({ x: WIDTH - HUD_PAD - 40, y: 6, width: 40, height: 28 });
 export const PAUSE_BUTTON = Object.freeze({ x: SPEED_BUTTON.x - 16 - 72, y: 6, width: 72, height: 28 });
+
+// design/hud.md's Start button, 160 by 44, centred across the canvas at 60% of its height.
+export const START_BUTTON = Object.freeze({ x: WIDTH / 2 - 80, y: Math.round(0.6 * CANVAS_HEIGHT) - 22, width: 160, height: 44 });
 
 // What the HUD shows, read from the state and never written to it. `bossWave` holds for the
 // whole of a wave whose spawner sends a boss, from its start.
@@ -58,6 +62,11 @@ export function hudButtonAt(x, y) {
   return null;
 }
 
+// Whether a canvas point is on the start screen's Start button.
+export function startButtonAt(x, y) {
+  return inside(START_BUTTON, x, y);
+}
+
 // The board cell under a canvas point, or null on the bar. A point past the board's edge
 // still names a cell, for cellError to call 'bounds'.
 export function boardCellAt(x, y) {
@@ -74,4 +83,9 @@ export function hudKey(key) {
   if (lower === 'f') return 'speed';
   if (lower === 'u') return 'upgrade';
   return null;
+}
+
+// Enter or Space starts a ready round; hudKey leaves them alone.
+export function startKey(key) {
+  return key === 'Enter' || key === ' ';
 }
