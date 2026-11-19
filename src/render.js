@@ -5,6 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
+import { towerById } from './tower.js';
 import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
@@ -21,7 +22,7 @@ const HEIGHT = ROWS * TILE;
 // An upgraded tower wears its level marks over its body.
 export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
   const model = selectedModel(state, selected);
-  const chosen = model && state.towers.find((t) => t.id === selected);
+  const chosen = model && towerById(state, selected);
   ctx.save();
   ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);

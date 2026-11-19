@@ -100,6 +100,16 @@ test('a level-3 tower refuses with max', () => {
   assert.equal(upgradeTower(game, 1), 'max'); // max is checked before gold
 });
 
+test('a kind that declares no upgrade is refused with max at level 1', () => {
+  const game = createGame({ waveSize: 0, gold: 1000 });
+  const { upgradeCost, upgradeDamage, upgradeRange, ...plain } = LANTERN;
+  placeTower(game, 1, 1, plain);
+  const before = stats(game);
+  assert.equal(before[0], 1);
+  assert.equal(upgradeTower(game, 1), 'max');
+  assert.deepEqual(stats(game), before);
+});
+
 test('an id that names no tower is refused with missing', () => {
   const game = createGame();
   assert.equal(upgradeTower(game, 7), 'missing');
@@ -205,12 +215,12 @@ test("draw shows the selected tower's card", () => {
   upgradeTower(game, 1);
   const short = recordingContext();
   draw(short, game, null, SPRITES, null, 1);
-  assert.deepEqual(texts(short)[2].fillStyle, THEME.hudDanger);
+  assert.equal(texts(short)[2].fillStyle, THEME.hudDanger);
   game.gold = 1000;
   upgradeTower(game, 1);
   const most = recordingContext();
   draw(most, game, null, SPRITES, null, 1);
-  assert.deepEqual([texts(most)[2].args[0], texts(most)[2].fillStyle], [UPGRADE_REFUSALS.max, THEME.hudMuted]);
+  assert.deepEqual([texts(most)[2].args[0], texts(most)[2].fillStyle], ['Level 3 is the most: upgrade another tower', THEME.hudMuted]);
 
   const bare = recordingContext();
   const plain = recordingContext();

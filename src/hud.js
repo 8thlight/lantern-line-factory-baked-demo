@@ -21,10 +21,10 @@ export function hudModel({ lives, gold, wave, totalWaves, paused, speed }) {
 }
 
 // What the card says in place of the upgrade line when upgradeError refuses, by its reason;
-// {cost} and {gold} are the upgrade's cost and the gold held.
+// {cost} and {gold} are the upgrade's cost and the gold held, {max} is MAX_LEVEL.
 export const UPGRADE_REFUSALS = Object.freeze({
   gold: 'Needs {cost} gold, you hold {gold}: banish more ghosts',
-  max: 'Level 3 is the most: upgrade another tower',
+  max: 'Level {max} is the most: upgrade another tower',
   missing: 'No tower to upgrade: click a placed tower first',
 });
 
@@ -42,7 +42,10 @@ export function selectedModel(state, id) {
 // The card's last line: what U does, or the refusal's sentence when it would refuse.
 export function upgradeLine({ upgradeCost, refusal }, gold) {
   if (refusal === null) return `Press U to upgrade: ${upgradeCost} gold`;
-  return UPGRADE_REFUSALS[refusal].replace('{cost}', String(upgradeCost)).replace('{gold}', String(gold));
+  return UPGRADE_REFUSALS[refusal]
+    .replace('{cost}', String(upgradeCost))
+    .replace('{gold}', String(gold))
+    .replace('{max}', String(MAX_LEVEL));
 }
 
 const inside = (rect, x, y) => x >= rect.x && x < rect.x + rect.width && y >= rect.y && y < rect.y + rect.height;

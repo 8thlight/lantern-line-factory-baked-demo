@@ -1,7 +1,7 @@
 // Three tower kinds. The Lantern fires a beam; the Brazier reaches less far and fires more slowly,
 // but its shot splashes onto every ghost around its target; Frost hits lightly but slows the ghost
 // it hits for a while. Each shoots the nearest ghost by default, or the one furthest along the
-// path once switched to first. A placed tower rises to level 3, each upgrade adding the damage
+// path once switched to first. A placed tower rises to MAX_LEVEL, each upgrade adding the damage
 // and range its kind declares for the gold its kind asks.
 
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
