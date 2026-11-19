@@ -62,5 +62,6 @@ touches:
   - src/main.js
   - test/frost.test.js
   - test/brazier.test.js
+  - test/pause-speed.test.js
 
 Acceptance criterion: Frost tower, re-cut from retired print line-factory-baked-demo-ywd (PR #46: green locally, red on hydraflow/verify at cd026f7 with no kept log, past verify_rounds.max). Add FROST to src/tower.js (cost 40, damage below the lantern's, slow 0.5, slowFor >= 1 s, carried by createTower, key '3' in kindForKey). A frost hit in step sets slow and refreshes slowLeft without stacking below the factor. advanceEnemy splits a step where the slow runs out. Frost and slowed-ghost colours go in src/theme.js and src/render.js. The HUD shows the selected kind from boot: main.js passes the current kind, not a null 'picked' (the review's P1). Write test/frost.test.js for the four criteria and change test/brazier.test.js's key-'3' assertion to expect FROST. npm --prefix . run test must pass.
