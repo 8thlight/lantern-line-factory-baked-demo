@@ -5,7 +5,7 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { rangePreview } from './game.js';
-import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel } from './hud.js';
+import { HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -16,17 +16,26 @@ const HEIGHT = ROWS * TILE;
 // diamond; neither casts a pool.
 // The board sits below the HUD bar, drawn in its own coordinates moved down by HUD_HEIGHT,
 // so no cell is ever under the bar; the end card veils the board and the bar stays readable.
-// `kind`, when handed, is the kind a click places, and the bar names it.
-export function draw(ctx, state, hover, sprites = SPRITES, kind = null) {
+// `kind`, when handed, is the kind a click places, and the bar names it. `selected`, when it is a
+// placed tower's id, rings that tower and draws its card above the ghosts and beams.
+// An upgraded tower wears its level marks over its body.
+export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected = null) {
+  const model = selectedModel(state, selected);
+  const chosen = model && state.towers.find((t) => t.id === selected);
   ctx.save();
   ctx.translate(0, HUD_HEIGHT);
   sprites.drawPath(ctx, state);
   for (const tower of state.towers) if (bodySprite(tower) === 'drawLanternBody') sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
   drawRangeRing(ctx, rangePreview(state, hover));
+  if (chosen && !(hover && hover.col === chosen.col && hover.row === chosen.row)) {
+    drawRangeRing(ctx, { x: chosen.x, y: chosen.y, radius: chosen.range });
+  }
   for (const tower of state.towers) sprites[bodySprite(tower)](ctx, tower);
+  for (const tower of state.towers) drawLevelMarks(ctx, tower);
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
+  if (chosen) drawTowerCard(ctx, chosen, model, state.gold);
   if (state.status !== 'playing') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind);
@@ -372,6 +381,53 @@ function drawButton(ctx, { x, y, width, height }, text, active) {
   ctx.fillStyle = active ? THEME.hudAccentInk : THEME.hudInk;
   ctx.textAlign = 'center';
   ctx.fillText(text, x + width / 2, y + height / 2);
+}
+
+// An upgraded tower's level: one small accent square per level in a row under its body, a mark
+// apart; a level-1 tower wears none and is drawn as the Board artboard draws it.
+export const LEVEL_MARK = 5;
+
+export function drawLevelMarks(ctx, tower) {
+  const level = tower.level ?? 1;
+  if (level < 2) return;
+  const left = tower.x - ((2 * level - 1) * LEVEL_MARK) / 2;
+  const top = tower.y + TILE * 0.3;
+  ctx.fillStyle = THEME.hudAccent;
+  for (let i = 0; i < level; i++) ctx.fillRect(left + i * 2 * LEVEL_MARK, top, LEVEL_MARK, LEVEL_MARK);
+}
+
+// The selected tower's card, as the Main artboard's tower card (design/screens/Main.dc.html:49-52):
+// a dark panel edged in the ring's gold beside the tower, its name and level, its reach and
+// damage, and what U does. Fixed sizes, no text measured, kept CARD_INSET inside the board.
+const CARD = { width: 300, height: 54, radius: 6, pad: 10, line: 15 };
+const CARD_INSET = 4;
+const REFUSAL_INK = { gold: 'hudDanger', max: 'hudMuted', missing: 'hudMuted' };
+const clamp = (value, low, high) => Math.min(Math.max(value, low), high);
+
+function drawTowerCard(ctx, tower, model, gold) {
+  const x = clamp(tower.x + TILE * 0.6, CARD_INSET, WIDTH - CARD_INSET - CARD.width);
+  const y = clamp(tower.y - TILE - 14, CARD_INSET, HEIGHT - CARD_INSET - CARD.height);
+  ctx.save();
+  ctx.fillStyle = THEME.hudBg;
+  ctx.strokeStyle = THEME.rangeRing;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(x, y, CARD.width, CARD.height, CARD.radius);
+  ctx.fill();
+  ctx.stroke();
+  ctx.font = '11px system-ui, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  const lines = [
+    [`${model.name} · level ${model.level}`, THEME.hudAccent],
+    [`Range ${model.range / TILE} tiles · ${model.damage} damage`, THEME.hudInk],
+    [upgradeLine(model, gold), model.refusal ? THEME[REFUSAL_INK[model.refusal]] : THEME.hudAccent],
+  ];
+  lines.forEach(([text, colour], i) => {
+    ctx.fillStyle = colour;
+    ctx.fillText(text, x + CARD.pad, y + CARD.pad + i * CARD.line + 2);
+  });
+  ctx.restore();
 }
 
 const END_TITLES = { lost: 'The ghosts got through', won: 'The path is safe' };
