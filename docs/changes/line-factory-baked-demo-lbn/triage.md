@@ -48,7 +48,7 @@ touches:
   - src/game.js
   - src/hud.js
   - src/render.js
-  - test/boss.test.js
   - test/waves.test.js
+  - test/hud.test.js
 
 Acceptance criterion: test/boss.test.js proves that waves 5 and 10 each spawn exactly one boss and waves 1 to 4 none, that the boss has the health and speed its table entry declares and takes that many hits of 1 to banish, that banishing it adds its declared gold, that its leak removes three lives and that the HUD model flags a boss wave; `npm --prefix . run test` passes with test/waves.test.js updated only where the boss changes the table's shape and the lives lost.
