@@ -23,10 +23,7 @@ lantern-line-factory-baked-demo-7r8 (issue #2, waves), taken together because bo
 
 ## Who meets it
 
-- person: the player, on the board every screen sits on. They see a ghost survive a lantern's
-  first beams with a health bar above it that shortens and reddens with each hit, as
-  design/screens/Board.png (source design/screens/Board.dc.html) draws it, and they see ghosts
-  arrive in waves of a fixed size, the next wave starting only once the board is clear.
+- person: the player, on the board drawn at design/screens/Board.png (source design/screens/Board.dc.html, listed in design/screens.yaml), sees a ghost survive a lantern's first beams with a health bar above it that shortens and reddens with each hit, and sees ghosts arrive in waves of a fixed size, the next wave starting only once the board is clear.
 
 ## Refusals
 
