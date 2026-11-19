@@ -2,10 +2,8 @@
   "print_id": "line-factory-baked-demo-sn6",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [
-    "src/tower.js"
-  ],
-  "said": "FOUND 1\n- `src/tower.js:40`: the same cell-match check was written twice. `canPlace` repeated the `t.col === col && t.row === row` test that the new `towerAt` already does. It now calls `towerAt(...) === null` instead, and behaviour is unchanged. No test exercises `canPlace` directly; the refactor passed only the full `npm test` run. fixed (commit 2f75e3b)\n- Nothing else was found. The diff covers all three files and the test the plan names, every acceptance criterion has a test that could have failed, the comments match what the code does, and nothing falls outside the signed touches.\n- This clone has no Makefile, so I couldn't use `make check-build`. I checked with `node --test` on `test/targeting-mode.test.js`, `test/targeting.test.js` and `test/brazier.test.js` (22/22 passed), then with `npm test` after the fix (65 passed, 0 failed). The tree is committed and clean.\n\nGATES green",
+  "edited": [],
+  "said": "FOUND 0\n- Nothing to fix. The four files changed against main are exactly the four the triage lists under `touches:`. All five acceptance criteria are covered in `test/targeting-mode.test.js`, along with the toggle and `toggleModeAt`. If the playing-only guard in `toggleModeAt` were removed, its test would fail: the tower would flip to `'first'` instead of returning null. The 'won' and 'playing' statuses the code checks are the real ones in `src/game.js:24`. The comments match what the code does, `test/targeting.test.js` was not edited, and the working tree is clean. This repo has no Makefile, so I checked with `node --test` on the touched test files (11/11 pass) and `npm test` (73/73 pass).\nGATES green",
   "gates": "green",
   "finding": null
 }

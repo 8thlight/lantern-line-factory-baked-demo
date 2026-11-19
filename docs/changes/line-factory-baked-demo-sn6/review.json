@@ -1,19 +1,22 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "116e6eb089edfb9896be08a0d300187171ab34160319a0d328b4bf3b41468aff",
+  "digest": "94de2878f85e6c8f34d369b1d75a9a49663585e35f4ccfb006a25d11200ac4c5",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] untested-wiring: the contextmenu handler in src/main.js returns early unless state.status === 'playing'. Neither that status string nor the cellAt helper appears anywhere in the rendered diffs, and no test covers main.js. If the game's live status value is spelled differently, right-click would silently never toggle and nothing would catch it. Either check that the guard matches the status values game.js actually uses, or drop the guard (the click handler shown in the diff has none in its visible context). A small test of the handler's logic would also help.",
-        "[P2] ux-feedback: nothing in the diff changes rendering, so a player who right-clicks a tower cannot see whether it is in 'nearest' or 'first' mode. A visual indicator in render.js would be good to have; the brief does not require one.",
-        "[P2] outcome-confirmed: the brief and acceptance criterion are met. firstInRange picks the in-range enemy with the greatest distance and returns null when none qualify. pickTarget treats 'first' as first and anything else, including no mode, as nearest. createTower sets mode 'nearest'. updateTower fires at pickTarget's choice. nextMode is a pure toggle. The contextmenu handler calls preventDefault and toggles the tower found by towerAt. test/targeting-mode.test.js covers every criterion, including updateTower firing at the leading ghost in mode 'first'. The canPlace refactor to use towerAt keeps the same behaviour."
+        "I found no P0, P1 or P2 issues.",
+        "Outcome: the diff does what the brief asks. src/targeting.js adds firstInRange, which picks the in-range enemy with the greatest distance, and pickTarget, which returns firstInRange when mode is 'first' and nearestInRange otherwise. createTower now sets mode: 'nearest'. updateTower calls pickTarget instead of nearestInRange.",
+        "Toggle: src/tower.js adds a pure nextMode and a toggleModeAt(state, col, row) that finds the tower with a new towerAt helper. src/main.js adds a contextmenu handler that calls preventDefault first, so the browser menu never opens, and then toggles the tower under the cursor. This mirrors how kindForKey keeps the logic testable outside the DOM.",
+        "Acceptance criterion: each required case has its own test in test/targeting-mode.test.js. They cover firstInRange beating a nearer ghost in both array orders; out-of-range ghosts ignored, null when none qualify, and a ghost exactly on the range edge included; pickTarget on the same enemies for 'nearest', 'first' and no mode; a new Lantern and a new Brazier starting as 'nearest' and the toggle flipping both ways; updateTower firing at the leader in mode 'first' and at the closer ghost by default; toggleModeAt returning null on an empty cell or after the round ends.",
+        "Construction: canPlace now uses towerAt but behaves exactly as before. toggleModeAt changes only the tower on the clicked cell and does nothing once the round is no longer 'playing'. I found no broken contract, security issue or data-loss path.",
+        "Limit: the review folder holds only the diffs, so I could not open the full src/main.js or src/targeting.js. That inRange exists and createGame starts in 'playing' is proven by the passing tests. That cellAt exists in src/main.js is inferred from the unchanged click handler, which works the same way, not checked against the file."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
