@@ -1,0 +1,13 @@
+{
+  "print_id": "line-factory-baked-demo-xev",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/game.js",
+    "test/armour.test.js",
+    "test/tower-price.test.js"
+  ],
+  "said": "FOUND 4\n- `src/game.js:80`: the comment on `placementError` said \"A kind with no cost is free\", but on normal and hard a costless kind still pays the price step. Changed it to say a costless kind pays only the step, so it is free only on a game with no difficulty. \u2014 fixed\n- `src/difficulty.js:29`: the `hard` row of `CHALLENGES` had no test. If it were deleted, `challengeEntry('hard')` would return undefined and the game would quietly use step 0 and no armour, with every test still green. Added a hard price test to `test/tower-price.test.js` (20, then 25) and a hard armour test to `test/armour.test.js` (wave 3 has none, wave 4 matches normal). Both go red without the row. \u2014 fixed\n- `test/armour.test.js:58`: the tick test wrote the wave-4 count `8` again, though `ARMOURED_WAVE_4` already holds it. It now reads `ARMOURED_WAVE_4.length`. \u2014 fixed\n- `src/game.js` (tick): the brief says splash hits follow the armour rule, but no test sends a brazier splash into an armoured ghost. Left as it is: `tick` already sends splash hits through `damageEnemy`, which the hit tests cover, and neither the plan nor the acceptance criteria ask for a splash test.\n\nGATES green: this clone has no Makefile, so there is no `make check-build`. I ran `node --test` over the plan's step-7 list of 17 test files instead, and all 172 tests passed. Prettier is not installed here, so I could not check formatting. The tree is clean and committed at 3131723.",
+  "gates": "green",
+  "finding": null
+}

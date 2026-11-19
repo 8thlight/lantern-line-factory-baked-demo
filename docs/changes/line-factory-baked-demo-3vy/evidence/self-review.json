@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-3vy",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 0\n\nI read the plan, the triage and the print's own changes (`git diff origin/main HEAD -- src test`), and checked each item:\n\n- **Planned files:** all six paths in the amended touches list are handled: `src/main.js`, `src/game.js`, `src/hud.js`, `src/render.js`, `test/difficulty-choice.test.js` and `test/pause-speed.test.js`. Nothing outside them changed.\n- **Acceptance criteria:** each of issue #68's criteria is checked in `test/difficulty-choice.test.js`, which also covers restart keeping the difficulty and how `main.js` handles clicks, keys and held keys. Every assertion there is exact, with a positive check beside each absent-text one.\n- **Comments:** the comments in `hud.js`, `game.js`, `render.js` and `main.js` match what the code does. In `test/pause-speed.test.js`, the `priced` helper's comment matches what `towerPrice` does in `src/game.js:75-78`.\n- **No fact twice:** the button row's order comes from `DIFFICULTIES`. The button size and gap are each written once in `hud.js`. The button labels come from `DIFFICULTIES[key].name`.\n- **Operator ruling:** the `test/pause-speed.test.js` edit is the one ruling q-8ea7b2c1 (a) ordered: the HUD now expects the priced tower name, such as \"Lantern 20\".\n\nGATES green: `node --test` on `test/difficulty-choice.test.js`, `test/pause-speed.test.js`, `test/start-screen.test.js` and `test/tower-price.test.js` passed 43/43. This clone has no Makefile, so `make check-build` could not run. The tree is committed and clean.",
+  "gates": "green",
+  "finding": null
+}
