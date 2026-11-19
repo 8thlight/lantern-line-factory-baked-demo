@@ -33,6 +33,15 @@ export function towerAt({ towers }, col, row) {
   return towers.find((t) => t.col === col && t.row === row) ?? null;
 }
 
+// A right-click's toggle: while the round is playing, the tower on the cell switches mode.
+// Returns that tower, or null when the round is over or the cell holds none.
+export function toggleModeAt(state, col, row) {
+  if (state.status !== 'playing') return null;
+  const tower = towerAt(state, col, row);
+  if (tower) tower.mode = nextMode(tower.mode);
+  return tower;
+}
+
 // A tower may stand on any in-bounds cell that is not path and not taken.
 export function canPlace({ path, towers }, col, row) {
   if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return false;
