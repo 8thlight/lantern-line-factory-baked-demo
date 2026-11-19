@@ -153,8 +153,8 @@ export function drawLanternBody(ctx, { x, y }) {
 }
 
 // The brazier's placeholder until the board art brings its sprite: an orange square with a
-// lighter core. THEME's one orange is the lantern's paper, so the square borrows it
-// and the lantern's core until the board art names the brazier's own colours.
+// lighter core. THEME names no brazier colours yet, so the square borrows the lantern's
+// orange paper and its lighter core until the board art names the brazier's own.
 const BRAZIER_SIDE = TILE * 0.6;
 const BRAZIER_CORE = TILE * 0.25;
 
