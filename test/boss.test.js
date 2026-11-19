@@ -91,6 +91,15 @@ test('waves 5 and 10 each spawn exactly one boss, last, and waves 1 to 4 none', 
   }
 });
 
+test('a tick that owes the whole wave at once still sends the boss last, and once', () => {
+  const game = atWave(5, { spawnInterval: 0.01 });
+  step(game, 0.1);
+  assert.deepEqual(
+    game.enemies.map((e) => e.boss === true),
+    [...Array(WAVES[4].count).fill(false), true],
+  );
+});
+
 test('the boss has its entry\'s health and speed', () => {
   for (const n of BOSS_WAVES) {
     const b = WAVES[n - 1].boss;
