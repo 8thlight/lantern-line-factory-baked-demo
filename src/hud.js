@@ -1,7 +1,7 @@
 // The HUD's model and where the pointer lands on the canvas. Pure logic, no DOM: render.js
 // draws the bar from hudModel and the selected tower's card from selectedModel, and main.js asks
 // these which button or cell a pointer is on, the start screen's Start and difficulty buttons
-// among them.
+// and the selected tower's card buttons among them.
 
 import { COLS, ROWS, TILE } from './path.js';
 import { MAX_LEVEL, towerById } from './tower.js';
@@ -33,6 +33,35 @@ export const DIFFICULTY_BUTTONS = Object.freeze(
     Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (DIFFICULTY_WIDTH + DIFFICULTY_GAP), y: CANVAS_HEIGHT - 8 - DIFFICULTY_HEIGHT, width: DIFFICULTY_WIDTH, height: DIFFICULTY_HEIGHT }),
   ),
 );
+
+// The selected tower's card, beside the tower and kept CARD_INSET inside the board, its Upgrade
+// and Sell buttons side by side along its bottom; render.js draws from these and main.js presses
+// them. In canvas pixels: the board's coordinates moved down by HUD_HEIGHT.
+const CARD = Object.freeze({ width: 300, height: 108 });
+const CARD_INSET = 4;
+const CARD_BUTTON = Object.freeze({ width: 136, height: 28, top: 70, pad: 10, gap: 8 });
+const clamp = (value, low, high) => Math.min(Math.max(value, low), high);
+
+// The card's rectangle for `tower`, in canvas pixels.
+export function cardRect(tower) {
+  return {
+    x: clamp(tower.x + TILE * 0.6, CARD_INSET, WIDTH - CARD_INSET - CARD.width),
+    y: HUD_HEIGHT + clamp(tower.y - TILE - 14, CARD_INSET, ROWS * TILE - CARD_INSET - CARD.height),
+    width: CARD.width,
+    height: CARD.height,
+  };
+}
+
+// The card's Upgrade and Sell buttons for `tower`, in canvas pixels, as { upgrade, sell }.
+export function cardButtons(tower) {
+  const card = cardRect(tower);
+  const { width, height, top, pad, gap } = CARD_BUTTON;
+  const y = card.y + top;
+  return {
+    upgrade: { x: card.x + pad, y, width, height },
+    sell: { x: card.x + pad + width + gap, y, width, height },
+  };
+}
 
 // What the HUD shows, read from the state and never written to it. `bossWave` holds for the
 // whole of a wave whose spawner sends a boss, from its start.
@@ -75,6 +104,16 @@ const inside = (rect, x, y) => x >= rect.x && x < rect.x + rect.width && y >= re
 export function hudButtonAt(x, y) {
   if (inside(PAUSE_BUTTON, x, y)) return 'pause';
   if (inside(SPEED_BUTTON, x, y)) return 'speed';
+  return null;
+}
+
+// The card button under a canvas point for the card of `tower`: 'upgrade', 'sell', or null off
+// them both and when there is no tower.
+export function cardButtonAt(tower, x, y) {
+  if (!tower) return null;
+  const { upgrade, sell } = cardButtons(tower);
+  if (inside(upgrade, x, y)) return 'upgrade';
+  if (inside(sell, x, y)) return 'sell';
   return null;
 }
 

@@ -216,11 +216,13 @@ test("draw shows the selected tower's card", () => {
   placeTower(game, 1, 1, LANTERN);
   const ctx = recordingContext();
   draw(ctx, game, null, SPRITES, null, 1);
-  assert.deepEqual(texts(ctx).slice(0, 5).map((c) => [c.args[0], c.fillStyle]), [
+  assert.deepEqual(texts(ctx).slice(0, 7).map((c) => [c.args[0], c.fillStyle]), [
     ['Lantern · level 1', THEME.hudAccent],
     ['Range 2.5 tiles · 1 damage · targets nearest', THEME.hudInk],
     ['Press U to upgrade: 25 gold', THEME.hudAccent],
     ['Press S to sell: 10 gold', THEME.hudInk],
+    ['Upgrade', THEME.hudInk],
+    ['Sell', THEME.hudInk],
     ['Lives', THEME.hudMuted],
   ]);
 

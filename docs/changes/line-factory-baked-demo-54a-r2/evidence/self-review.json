@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-54a-r2",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "I made one review pass over the build and found nothing to fix, so I changed nothing in it. I read the two build commits (71308ff and 5607d00) against the plan and the triage:\n\n- **Files:** all six paths in the signed `touches:` list are handled, and the diff touches nothing outside them. The existing test files change only in the three card expectations the plan names: the new 108 height and the two button texts.\n- **Acceptance criteria:** each one has a check in `test/card-buttons.test.js`. The button rectangles are pinned to exact numbers as well as bounded. The labels are checked to be drawn at the centres of the rectangles a click is tested against. The \"refused upgrade changes nothing\" and \"Sell places no tower\" checks would turn red if the click handler fell through to `clickCell`: the selection would clear, or a 20-gold lantern would be bought on cell (7, 2) and show gold 7 instead of 27. `cardButtonAt(undefined, \u2026)` covers the no-tower guard.\n- **Comments:** the ones in `src/hud.js`, `src/render.js` and `src/main.js` match what the code does, and the paths they name exist.\n- **No fact twice:** the card and button sizes now live only in `src/hud.js`. `src/render.js` keeps only `radius`, `pad` and `line`, and `WIDTH`, `HEIGHT` and `TILE` are all still used there.\n\nFOUND 0\nGATES green (this repo has no Makefile and so no `check-build` target; the tree's only check is `npm test`, i.e. `node --test`, which I ran on the 11 test files from plan step 6: 111 passed, 0 failed, and the tree is clean and committed)",
+  "gates": "green",
+  "finding": null
+}

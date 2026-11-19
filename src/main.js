@@ -2,8 +2,8 @@
 
 import { COLS, ROWS, TILE } from './path.js';
 import { chooseDifficulty, clickCell, createGame, hoverAt, restart, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
-import { HUD_HEIGHT, boardCellAt, difficultyButtonAt, difficultyKey, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
-import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
+import { HUD_HEIGHT, boardCellAt, cardButtonAt, difficultyButtonAt, difficultyKey, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
+import { LANTERN, kindForKey, toggleModeAt, towerById } from './tower.js';
 import { SPRITES, draw } from './render.js';
 import { bestAfterStep, browserStorage, readBest } from './best.js';
 
@@ -39,6 +39,8 @@ const cellAt = (event) => {
 // Once the round is over, a click starts a fresh one, back on the start screen, rather than
 // placing a lantern.
 // A click on a HUD button toggles it; anywhere else on the bar does nothing.
+// A click on the selected tower's Upgrade or Sell button does what U or S does, before the board,
+// so it never lands on the cell beneath; Sell clears the selection.
 // On the board, a click on a placed tower selects it for its card; anywhere else places a tower
 // and clears the selection.
 canvas.addEventListener('click', (event) => {
@@ -61,6 +63,16 @@ canvas.addEventListener('click', (event) => {
   const button = hudButtonAt(x, y);
   if (button) {
     TOGGLES[button](state);
+    return;
+  }
+  const press = selected === null ? null : cardButtonAt(towerById(state, selected), x, y);
+  if (press === 'upgrade') {
+    upgradeTower(state, selected);
+    return;
+  }
+  if (press === 'sell') {
+    sellTower(state, selected);
+    selected = null;
     return;
   }
   const cell = boardCellAt(x, y);
