@@ -1,19 +1,26 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
 import { WAYPOINTS, pathCells } from './path.js';
-import { advanceEnemy, createEnemy } from './enemy.js';
+import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
 import { canPlace, createTower, updateTower } from './tower.js';
+import { createWave, updateWave, waveDone } from './wave.js';
 
 export const START_LIVES = 10;
 export const SPAWN_INTERVAL = 1.5; // seconds between ghosts
+export const WAVE_SIZE = 5; // ghosts per wave
 const SHOT_TTL = 0.1; // how long a beam stays drawn
 
-export function createGame({ waypoints = WAYPOINTS, spawnInterval = SPAWN_INTERVAL, lives = START_LIVES } = {}) {
+export function createGame({
+  waypoints = WAYPOINTS,
+  spawnInterval = SPAWN_INTERVAL,
+  waveSize = WAVE_SIZE,
+  lives = START_LIVES,
+} = {}) {
   return {
     waypoints,
     path: pathCells(waypoints),
-    spawnInterval,
-    spawnTimer: 0,
+    wave: 1,
+    spawner: createWave({ count: waveSize, interval: spawnInterval }),
     nextEnemyId: 1,
     enemies: [],
     towers: [],
@@ -45,11 +52,8 @@ export function leakEnemies(state) {
 
 // Advance the whole game by `dt` seconds.
 export function step(state, dt) {
-  state.spawnTimer -= dt;
-  if (state.spawnTimer <= 0) {
-    spawnEnemy(state);
-    state.spawnTimer += state.spawnInterval;
-  }
+  const due = updateWave(state.spawner, dt);
+  for (let i = 0; i < due; i++) spawnEnemy(state);
 
   for (const enemy of state.enemies) advanceEnemy(enemy, state.waypoints, dt);
   leakEnemies(state);
@@ -60,10 +64,20 @@ export function step(state, dt) {
   for (const tower of state.towers) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
-    // Today one hit removes a ghost. Enemy health is milestone work (work/m1-01).
-    state.enemies = state.enemies.filter((e) => e !== target);
-    state.kills += 1;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });
+    if (damageEnemy(target, tower.damage)) {
+      state.enemies = state.enemies.filter((e) => e !== target);
+      state.kills += 1;
+    }
+  }
+
+  // The next wave starts once this one has spawned out and the board is clear,
+  // whether its ghosts were banished or leaked. Every wave is the same size for now.
+  // A wave of no ghosts is spawned out from the start, so it is kept from counting waves up on an empty board.
+  if (state.spawner.count > 0 && waveDone(state.spawner) && state.enemies.length === 0) {
+    const { count, interval } = state.spawner;
+    state.wave += 1;
+    state.spawner = createWave({ count, interval });
   }
 
   return state;
