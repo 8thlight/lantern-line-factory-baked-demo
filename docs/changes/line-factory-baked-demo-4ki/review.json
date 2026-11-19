@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "9a398bec90c1936b6c4f5446bbd67bb67511822cc1dda4c42d959a0cadc9fbdf",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P1] design/test gap: drawBrazier (src/render.js) fills with THEME.lanternPaper and THEME.lanternCore, which the code's own comment calls 'the lantern's paper and core colours'. The brief says the lantern is drawn yellow and asks for an orange brazier per design/screens/Main.png. The test in test/brazier.test.js only checks that the fill is some THEME colour, not that it is orange. I could not see theme.js in this rendering to check the actual value, so the brazier may be a yellow square rather than an orange one. Add or pick an orange THEME entry and assert it in the test.",
+        "[P2] ux: main.js switches the placement kind on keys 1 and 2, but nothing on the board shows which kind is selected. The player has no feedback after pressing a key. Consider a HUD indicator or a hover tint for the selected kind.",
+        "[P2] structure: render.js and game.js decide that a tower is a brazier by checking `tower.splash > 0` rather than by an explicit kind on the tower. Any future splash tower would be drawn as a brazier square with no light pool. An explicit kind or sprite field would be sturdier."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
