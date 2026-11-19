@@ -8,12 +8,16 @@ import { THEME } from './theme.js';
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
 
-// Pools first, then the hover, then lantern bodies, so no lantern's pool lands on another's body.
+// Pools first, then the hover, then tower bodies, so no lantern's pool lands on another's body.
+// A tower that splashes is a brazier: it casts no pool and is drawn as its square.
 export function draw(ctx, state, hover, sprites = SPRITES) {
   sprites.drawPath(ctx, state);
-  for (const tower of state.towers) sprites.drawLanternLight(ctx, tower);
+  for (const tower of state.towers) if (!(tower.splash > 0)) sprites.drawLanternLight(ctx, tower);
   if (hover) drawHover(ctx, hover);
-  for (const tower of state.towers) sprites.drawLanternBody(ctx, tower);
+  for (const tower of state.towers) {
+    if (tower.splash > 0) sprites.drawBrazier(ctx, tower);
+    else sprites.drawLanternBody(ctx, tower);
+  }
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
   drawLives(ctx, state.lives);
@@ -148,6 +152,19 @@ export function drawLanternBody(ctx, { x, y }) {
   ctx.restore();
 }
 
+// The brazier's placeholder until the board art brings its sprite: an orange square with a
+// lighter core. THEME names no brazier colours yet, so the square borrows the lantern's
+// orange paper and its lighter core until the board art names the brazier's own.
+const BRAZIER_SIDE = TILE * 0.6;
+const BRAZIER_CORE = TILE * 0.25;
+
+export function drawBrazier(ctx, { x, y }) {
+  ctx.fillStyle = THEME.lanternPaper;
+  ctx.fillRect(x - BRAZIER_SIDE / 2, y - BRAZIER_SIDE / 2, BRAZIER_SIDE, BRAZIER_SIDE);
+  ctx.fillStyle = THEME.lanternCore;
+  ctx.fillRect(x - BRAZIER_CORE / 2, y - BRAZIER_CORE / 2, BRAZIER_CORE, BRAZIER_CORE);
+}
+
 function line(ctx, x1, y1, x2, y2) {
   ctx.beginPath();
   ctx.moveTo(x1, y1);
@@ -276,4 +293,4 @@ function drawEndCard(ctx, status) {
 }
 
 // The sprite table draw uses; a test hands in its own to count calls.
-export const SPRITES = { drawPath, drawLanternLight, drawLanternBody, drawGhost, drawBeam };
+export const SPRITES = { drawPath, drawLanternLight, drawLanternBody, drawBrazier, drawGhost, drawBeam };

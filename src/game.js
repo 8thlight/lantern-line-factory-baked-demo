@@ -2,7 +2,8 @@
 
 import { WAYPOINTS, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy } from './enemy.js';
-import { canPlace, createTower, updateTower } from './tower.js';
+import { LANTERN, canPlace, createTower, updateTower } from './tower.js';
+import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 
 export const START_LIVES = 10;
@@ -35,9 +36,9 @@ export function createGame({
   };
 }
 
-export function placeTower(state, col, row) {
+export function placeTower(state, col, row, kind = LANTERN) {
   if (!canPlace(state, col, row)) return false;
-  state.towers.push(createTower(col, row));
+  state.towers.push(createTower(col, row, kind));
   return true;
 }
 
@@ -81,9 +82,12 @@ export function step(state, dt) {
     const target = updateTower(tower, state.enemies, dt);
     if (!target) continue;
     state.shots.push({ from: { x: tower.x, y: tower.y }, to: { x: target.x, y: target.y }, ttl: SHOT_TTL });
-    if (damageEnemy(target, tower.damage)) {
-      state.enemies = state.enemies.filter((e) => e !== target);
-      state.kills += 1;
+    // A splash takes in its own target, so each ghost is hit once and each kill counted once.
+    const hit = tower.splash > 0 ? splashTargets(target, state.enemies, tower.splash) : [target];
+    const dead = hit.filter((enemy) => damageEnemy(enemy, tower.damage));
+    if (dead.length) {
+      state.enemies = state.enemies.filter((e) => !dead.includes(e));
+      state.kills += dead.length;
     }
   }
 
