@@ -3,10 +3,9 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "src/render.js",
-    "src/theme.js"
+    "src/render.js"
   ],
-  "said": "FOUND 1\n- `src/render.js:2` and `src/theme.js:2`: both comments named artboards by paths that don't exist (`design/screens/Board`, or \"Board, Win and Lose\" with no extension). They now name the real files, `Board.png` and `Board.dc.html` / `Win.dc.html` / `Lose.dc.html`. fixed (ec8022e)\n\nEverything else checked out:\n- Every file the plan names is handled, and every acceptance criterion has a test that fails if its guard is removed.\n- The diff stays inside the six paths in `touches:`.\n- `PALETTE` is kept as an alias of `THEME`, which differs from the plan. This is on purpose: `test/enemy.test.js`, which is outside the touches, still imports it.\n\nGATES green: the clone has no Makefile and no `check-build` target, so I ran `node --test` on `test/game-over.test.js`, `test/render.test.js`, `test/enemy.test.js` and `test/game.test.js`. All 33 tests pass, and the tree is committed and clean.",
+  "said": "FOUND 1\n- `src/render.js:26`: `draw` listed the end-of-round statuses again (`'lost' || 'won'`) when the `HEADLINE` map already holds them. It now checks `state.status in HEADLINE`. Fixed in 45a9557.\nGATES green",
   "gates": "green",
   "finding": null
 }
