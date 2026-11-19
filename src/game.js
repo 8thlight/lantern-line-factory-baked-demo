@@ -6,6 +6,7 @@ import { LANTERN, MAX_LEVEL, canPlace, cellError, createTower, towerById, update
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 import { WAVES } from './waves.js';
+import { difficultyEntry } from './difficulty.js';
 
 export const START_LIVES = 10;
 export const START_GOLD = 50;
@@ -30,19 +31,25 @@ export function waveSpawner({ options }, wave) {
 // `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave,
 // `waveSize` counting the plain ghosts, so a boss wave of a nonzero size still sends its boss after them.
 // `status` left out starts the game playing; 'ready' holds it on the start screen, and restart
-// brings it back the same way.
+// brings it back the same way. `difficulty` (a key of DIFFICULTIES) sets the starting gold and
+// lives and how tough the ghosts are; an explicit `gold` or `lives` wins over it, and left out the
+// game plays as the table and START_GOLD/START_LIVES give it.
 export function createGame({
   waypoints = WAYPOINTS,
   spawnInterval,
   waveSize,
-  lives = START_LIVES,
-  gold = START_GOLD,
+  lives,
+  gold,
   totalWaves = TOTAL_WAVES,
   status = 'playing',
+  difficulty = null,
 } = {}) {
-  const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves, status };
+  const entry = difficultyEntry(difficulty);
+  // `lives` and `gold` are kept as given, so restart resolves them through the difficulty again.
+  const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves, status, difficulty };
   return {
     options,
+    difficulty, // a key of DIFFICULTIES, or null
     status, // 'ready' until started, 'playing', then 'won' or 'lost', and the round is over
     waypoints,
     path: pathCells(waypoints),
@@ -54,8 +61,8 @@ export function createGame({
     enemies: [],
     towers: [],
     shots: [],
-    lives,
-    gold,
+    lives: lives === undefined ? entry?.lives ?? START_LIVES : lives,
+    gold: gold === undefined ? entry?.gold ?? START_GOLD : gold,
     kills: 0,
     paused: false,
     speed: 1, // 1 or 2: the ticks each step runs
@@ -134,19 +141,28 @@ export function rangePreview(state, hover) {
   return { x, y, radius: (hover.kind ?? LANTERN).range };
 }
 
-// A plain ghost of the current wave, as tough and fast as its entry in the table.
+// A ghost's health on this game's difficulty; as the table gives it when there is none.
+function toughened(state, health) {
+  return Math.ceil(health * (difficultyEntry(state.difficulty)?.health ?? 1));
+}
+
+// A plain ghost of the current wave, as fast as its entry in the table and as tough, scaled by
+// the game's difficulty.
 export function spawnEnemy(state) {
   const { health, speed } = waveEntry(state.wave);
-  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed });
+  const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health: toughened(state, health), speed });
   state.enemies.push(enemy);
   return enemy;
 }
 
-// The current wave's boss, as tough, fast and rewarding as its entry declares, marked so render
-// draws it larger. Only called on a wave whose entry has a boss.
+// The current wave's boss, as fast and rewarding as its entry declares and as tough, scaled by
+// the game's difficulty, marked so render draws it larger. Only called on a wave whose entry has a boss.
 export function spawnBoss(state) {
   const { health, speed, bounty } = waveEntry(state.wave).boss;
-  const enemy = { ...createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed, bounty }), boss: true };
+  const enemy = {
+    ...createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health: toughened(state, health), speed, bounty }),
+    boss: true,
+  };
   state.enemies.push(enemy);
   return enemy;
 }
