@@ -8,8 +8,8 @@ import { rangePreview } from './game.js';
 import { HUD_BUTTONS, HUD_GAP, HUD_HEIGHT, HUD_PAD, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
-const FONT = 'Inter, system-ui, sans-serif'; // the HUD's and the end card's text
 const HEIGHT = ROWS * TILE;
+const FONT = 'Inter, system-ui, sans-serif'; // the HUD's and the end card's text
 
 // A whole frame: the board, then the HUD bar over it, then the end card's veil over both
 // once the round is over. The HUD is its own layer, so draw stays the board alone.
