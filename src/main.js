@@ -1,8 +1,8 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { clickCell, createGame, hoverAt, restart, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
-import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
+import { chooseDifficulty, clickCell, createGame, hoverAt, restart, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
+import { HUD_HEIGHT, boardCellAt, difficultyButtonAt, difficultyKey, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
 import { bestAfterStep, browserStorage, readBest } from './best.js';
@@ -12,7 +12,7 @@ canvas.width = COLS * TILE;
 canvas.height = HUD_HEIGHT + ROWS * TILE; // the HUD bar, then the whole board below it
 const ctx = canvas.getContext('2d');
 
-let state = createGame({ status: 'ready' }); // the start screen, until Start, Enter or Space
+let state = createGame({ status: 'ready', difficulty: 'normal' }); // the start screen, on normal, until Start, Enter or Space
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
 let selected = null; // the id of the tower the card shows, chosen by a click on it
@@ -34,7 +34,8 @@ const cellAt = (event) => {
   return boardCellAt(x, y);
 };
 
-// On the start screen, only a click on Start does anything: it begins wave 1.
+// On the start screen, a click on Start begins wave 1 and a click on a difficulty button
+// chooses that difficulty; anywhere else does nothing.
 // Once the round is over, a click starts a fresh one, back on the start screen, rather than
 // placing a lantern.
 // A click on a HUD button toggles it; anywhere else on the bar does nothing.
@@ -43,7 +44,12 @@ const cellAt = (event) => {
 canvas.addEventListener('click', (event) => {
   if (state.status === 'ready') {
     const { x, y } = pointAt(event);
-    if (startButtonAt(x, y)) start(state);
+    if (startButtonAt(x, y)) {
+      start(state);
+    } else {
+      const choice = difficultyButtonAt(x, y);
+      if (choice) state = chooseDifficulty(state, choice);
+    }
     return;
   }
   if (state.status === 'won' || state.status === 'lost') {
@@ -72,9 +78,17 @@ canvas.addEventListener('contextmenu', (event) => {
 // 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses, F changes
 // speed, U upgrades the selected tower and S sells it and clears the selection (paused or not),
 // once per press. Escape clears the selection.
-// On the start screen, Enter or Space begins wave 1, once per press.
+// On the start screen, E, N or H chooses easy, normal or hard, and Enter or Space begins wave 1,
+// once per press.
 window.addEventListener('keydown', (event) => {
   kind = kindForKey(event.key, kind);
+  if (state.status === 'ready' && !event.repeat) {
+    const choice = difficultyKey(event.key);
+    if (choice) {
+      state = chooseDifficulty(state, choice);
+      return;
+    }
+  }
   if (state.status === 'ready' && startKey(event.key) && !event.repeat) {
     start(state);
     return;
