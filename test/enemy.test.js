@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WAYPOINTS } from '../src/path.js';
 import { ENEMY_HEALTH, createEnemy, damageEnemy, healthFraction } from '../src/enemy.js';
-import { PALETTE, drawHealthBar } from '../src/render.js';
+import { drawHealthBar } from '../src/render.js';
+import { THEME } from '../src/theme.js';
 
 test('a ghost starts at full health, 3 by default', () => {
   const enemy = createEnemy({ id: 1, waypoints: WAYPOINTS });
@@ -72,11 +73,11 @@ test('the health bar is a 26x4 track whose fill shortens and turns green, yellow
     damageEnemy(enemy, 1);
   }
   for (const [track] of bars) {
-    assert.deepEqual(track, { x: 87, y: 50, width: 26, height: 4, colour: PALETTE.healthTrack });
+    assert.deepEqual(track, { x: 87, y: 50, width: 26, height: 4, colour: THEME.healthTrack });
   }
   assert.deepEqual(bars.map(([, fill]) => [fill.width, fill.colour]), [
-    [26, PALETTE.healthHigh],
-    [26 * (2 / 3), PALETTE.healthMid],
-    [26 * (1 / 3), PALETTE.healthLow],
+    [26, THEME.healthHigh],
+    [26 * (2 / 3), THEME.healthMid],
+    [26 * (1 / 3), THEME.healthLow],
   ]);
 });

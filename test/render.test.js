@@ -113,7 +113,8 @@ test('every light pool is drawn before the hover cell and before any lantern bod
   assert.equal(pools.length, 2);
   const lastPool = Math.max(...pools);
   const hover = ctx.calls.findIndex((c) => c.name === 'fillRect' && c.fillStyle === THEME.hover);
-  const bodies = named(ctx, ...CURVES).map(at);
+  // A pool's own arc is filled with its gradient; every other curve here is a lantern body's.
+  const bodies = named(ctx, ...CURVES).filter((c) => c.fillStyle?.gradient === undefined).map(at);
   assert.equal(hover > lastPool, true);
   assert.equal(bodies.length > 0, true);
   assert.equal(Math.min(...bodies) > lastPool, true);
