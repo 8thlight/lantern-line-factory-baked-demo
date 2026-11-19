@@ -1,9 +1,10 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, placeTower, restart, step } from './game.js';
+import { createGame, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
 import { LANTERN, canPlace, kindForKey, toggleModeAt } from './tower.js';
 import { draw } from './render.js';
+import { hudButtonAt } from './hud.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -14,17 +15,31 @@ let state = createGame();
 let hover = null;
 let kind = LANTERN; // the kind a click places: 1 for a lantern, 2 for a brazier
 
-function cellAt(event) {
+function pointAt(event) {
   const rect = canvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * canvas.width;
   const y = ((event.clientY - rect.top) / rect.height) * canvas.height;
+  return { x, y };
+}
+
+function cellAt(event) {
+  const { x, y } = pointAt(event);
   return { col: Math.floor(x / TILE), row: Math.floor(y / TILE) };
 }
 
+const HUD_ACTIONS = { pause: togglePause, speed: toggleSpeed };
+
 // Once the round is over, a click starts a fresh one rather than placing a lantern.
+// In play, a click on the HUD's Pause or Speed button toggles it and places nothing.
 canvas.addEventListener('click', (event) => {
   if (state.status !== 'playing') {
     state = restart(state);
+    return;
+  }
+  const { x, y } = pointAt(event);
+  const button = hudButtonAt(x, y);
+  if (button) {
+    HUD_ACTIONS[button](state);
     return;
   }
   const { col, row } = cellAt(event);
@@ -39,7 +54,11 @@ canvas.addEventListener('contextmenu', (event) => {
   toggleModeAt(state, col, row);
 });
 
+// P pauses and resumes, F moves between 1x and 2x; 1 and 2 choose the kind a click places.
 window.addEventListener('keydown', (event) => {
+  const key = event.key.toLowerCase();
+  if (key === 'p') togglePause(state);
+  if (key === 'f') toggleSpeed(state);
   kind = kindForKey(event.key, kind);
 });
 
