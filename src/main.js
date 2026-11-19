@@ -4,7 +4,7 @@ import { COLS, ROWS, TILE } from './path.js';
 import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { drawFrame } from './render.js';
-import { hudButtonAt } from './hud.js';
+import { hudButtonAt, hudButtonForKey } from './hud.js';
 
 const canvas = document.getElementById('board');
 canvas.width = COLS * TILE;
@@ -56,9 +56,8 @@ canvas.addEventListener('contextmenu', (event) => {
 
 // P pauses and resumes, F moves between 1x and 2x; 1 and 2 choose the kind a click places.
 window.addEventListener('keydown', (event) => {
-  const key = event.key.toLowerCase();
-  if (key === 'p') togglePause(state);
-  if (key === 'f') toggleSpeed(state);
+  const button = hudButtonForKey(event.key);
+  if (button) HUD_ACTIONS[button](state);
   kind = kindForKey(event.key, kind);
 });
 

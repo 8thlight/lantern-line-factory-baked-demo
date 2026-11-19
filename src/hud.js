@@ -32,3 +32,10 @@ export function hudButtonAt(x, y) {
   }
   return null;
 }
+
+// The HUD button a key presses: P for Pause, F for Speed, in either case; null for any other key.
+const HUD_KEYS = { p: 'pause', f: 'speed' };
+
+export function hudButtonForKey(key) {
+  return HUD_KEYS[key.toLowerCase()] ?? null;
+}
