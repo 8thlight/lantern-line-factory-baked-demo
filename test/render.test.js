@@ -177,13 +177,13 @@ test('draw on a fresh game draws the path once and no ghost', () => {
 test('a finished round draws its end card, and a round in play draws none', () => {
   const lost = recordingContext();
   draw(lost, { ...createGame(), status: 'lost' }, null);
-  assert.deepEqual(texts(lost).slice(1), ['The ghosts got through', 'Click to play again']);
+  assert.deepEqual(texts(lost).slice(0, 2), ['The ghosts got through', 'Click to play again']);
 
   const won = recordingContext();
   draw(won, { ...createGame(), status: 'won' }, null);
-  assert.deepEqual(texts(won).slice(1), ['The path is safe', 'Click to play again']);
+  assert.deepEqual(texts(won).slice(0, 2), ['The path is safe', 'Click to play again']);
 
   const playing = recordingContext();
   draw(playing, createGame(), null);
-  assert.deepEqual(texts(playing), ['Lives: 10']);
+  assert.deepEqual(texts(playing), ['Lives', '10', 'Gold', '50', 'Wave', '1 / 10', 'Pause', '1x']);
 });

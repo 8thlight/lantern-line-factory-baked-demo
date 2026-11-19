@@ -1,4 +1,5 @@
 // The board's colours by name, as the Board artboard (design/screens/Board.dc.html) paints them.
+// The HUD bar's colours are design/hud.md's tokens (HudStates.dc.html for the active 2x).
 // Every colour render.js draws with is one of these; an opacity the artboard sets is folded into rgba().
 
 export const THEME = Object.freeze({
@@ -45,4 +46,12 @@ export const THEME = Object.freeze({
   hoverBad: 'rgba(230, 90, 90, 0.35)',
   text: '#f4efe1',
   dim: 'rgba(7, 19, 13, 0.7)', // #07130d at 0.7
+  // HUD bar (design/hud.md tokens; HudStates.dc.html for the active 2x)
+  hudBg: 'rgba(18, 36, 28, 0.85)',
+  hudInk: '#f4efe1',
+  hudMuted: '#b8c4b0',
+  hudAccent: '#f2c14e',
+  hudDanger: '#e65a5a',
+  hudGhost: '#8e6bd8',
+  hudAccentInk: '#12241c', // dark text on the filled 2x button
 });
