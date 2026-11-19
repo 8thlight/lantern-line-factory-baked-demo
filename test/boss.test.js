@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { WAVES } from '../src/waves.js';
-import { BOSS_LIVES, createGame, spawnBoss, spawnEnemy, step, waveSpawner } from '../src/game.js';
+import { BOSS_LIVES, createGame, leakEnemies, spawnBoss, spawnEnemy, step, waveSpawner } from '../src/game.js';
 import { ENEMY_BOUNTY, damageEnemy } from '../src/enemy.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
 import { createTower } from '../src/tower.js';
@@ -128,6 +128,20 @@ test('a boss reaching the end takes three lives, a ghost one', () => {
   spawnEnemy(game);
   step(game, pathLength(WAYPOINTS) / WAVES[4].boss.speed + 0.1);
   assert.deepEqual([game.lives, game.enemies.length], [6, 0]);
+});
+
+test('leakEnemies returns the lives its leaks cost: three for a boss, one for a ghost', () => {
+  const game = atWave(5, { waveSize: 0, lives: 10 });
+  for (const e of [spawnBoss(game), spawnEnemy(game)]) e.reachedEnd = true;
+  assert.deepEqual([leakEnemies(game), game.lives], [BOSS_LIVES + 1, 10 - BOSS_LIVES - 1]);
+});
+
+test('an explicit waveSize counts the plain ghosts, and a boss wave sends its boss after them', () => {
+  const sent = (n) => {
+    const { count, boss } = atWave(n, { waveSize: 2 }).spawner;
+    return [count, boss];
+  };
+  assert.deepEqual([sent(4), sent(5), sent(10)], [[2, null], [3, WAVES[4].boss], [3, WAVES[9].boss]]);
 });
 
 test('a boss that takes the last lives loses the round, and lives stop at 0', () => {

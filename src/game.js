@@ -27,7 +27,8 @@ export function waveSpawner({ options }, wave) {
   return { ...createWave({ count: count + (boss ? 1 : 0), interval: options.spawnInterval ?? entry.interval }), boss };
 }
 
-// `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave.
+// `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave,
+// `waveSize` counting the plain ghosts, so a boss wave of a nonzero size still sends its boss after them.
 export function createGame({
   waypoints = WAYPOINTS,
   spawnInterval,
@@ -148,11 +149,12 @@ export function spawnBoss(state) {
 }
 
 // Lose one life per enemy that reached the end, BOSS_LIVES for a boss, and remove those enemies.
+// Returns the lives the leaks cost; lives stop at 0 even when that cost is more.
 export function leakEnemies(state) {
-  const leaked = state.enemies.filter((e) => e.reachedEnd);
-  state.lives = Math.max(0, state.lives - leaked.reduce((sum, e) => sum + (e.boss ? BOSS_LIVES : 1), 0));
+  const cost = state.enemies.reduce((sum, e) => sum + (e.reachedEnd ? (e.boss ? BOSS_LIVES : 1) : 0), 0);
+  state.lives = Math.max(0, state.lives - cost);
   state.enemies = state.enemies.filter((e) => !e.reachedEnd);
-  return leaked.length;
+  return cost;
 }
 
 // A fresh game made with the options this one was made with.
