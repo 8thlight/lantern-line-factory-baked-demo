@@ -113,3 +113,10 @@ test('draw paints a free cell the player cannot afford in the refusal colour', (
   draw(welcome, rich, hoverAt(rich, 3, 1, LANTERN));
   assert.equal(lastCellFill(welcome, 3, 1), THEME.hover);
 });
+
+test('a kind with no cost places free and spends nothing', () => {
+  const game = quietGame({ gold: 0 });
+  const free = { range: 50, cooldown: 1, damage: 1 };
+  assert.deepEqual([placementError(game, 3, 1, free), placeTower(game, 3, 1, free)], [null, true]);
+  assert.deepEqual([game.towers.length, game.gold], [1, 0]);
+});

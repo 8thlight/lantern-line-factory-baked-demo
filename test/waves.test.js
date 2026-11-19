@@ -70,3 +70,16 @@ test('explicit waveSize and spawnInterval still override the table, in every wav
   assert.deepEqual([ghost.health, ghost.speed], [WAVES[1].health, WAVES[1].speed]);
   assert.equal(restart(game).spawner.count, 1);
 });
+
+test('a game holding more waves than the table sends the last entry again', () => {
+  const game = createGame({ totalWaves: WAVES.length + 1, lives: 1000 });
+  stepUntil(game, (g) => g.wave === WAVES.length + 1, 20000);
+  assert.equal(game.wave, WAVES.length + 1);
+  step(game, 0.01);
+  const last = WAVES.at(-1);
+  const ghost = game.enemies.at(-1);
+  assert.deepEqual(
+    [game.spawner.count, ghost.health, ghost.speed],
+    [last.count, last.health, last.speed],
+  );
+});
