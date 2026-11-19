@@ -79,6 +79,16 @@ test('the buttons are 96 by 28, 8 apart, centred, 8 above the bottom, inside the
   }
 });
 
+test('the row sits below the start screen\'s hint and steps, clear of their 12px text', () => {
+  const calls = drawn(createGame({ status: 'ready', difficulty: 'normal' }));
+  const texts = calls.filter((c) => c.name === 'fillText');
+  // Every text drawn after Start that is not a difficulty label: the hint, then the steps.
+  const below = texts.slice(texts.findIndex((c) => c.args[0] === 'Start') + 1).filter((c) => LABELS.indexOf(c.args[0]) === -1);
+  assert.equal(below.length, 4);
+  const lowest = Math.max(...below.map((c) => c.args[2])) + 12 / 2; // middle-baselined, so half the font below
+  assert.equal(lowest <= Math.min(...DIFFICULTY_BUTTONS.map((b) => b.y)), true);
+});
+
 test('difficultyKey reads E, N and H in either case, and null for any other key', () => {
   assert.deepEqual(
     ['e', 'E', 'n', 'h', 'x', 'Enter'].map(difficultyKey),

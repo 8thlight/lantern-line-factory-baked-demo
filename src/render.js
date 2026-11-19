@@ -7,7 +7,7 @@ import { THEME } from './theme.js';
 import { DIFFICULTIES } from './difficulty.js';
 import { rangePreview } from './game.js';
 import { towerById } from './tower.js';
-import { CANVAS_HEIGHT, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, DIFFICULTY_BUTTONS, hudModel, selectedModel, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
