@@ -87,6 +87,21 @@ test('placeTower with no kind places a lantern', () => {
   assert.deepEqual([game.towers[0].range, game.towers[0].splash], [LANTERN.range, 0]);
 });
 
+// A '#rrggbb' colour's hue in degrees and its lightness from 0 to 1.
+function hueAndLightness(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const lightness = (max + min) / 2;
+  if (max === min) return { hue: 0, lightness };
+  const d = max - min;
+  let hue;
+  if (max === r) hue = ((g - b) / d) % 6;
+  else if (max === g) hue = (b - r) / d + 2;
+  else hue = (r - g) / d + 4;
+  return { hue: (hue * 60 + 360) % 360, lightness };
+}
+
 test('drawBrazier draws an orange square centred on the tower, in THEME colours only', () => {
   const calls = [];
   const ctx = new Proxy(
@@ -105,6 +120,10 @@ test('drawBrazier draws an orange square centred on the tower, in THEME colours 
     squares.map(() => true),
   );
   assert.equal(SPRITES.drawBrazier, drawBrazier);
+  // The body is orange (a hue between red at 0 and yellow at 60, nearer neither end), and its core is lighter.
+  const body = hueAndLightness(squares[0].fillStyle);
+  const core = hueAndLightness(squares[1].fillStyle);
+  assert.deepEqual([body.hue >= 15, body.hue <= 45, core.lightness > body.lightness], [true, true, true]);
 });
 
 test('draw gives a brazier its square and no lantern pool, and a lantern its pool and body', () => {
