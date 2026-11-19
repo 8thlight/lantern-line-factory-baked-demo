@@ -5,8 +5,8 @@
 import { COLS, ROWS, cellCenter, cellKey } from './path.js';
 import { pickTarget } from './targeting.js';
 
-export const LANTERN = { range: 100, cooldown: 0.6, damage: 1 }; // pixels, seconds, health
-export const BRAZIER = { range: 80, cooldown: 1.2, damage: 1, splash: 40 }; // pixels, seconds, health, pixels
+export const LANTERN = { range: 100, cooldown: 0.6, damage: 1, cost: 20 }; // pixels, seconds, health, gold
+export const BRAZIER = { range: 80, cooldown: 1.2, damage: 1, splash: 40, cost: 30 }; // pixels, seconds, health, pixels, gold
 
 // The kind a key chooses: 1 the lantern, 2 the brazier; any other key keeps `current`.
 export function kindForKey(key, current) {
@@ -42,11 +42,18 @@ export function toggleModeAt(state, col, row) {
   return tower;
 }
 
+// Why a tower may not stand on a cell: 'bounds' off the board, 'path' on it, 'taken' under
+// another tower; null when the cell is free.
+export function cellError({ path, towers }, col, row) {
+  if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return 'bounds';
+  if (path.has(cellKey(col, row))) return 'path';
+  if (towerAt({ towers }, col, row) !== null) return 'taken';
+  return null;
+}
+
 // A tower may stand on any in-bounds cell that is not path and not taken.
-export function canPlace({ path, towers }, col, row) {
-  if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return false;
-  if (path.has(cellKey(col, row))) return false;
-  return towerAt({ towers }, col, row) === null;
+export function canPlace(state, col, row) {
+  return cellError(state, col, row) === null;
 }
 
 // Count the reload down; when ready and an enemy is in range, fire.

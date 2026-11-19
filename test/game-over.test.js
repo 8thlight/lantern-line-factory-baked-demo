@@ -2,17 +2,17 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { START_LIVES, TOTAL_WAVES, createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
-import { ENEMY_SPEED } from '../src/enemy.js';
+import { WAVES } from '../src/waves.js';
 
-// Long enough for a ghost spawned now to walk the whole path.
-const WALK = pathLength(WAYPOINTS) / ENEMY_SPEED + 0.1;
+// Long enough for a ghost spawned now, in any wave, to walk the whole path.
+const WALK = pathLength(WAYPOINTS) / Math.min(...WAVES.map((w) => w.speed)) + 0.1;
 
-test('a new game is playing wave 1 of 5, and totalWaves can be set', () => {
+test("a new game is playing wave 1 of the table's waves, and totalWaves can be set", () => {
   const game = createGame();
   assert.equal(game.status, 'playing');
   assert.equal(game.wave, 1);
-  assert.equal(TOTAL_WAVES, 5);
-  assert.equal(game.totalWaves, 5);
+  assert.equal(TOTAL_WAVES, WAVES.length);
+  assert.equal(game.totalWaves, WAVES.length);
   assert.equal(createGame({ totalWaves: 2 }).totalWaves, 2);
 });
 

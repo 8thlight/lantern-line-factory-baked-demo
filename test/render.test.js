@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as render from '../src/render.js';
 import { THEME } from '../src/theme.js';
-import { createGame, placeTower, spawnEnemy } from '../src/game.js';
+import { TOTAL_WAVES, createGame, placeTower, spawnEnemy } from '../src/game.js';
 import { damageEnemy } from '../src/enemy.js';
 import { createTower } from '../src/tower.js';
 
@@ -186,7 +186,7 @@ test('a finished round draws its end card, and a round in play draws none', () =
 
   const playing = recordingContext();
   draw(playing, createGame(), null);
-  assert.deepEqual(texts(playing), ['10', 'lives', '50', 'gold', 'Wave', '1 / 5', '1x', '2x']);
+  assert.deepEqual(texts(playing), ['10', 'lives', '50', 'gold', 'Wave', `1 / ${TOTAL_WAVES}`, '1x', '2x']);
 });
 
 test('the HUD draws danger lives, the resume icon and a filled 2x from hudModel', () => {
