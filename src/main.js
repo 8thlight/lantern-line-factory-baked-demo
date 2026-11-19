@@ -2,7 +2,7 @@
 
 import { COLS, ROWS, TILE } from './path.js';
 import { createGame, placeTower, restart, step } from './game.js';
-import { BRAZIER, LANTERN, canPlace } from './tower.js';
+import { LANTERN, canPlace, kindForKey } from './tower.js';
 import { draw } from './render.js';
 
 const canvas = document.getElementById('board');
@@ -31,10 +31,8 @@ canvas.addEventListener('click', (event) => {
   placeTower(state, col, row, kind);
 });
 
-// Any key other than 1 or 2 leaves the chosen kind as it is.
 window.addEventListener('keydown', (event) => {
-  if (event.key === '1') kind = LANTERN;
-  else if (event.key === '2') kind = BRAZIER;
+  kind = kindForKey(event.key, kind);
 });
 
 canvas.addEventListener('mousemove', (event) => {
