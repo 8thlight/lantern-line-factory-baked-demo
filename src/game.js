@@ -10,6 +10,7 @@ import { WAVES } from './waves.js';
 export const START_LIVES = 10;
 export const START_GOLD = 50;
 export const TOTAL_WAVES = WAVES.length; // waves to hold for the round to be won
+export const BOSS_LIVES = 3; // lives a boss takes when it reaches the end
 const SHOT_TTL = 0.1; // how long a beam stays drawn
 
 // The table's entry for a wave; a game holding more waves than the table repeats its last.
@@ -18,9 +19,12 @@ function waveEntry(wave) {
 }
 
 // A wave's spawner: its entry's count and interval, unless the game was made with its own.
-function createSpawner({ waveSize, spawnInterval }, wave) {
+// A wave whose entry has a boss sends it as its last spawn; a wave of no ghosts sends no boss either.
+export function waveSpawner({ options }, wave) {
   const entry = waveEntry(wave);
-  return createWave({ count: waveSize ?? entry.count, interval: spawnInterval ?? entry.interval });
+  const count = options.waveSize ?? entry.count;
+  const boss = count > 0 ? entry.boss ?? null : null;
+  return { ...createWave({ count: count + (boss ? 1 : 0), interval: options.spawnInterval ?? entry.interval }), boss };
 }
 
 // `waveSize` and `spawnInterval` left out, each wave reads them from the table; given, they hold for every wave.
@@ -40,7 +44,7 @@ export function createGame({
     path: pathCells(waypoints),
     wave: 1,
     totalWaves,
-    spawner: createSpawner(options, 1),
+    spawner: waveSpawner({ options }, 1),
     nextEnemyId: 1,
     nextTowerId: 1,
     enemies: [],
@@ -126,7 +130,7 @@ export function rangePreview(state, hover) {
   return { x, y, radius: (hover.kind ?? LANTERN).range };
 }
 
-// A ghost of the current wave, as tough and fast as its entry in the table.
+// A plain ghost of the current wave, as tough and fast as its entry in the table.
 export function spawnEnemy(state) {
   const { health, speed } = waveEntry(state.wave);
   const enemy = createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed });
@@ -134,10 +138,19 @@ export function spawnEnemy(state) {
   return enemy;
 }
 
-// Lose one life per enemy that reached the end, and remove those enemies.
+// The current wave's boss, as tough, fast and rewarding as its entry declares, marked so render
+// draws it larger. Only called on a wave whose entry has a boss.
+export function spawnBoss(state) {
+  const { health, speed, bounty } = waveEntry(state.wave).boss;
+  const enemy = { ...createEnemy({ id: state.nextEnemyId++, waypoints: state.waypoints, health, speed, bounty }), boss: true };
+  state.enemies.push(enemy);
+  return enemy;
+}
+
+// Lose one life per enemy that reached the end, BOSS_LIVES for a boss, and remove those enemies.
 export function leakEnemies(state) {
   const leaked = state.enemies.filter((e) => e.reachedEnd);
-  state.lives = Math.max(0, state.lives - leaked.length);
+  state.lives = Math.max(0, state.lives - leaked.reduce((sum, e) => sum + (e.boss ? BOSS_LIVES : 1), 0));
   state.enemies = state.enemies.filter((e) => !e.reachedEnd);
   return leaked.length;
 }
@@ -171,7 +184,12 @@ export function step(state, dt) {
 
 function tick(state, dt) {
   const due = updateWave(state.spawner, dt);
-  for (let i = 0; i < due; i++) spawnEnemy(state);
+  // The boss is the wave's last spawn, even when a long tick owes a backlog.
+  for (let i = 0; i < due; i++) {
+    const last = state.spawner.spawned - due + i + 1 === state.spawner.count;
+    if (last && state.spawner.boss) spawnBoss(state);
+    else spawnEnemy(state);
+  }
 
   for (const enemy of state.enemies) advanceEnemy(enemy, state.waypoints, dt);
   leakEnemies(state);
@@ -209,7 +227,7 @@ function tick(state, dt) {
       return state;
     }
     state.wave += 1;
-    state.spawner = createSpawner(state.options, state.wave);
+    state.spawner = waveSpawner(state, state.wave);
   }
 
   return state;

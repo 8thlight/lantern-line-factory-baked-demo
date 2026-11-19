@@ -240,14 +240,16 @@ function fillRounded(ctx, colour, x, y, width, height, radius) {
 
 // The artboard's ghost symbol (32x36 units around its centre): a round head, a hem of
 // curved points, a sheen and two eyes with shine; its health bar floats above it.
-// A ghost frost is slowing is tinted frost.
+// A ghost frost is slowing is tinted frost. A boss is the same ghost, drawn BOSS_SCALE larger.
 const GHOST_SCALE = 0.94;
+export const BOSS_SCALE = 1.6;
 
 export function drawGhost(ctx, enemy) {
   const { x, y } = enemy;
   ctx.save();
   ctx.translate(x, y);
-  ctx.scale(GHOST_SCALE, GHOST_SCALE);
+  const size = enemy.boss ? BOSS_SCALE : 1;
+  ctx.scale(GHOST_SCALE * size, GHOST_SCALE * size);
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
 
@@ -291,7 +293,7 @@ export function drawGhost(ctx, enemy) {
 
   // A ghost handed in with no health of its own is drawn at full health.
   const fraction = enemy.maxHealth === undefined ? 1 : healthFraction(enemy);
-  drawHealthBar(ctx, x, y - 29, fraction);
+  drawHealthBar(ctx, x, y - 29 * size, fraction);
 }
 
 // The Board artboard's bar: a 26x4 track whose fill shortens and reddens with each hit.
@@ -328,16 +330,18 @@ export function drawBeam(ctx, from, to) {
 
 // The design/hud.md bar, drawn only from hudModel: Lives, Gold and Wave from the left at fixed
 // offsets (no text is measured), then the kind a click places when draw is handed one, styled
-// like the three before it and clear of the Pause and Speed buttons on the right.
+// like the three before it and clear of the Pause and Speed buttons on the right. On a boss wave,
+// "Boss wave" follows in the danger red, before the buttons.
 const HUD_ITEMS = [
   { label: 'Lives', labelX: HUD_PAD, valueX: 54 },
   { label: 'Gold', labelX: 96, valueX: 138 },
   { label: 'Wave', labelX: 190, valueX: 236 },
 ];
 export const HUD_KIND = { label: 'Tower', labelX: 300, valueX: 348 };
+export const HUD_BOSS_X = 420;
 const BUTTON_RADIUS = 6;
 
-function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger }, kind) {
+function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDanger, bossWave }, kind) {
   ctx.save();
   ctx.fillStyle = THEME.hudBg;
   ctx.fillRect(0, 0, WIDTH, HUD_HEIGHT);
@@ -360,6 +364,10 @@ function drawHud(ctx, { lives, gold, wave, totalWaves, paused, speed, livesDange
     ctx.fillText(HUD_KIND.label, HUD_KIND.labelX, HUD_HEIGHT / 2);
     ctx.fillStyle = THEME.hudInk;
     ctx.fillText(kind.name, HUD_KIND.valueX, HUD_HEIGHT / 2);
+  }
+  if (bossWave) {
+    ctx.fillStyle = THEME.hudDanger;
+    ctx.fillText('Boss wave', HUD_BOSS_X, HUD_HEIGHT / 2);
   }
   drawButton(ctx, PAUSE_BUTTON, paused ? 'Resume' : 'Pause', false);
   drawButton(ctx, SPEED_BUTTON, `${speed}x`, speed === 2);
