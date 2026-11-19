@@ -1,6 +1,7 @@
 // Canvas drawing only. Reads game state; never changes it.
 
 import { COLS, ROWS, TILE, cellKey } from './path.js';
+import { healthFraction } from './enemy.js';
 
 export const PALETTE = {
   grassA: '#1d3a2e',
@@ -12,6 +13,10 @@ export const PALETTE = {
   ghost: '#8e6bd8',
   ghostEdge: '#4d3586',
   beam: '#fff4c9',
+  healthTrack: 'rgba(12, 26, 19, 0.7)', // #0c1a13 at 0.7, as the Board artboard draws it
+  healthHigh: '#7fd68a',
+  healthMid: '#e9c75a',
+  healthLow: '#e65a5a',
   hover: 'rgba(255, 244, 201, 0.25)',
   hoverBad: 'rgba(230, 90, 90, 0.35)',
   text: '#f4efe1',
@@ -56,7 +61,8 @@ function drawTower(ctx, { x, y }) {
   ctx.fill();
 }
 
-function drawGhost(ctx, { x, y }) {
+function drawGhost(ctx, enemy) {
+  const { x, y } = enemy;
   const r = TILE * 0.3;
   ctx.fillStyle = PALETTE.ghost;
   ctx.strokeStyle = PALETTE.ghostEdge;
@@ -69,6 +75,21 @@ function drawGhost(ctx, { x, y }) {
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+  drawHealthBar(ctx, x, y - r - 12, healthFraction(enemy));
+}
+
+// The Board artboard's bar: a 26x4 track whose fill shortens and reddens with each hit.
+const BAR_WIDTH = 26;
+const BAR_HEIGHT = 4;
+
+function drawHealthBar(ctx, x, top, fraction) {
+  const left = x - BAR_WIDTH / 2;
+  ctx.fillStyle = PALETTE.healthTrack;
+  ctx.fillRect(left, top, BAR_WIDTH, BAR_HEIGHT);
+  if (fraction > 2 / 3) ctx.fillStyle = PALETTE.healthHigh;
+  else if (fraction > 1 / 3) ctx.fillStyle = PALETTE.healthMid;
+  else ctx.fillStyle = PALETTE.healthLow;
+  ctx.fillRect(left, top, BAR_WIDTH * fraction, BAR_HEIGHT);
 }
 
 function drawShots(ctx, shots) {
