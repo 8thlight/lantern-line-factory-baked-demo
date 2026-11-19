@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { BEST_KEY, readBest, writeBest } from '../src/best.js';
-import { createGame } from '../src/game.js';
+import { BEST_KEY, bestAfterStep, readBest, writeBest } from '../src/best.js';
+import { createGame, step } from '../src/game.js';
 import { draw } from '../src/render.js';
 
 // A plain object in the shape of the browser's Storage.
@@ -112,4 +112,51 @@ test('a playing game draws the same texts with a best as without one', () => {
   const withBest = drawnTexts(game, 7);
   assert.deepEqual(withBest, drawnTexts(game, null));
   assert.equal(withBest[0], 'Lives');
+});
+
+test('a wave that is not a whole wave of at least 1 is never saved, and leaves a real best as it was', () => {
+  const storage = memoryStorage();
+  writeBest(storage, 7);
+  for (const wave of [0, -2, 2.5, NaN, undefined, '9']) assert.equal(writeBest(storage, wave), 7);
+  assert.deepEqual(storage.items, { [BEST_KEY]: '7' });
+  assert.equal(writeBest(memoryStorage(), NaN), null);
+});
+
+// One frame of src/main.js's loop: the status before the step, the step, then the best after it.
+function frame(storage, state, best) {
+  const before = state.status;
+  step(state, 0.05);
+  return bestAfterStep(storage, before, state, best);
+}
+
+test('the step a run is lost on saves the wave it reached, once, through the real loop', () => {
+  const storage = memoryStorage();
+  const writes = [];
+  const setItem = storage.setItem;
+  storage.setItem = function (key, value) {
+    writes.push(value);
+    setItem.call(this, key, value);
+  };
+  const state = createGame({ lives: 1 });
+  let best = null;
+  for (let i = 0; i < 2000 && state.status === 'playing'; i++) best = frame(storage, state, best);
+  assert.equal(state.status, 'lost');
+  for (let i = 0; i < 5; i++) best = frame(storage, state, best); // the frames after the loss
+  assert.equal(best, state.wave);
+  assert.deepEqual(writes, [String(state.wave)]);
+});
+
+test('a step that wins the run saves the wave it reached', () => {
+  const storage = memoryStorage({ [BEST_KEY]: '2' });
+  const state = { status: 'won', wave: 5 };
+  assert.equal(bestAfterStep(storage, 'playing', state, 2), 5);
+  assert.equal(readBest(storage), 5);
+});
+
+test('a step that does not end a run leaves the best as it was and writes nothing', () => {
+  const storage = memoryStorage();
+  assert.equal(bestAfterStep(storage, 'playing', { status: 'playing', wave: 3 }, 2), 2);
+  assert.equal(bestAfterStep(storage, 'ready', { status: 'ready', wave: 1 }, 2), 2);
+  assert.equal(bestAfterStep(storage, 'lost', { status: 'lost', wave: 9 }, 2), 2);
+  assert.deepEqual(storage.items, {});
 });
