@@ -5,9 +5,11 @@ import { nearestInRange } from './targeting.js';
 
 export const LANTERN = { range: 100, cooldown: 0.6, damage: 1 }; // pixels, seconds, health
 
+// A kind with no damage of its own hits for the lantern's, so its beams always land.
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
-  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage: kind.damage, reload: 0 };
+  const damage = kind.damage ?? LANTERN.damage;
+  return { col, row, x, y, range: kind.range, cooldown: kind.cooldown, damage, reload: 0 };
 }
 
 // A tower may stand on any in-bounds cell that is not path and not taken.

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { START_LIVES, createGame, placeTower, spawnEnemy, step } from '../src/game.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
-import { LANTERN } from '../src/tower.js';
+import { LANTERN, createTower } from '../src/tower.js';
 
 // A game whose waves hold no ghosts, so each test controls its enemies.
 // Its wave number stays at 1: step() never advances past a wave of no ghosts.
@@ -124,4 +124,10 @@ test('a 3-health ghost beside a lantern survives the first shot and is gone afte
   assert.deepEqual(game.enemies, []);
   assert.equal(game.kills, 1);
   assert.equal(game.lives, START_LIVES);
+});
+
+test('a tower kind with no damage of its own hits for 1, so its ghost still dies on the third beam', () => {
+  const tower = createTower(1, 1, { range: LANTERN.range, cooldown: LANTERN.cooldown });
+  assert.equal(tower.damage, 1);
+  assert.equal(createTower(1, 1, { ...LANTERN, damage: 2 }).damage, 2);
 });
