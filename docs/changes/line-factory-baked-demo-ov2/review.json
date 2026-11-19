@@ -1,18 +1,15 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "f9c2dd29478d4a1b202bda5c507e42b4623171afe4ad35e883f8ad5cd93d73db",
+  "digest": "8479443fd46dbb0cb368dc40920d6356e559eb923ac204af9dc06658e96627f6",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] edge case: step only counts a wave as cleared when state.spawner.count > 0, so a game made with waveSize 0 can never reach 'won'. It plays on forever with status 'playing', and no test covers this. Nothing reaches it today because the default waveSize is 5, but totalWaves now makes a round end, so a zero-size wave should either count as cleared or be refused by createGame.",
-        "[P1] missing test: nothing tests the main.js click branch that calls restart once the round is over and does not place a tower. A test that swaps `state` for the result of restart in the browser entry, or a small exported click handler, would prove the 'click to play again' part of the brief.",
-        "[P2] sprite fidelity: the brief asks for a wavy hem, but drawGhost draws the hem as a zig-zag of lineTo points ([8,8],[4,13],[0,8],...). quadraticCurveTo scallops would match the 'wavy hem' wording and Board.png better.",
-        "[P2] draw order: drawLantern draws each lantern's light pool and then its body in the same call. Each later lantern's translucent pool (radius TILE*3) is therefore drawn over the bodies of lanterns placed before it. Drawing every pool first and every body after would keep each lantern's paper colour clean.",
-        "[P2] naming: render.js keeps `export const PALETTE = THEME` only as an alias for older health-bar tests. Moving those tests to THEME and dropping the alias would leave one name for the colour tokens."
+        "[P2] render layering: drawLantern paints its light pool (radius TILE*3, translucent, centre alpha 0.42) and then its body in one call, and draw calls it once per tower in order. A later lantern's pool therefore lands on top of any earlier lantern's body within three tiles, and on the hover highlight, so lanterns placed close together tint each other. The fix is to draw every pool in one pass before any lantern body, either by splitting the pool into its own exported helper or by having draw loop over the towers twice.",
+        "[P2] naming: render.js still exports PALETTE as an alias of THEME only so that older health-bar tests keep reading colours by that name. That leaves two names for one token set. Moving those tests to THEME and dropping the alias would make theme.js the only source, as the brief describes."
       ],
       "seat": "review",
       "verdict": "changes-required"

@@ -2,10 +2,8 @@
   "print_id": "line-factory-baked-demo-ov2",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [
-    "src/render.js"
-  ],
-  "said": "FOUND 1\n- `src/render.js:26`: `draw` listed the end-of-round statuses again (`'lost' || 'won'`) when the `HEADLINE` map already holds them. It now checks `state.status in HEADLINE`. Fixed in 45a9557.\nGATES green",
+  "edited": [],
+  "said": "FOUND 0\n\nThis attempt's diff (commits 9075390 and a290ecb, checked against main) needed no fixes, so I committed nothing:\n- `src/game.js:65`: the new `click(state, col, row)` does what its comment says. It restarts a finished round and places a lantern during play. `src/main.js` calls it, so the old restart branch in `main.js` is gone.\n- `test/game-over.test.js:105`: the click test can fail. A tower must actually be placed while playing, and a lost game must restart to `'playing'` with no towers and its own lives option (2), not the default.\n- `src/render.js:168`: the three `quadraticCurveTo` scallops end at (-12, 12), the hem's start point, so the path closes as the comment describes. The new test in `test/render.test.js:165` would have failed on the old zig-zag, which drew no `quadraticCurveTo`.\n- Scope: the diff stays inside the six paths on the triage's `touches:` list.\n\nOne thing beyond this attempt's two commits: `origin/print/line-factory-baked-demo-ov2` is behind. The range the pass asks for also pulls in print a8h's commits, which `main` already has (#21). Diffed against `main` instead, the diff covers only the six paths in this print's `touches:` list plus its own chain files under `docs/changes/line-factory-baked-demo-ov2`.\n\nGATES green: `node --test test/game-over.test.js test/render.test.js test/enemy.test.js test/game.test.js` passed 35 of 35. I ran `test/enemy.test.js` and `test/game.test.js` too because they import `render.js` and `game.js`. This repo has no Makefile, so there is no `make check-build`. The full `npm test`, which CI runs, was not run here.",
   "gates": "green",
   "finding": null
 }
