@@ -1,0 +1,13 @@
+{
+  "print_id": "line-factory-baked-demo-dd1",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/best.js",
+    "src/main.js",
+    "test/best.test.js"
+  ],
+  "said": "FOUND 1\n- `src/main.js:18`: `globalThis.localStorage` was read outside any `try` when the module loads. In a browser that has storage turned off, that read throws a SecurityError and the game never starts, though the plan says it should run with no best. The read now goes through a new `browserStorage()` in `src/best.js`, which returns nothing when the browser refuses. A new test in `test/best.test.js` covers both a refusing browser and one that allows storage. fixed (committed).\n- GATES green: `npm --prefix . run test` gives 193 passed, 0 failed, and the six touched suites give 74 of 74. This repo has no Makefile or `check-build` target, so I checked with `node --test` and said so in the attempt notes. The working tree is clean.",
+  "gates": "green",
+  "finding": null
+}
