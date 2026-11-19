@@ -1,17 +1,17 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "78177d3e3eddcad61e6a0258f8dd20b19164865240a816de81431099cdf831a9",
+  "digest": "465b78bb58e2ceaa4ac4bf3fdf2a4302c50ea3ab194cdaff9c2615c0633411f7",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P0] outcome: src/main.js never passes the selected kind to draw. The brief says 'main.js passes the selected kind to draw', and the issue says 'the selected kind shows in the HUD'. The 0003.diff only rewords two comments; the draw call is unchanged. render.js now takes draw(ctx, state, hover, sprites = SPRITES, kind = null) and calls drawKind only when kind is given, so in the running game kind stays null and drawKind never runs. The player never sees which tower kind is selected. Fix: change the call in main.js to draw(ctx, state, hover, SPRITES, kind).",
-        "[P1] test gap: no test covers the new render paths. Nothing checks that draw calls sprites.drawFrost for a tower with slow > 0, that drawGhost uses THEME.ghostSlowed while slowLeft > 0, or that the HUD shows the kind only when draw is handed one. A test like that would have caught the missing main.js wiring above.",
-        "[P2] scope: game.js adds a non-enumerable spawnTimer accessor on the state, used only by the quietGame helper in test/frost.test.js. The test could set state.spawner.timer directly. The accessor adds a second, hidden name for the same field to the game state.",
-        "[P2] structure: createTower now puts kind, slow and slowFor on every tower, so lantern and brazier towers carry slow: undefined and slowFor: undefined. Defaulting them the way splash already defaults (slow: kind.slow ?? 0) would keep the tower's fields consistent across kinds."
+        "[P0] outcome: The brief says 'main.js passes the selected kind to draw', and the issue asks that 'the selected kind shows in the HUD'. The src/main.js diff (0003.diff) changes only two comments, the `let kind` comment and the keydown comment. No draw call is changed. render.js's draw gained a fifth `kind = null` parameter, and drawKind runs only when kind is truthy. Because main.js never passes it, the selected kind (Lantern/Brazier/Frost) is never shown in the game. Fix: pass `kind` as the fifth argument of the draw call in main.js, after the sprites argument (SPRITES).",
+        "[P1] test gap: No test calls draw with a kind and checks that the HUD shows its name and cost. No test checks that drawGhost uses THEME.ghostSlowed for a ghost with slowLeft > 0. The HUD wiring miss above got through because nothing covers it.",
+        "[P2] structure: game.js adds a non-enumerable `spawnTimer` getter/setter to the game state. Its only purpose is to let test/frost.test.js hold spawning off. This puts a test hook in production state outside the brief's touch list. The test could set `game.spawner.timer` directly, or use `waveSize: 0`.",
+        "[P2] structure: createTower now stores the whole `kind` object on each tower, and it also stores `slow: undefined` / `slowFor: undefined` for kinds that don't slow. Other optional fields default (`splash ?? 0`), so a missing slow should probably default the same way (`slow ?? 0`, `slowFor ?? 0`). The `kind` reference is not needed by anything in this change."
       ],
       "seat": "review",
       "verdict": "changes-required"
