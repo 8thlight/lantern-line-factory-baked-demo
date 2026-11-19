@@ -39,6 +39,15 @@ test('pickPath gives path 1 for 0, path 3 for 0.5 and path 5 for 0.99', () => {
   assert.equal(pickPath(() => 0.5), PATHS[2]);
 });
 
+test('pickPath refuses a random of 1 or more, below 0, or not a number', () => {
+  for (const r of [1, 1.5, -0.1, NaN]) {
+    assert.throws(() => pickPath(() => r), {
+      name: 'RangeError',
+      message: `pickPath needs a random from 0 up to but not including 1, as Math.random gives; it got ${r}.`,
+    });
+  }
+});
+
 test("a game made with path 4 refuses a tower on path 4, takes one on a cell only path 1 covers, and spawns its first ghost at path 4's first corner", () => {
   const game = createGame({ waypoints: PATHS[3] });
   // (0, 1) is its first corner, (7, 5) mid-way down its second leg.

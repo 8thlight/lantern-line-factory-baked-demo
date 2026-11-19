@@ -28,9 +28,14 @@ export const PATHS = [
 ];
 
 // One of PATHS, each as likely, for a `random` returning 0 up to but not including 1, as
-// Math.random does.
+// Math.random does. Any other answer is refused rather than read as no path, which createGame
+// would quietly turn into path 1.
 export function pickPath(random) {
-  return PATHS[Math.floor(random() * PATHS.length)];
+  const r = random();
+  if (!(r >= 0 && r < 1)) {
+    throw new RangeError(`pickPath needs a random from 0 up to but not including 1, as Math.random gives; it got ${r}.`);
+  }
+  return PATHS[Math.floor(r * PATHS.length)];
 }
 
 export const cellKey = (col, row) => `${col},${row}`;
