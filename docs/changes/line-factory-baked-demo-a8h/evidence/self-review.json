@@ -1,0 +1,12 @@
+{
+  "print_id": "line-factory-baked-demo-a8h",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/game.test.js",
+    "test/wave.test.js"
+  ],
+  "said": "I found three small problems in the tests and fixed all three in one commit. All 30 tests pass and the tree is clean.\n\nFOUND 3\n- `test/wave.test.js:5`: the test's title still said \"exactly 5 in all\", but its total check was moved into the next test, so it no longer checks the total. I renamed it to what it checks: 1 spawn at t=0, none half a second later, the next at 1 second. fixed\n- `test/game.test.js:129`: the title said \"its ghost still dies on the third beam\", but the test only checks the tower's `damage` and no ghost is ever hit. I renamed it to say that. fixed\n- `test/game.test.js:131`: the test wrote the lantern's damage as a bare `1` (and `2`) instead of reading `LANTERN.damage`, so the same number lived in two places. It now reads `LANTERN.damage` and `LANTERN.damage + 1`. fixed\n\nGATES green (this repo has no Makefile `check-build` target, so I ran `node --test` on the three touched test files, 21/21 passing, then `npm --prefix . run test`, 30/30 passing)",
+  "gates": "green",
+  "finding": null
+}

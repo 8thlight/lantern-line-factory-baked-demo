@@ -1,26 +1,68 @@
-// Tower kinds. The Lantern fires a beam at the nearest enemy; Frost slows the one it hits.
+// Three tower kinds. The Lantern fires a beam; the Brazier reaches less far and fires more slowly,
+// but its shot splashes onto every ghost around its target; Frost hits lightly and slows the ghost
+// it hits. Each shoots the nearest ghost by default, or the one furthest along the path once
+// switched to first.
 
-import { cellCenter } from './path.js';
-import { nearestInRange } from './targeting.js';
+import { COLS, ROWS, cellCenter, cellKey } from './path.js';
+import { pickTarget } from './targeting.js';
 
-export const LANTERN = { name: 'Lantern', range: 100, cooldown: 0.6, cost: 0 }; // pixels, seconds, gold
-// Frost does no damage: it sets a hit ghost's speed to `slow` times its own for `slowFor` seconds.
-export const FROST = { name: 'Frost', range: 90, cooldown: 1.0, cost: 40, slow: 0.5, slowFor: 2 };
+export const LANTERN = { name: 'Lantern', range: 100, cooldown: 0.6, damage: 1, cost: 20 }; // pixels, seconds, health, gold
+export const BRAZIER = { name: 'Brazier', range: 80, cooldown: 1.2, damage: 1, splash: 40, cost: 30 }; // pixels, seconds, health, pixels, gold
+// Frost hits for less than the lantern and sets a hit ghost's speed to `slow` times its own for `slowFor` seconds.
+export const FROST = { name: 'Frost', range: 90, cooldown: 1.0, damage: 0.5, cost: 40, slow: 0.5, slowFor: 2 }; // pixels, seconds, health, gold, factor, seconds
 
-// The tower picker: key 1 the lantern, key 3 frost. Any other key keeps the current kind.
+// The kind a key chooses: 1 the lantern, 2 the brazier, 3 frost; any other key keeps `current`.
 export function kindForKey(key, current) {
   if (key === '1') return LANTERN;
+  if (key === '2') return BRAZIER;
   if (key === '3') return FROST;
   return current;
 }
 
+// A kind with no damage of its own hits for the lantern's, so its beams always land;
+// a kind with no splash hits its target alone, and a kind with no slow leaves its speed alone.
 export function createTower(col, row, kind = LANTERN) {
   const { x, y } = cellCenter({ col, row });
+  const damage = kind.damage ?? LANTERN.damage;
   return {
     col, row, x, y, kind,
-    range: kind.range, cooldown: kind.cooldown, slow: kind.slow, slowFor: kind.slowFor,
-    reload: 0,
+    range: kind.range, cooldown: kind.cooldown, damage, splash: kind.splash ?? 0,
+    slow: kind.slow, slowFor: kind.slowFor,
+    reload: 0, mode: 'nearest',
   };
+}
+
+// The mode a toggle switches to: 'first' gives 'nearest', anything else gives 'first'.
+export function nextMode(mode) {
+  return mode === 'first' ? 'nearest' : 'first';
+}
+
+// The tower standing on a cell, or null.
+export function towerAt({ towers }, col, row) {
+  return towers.find((t) => t.col === col && t.row === row) ?? null;
+}
+
+// A right-click's toggle: while the round is playing, the tower on the cell switches mode.
+// Returns that tower, or null when the round is over or the cell holds none.
+export function toggleModeAt(state, col, row) {
+  if (state.status !== 'playing') return null;
+  const tower = towerAt(state, col, row);
+  if (tower) tower.mode = nextMode(tower.mode);
+  return tower;
+}
+
+// Why a tower may not stand on a cell: 'bounds' off the board, 'path' on it, 'taken' under
+// another tower; null when the cell is free.
+export function cellError({ path, towers }, col, row) {
+  if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return 'bounds';
+  if (path.has(cellKey(col, row))) return 'path';
+  if (towerAt({ towers }, col, row) !== null) return 'taken';
+  return null;
+}
+
+// A tower may stand on any in-bounds cell that is not path and not taken.
+export function canPlace(state, col, row) {
+  return cellError(state, col, row) === null;
 }
 
 // Count the reload down; when ready and an enemy is in range, fire.
@@ -28,7 +70,7 @@ export function createTower(col, row, kind = LANTERN) {
 export function updateTower(tower, enemies, dt) {
   tower.reload = Math.max(0, tower.reload - dt);
   if (tower.reload > 0) return null;
-  const target = nearestInRange(tower, enemies);
+  const target = pickTarget(tower, enemies);
   if (target) tower.reload = tower.cooldown;
   return target;
 }
