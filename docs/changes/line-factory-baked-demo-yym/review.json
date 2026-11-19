@@ -1,19 +1,19 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "37d946ad32521641ee70fefbe98557bf73d8cf2425decaf705ae8c22e558f5cc",
+  "digest": "b4a3ad73914cf27f70e683f4ab033cb362ff6abc5c0b807953ecb9987ad3d090",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P2] naming: the test in test/upgrade.test.js is titled 'draw makes one level mark per level above the first', but it asserts [0, 2, 3] marks for levels 1\u20133. drawLevelMarks in src/render.js draws one mark per level for an upgraded tower, so a level-2 tower gets 2 marks. That matches the issue's 'an upgraded tower is drawn with a mark per level', but the title describes a different rule (which would give 0, 1, 2 marks). Rename the test to say level 1 has no marks and level N >= 2 has N.",
-        "[P1] missing-test: the browser wiring in src/main.js has no test. Nothing covers that the click handler stores clickCell's id in `selected`, that U calls upgradeTower(state, selected) only while playing and not on a key repeat, that Escape and restart clear the selection, or that `selected` reaches draw. clickCell, hudKey and selectedModel are each tested alone, but a broken handler that never upgrades or never selects would still pass CI.",
-        "[P1] fragile-structure: towers now hold a live reference to their kind object (`kind` in createTower), and upgradeError/upgradeTower read upgradeCost, upgradeDamage and upgradeRange from it at upgrade time. Any later code that serialises or clones game state, such as a save or snapshot feature, will lose or detach that reference, and upgrades will then quietly refuse with 'max' because of the `kind?.upgradeCost === undefined` branch. Storing the kind's name, or copying the upgrade fields onto the tower, would make this sturdier."
+        "OUTCOME: upgradeTower(state, id) in src/game.js meets the brief. It raises the level, adds the per-level damage and range that the kind declares in src/tower.js (LANTERN 25 gold, +1 damage, +20 range), and takes the upgrade cost from the player's gold. It refuses with 'gold' or 'max' and changes nothing when it does. 'max' is checked before 'gold', and MAX_LEVEL is 3. test/upgrade.test.js asserts each case, including that level, damage, range and gold are unchanged after a refusal.",
+        "OUTCOME: the remaining requirements are met. Towers now get a unique id from state.nextTowerId. A left click on a tower's cell selects it through clickCell instead of being refused as 'taken'. selectedModel gives the HUD the selected tower's level, damage, range and upgrade cost (null at the maximum), and render.js draws these on a tower card. drawLevelMarks draws one mark per level on an upgraded tower: none at level 1, 2 at level 2, 3 at level 3. This matches the issue's wording, 'an upgraded tower is drawn with a mark per level', and is tested both directly and through draw().",
+        "CONSTRUCTION: no defect found. A refused upgrade returns before anything is changed. Each tower keeps its own copy of the upgrade data, so a structuredClone of the game still upgrades, and a test covers this. main.js clears the selection on restart and on Escape, ignores a held key's repeat for U, and only upgrades while the round is playing. A click on an empty cell still places a tower as before and clears the selection."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
