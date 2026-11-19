@@ -1,0 +1,19 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "c957572f703275455f196d054124bb6cf9b3d67ad91e378a591fad99e2c712ff",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "Outcome met: the diffs for the three declaration files match what issue #76 quoted. In .hydraflow/charter.yaml (0001.diff) the new 1-13 and 15-31 lines are the issue's 31 lines in order, with all blocks copied from the kernel removed (promotion, actors, gate_polarity, operator, artifacts, product_standards, measures, planned_standards, assurance, awaiting_standards, local). In .hydraflow/layout.yaml (0002.diff) the new 1-15, 27-40 and 52-68 lines line up with the issue's 68-line file: chain and workflows are added and the 22 internal standards are dropped, leaving 11. In docs/standards/README.md (0003.diff) the new 1-20 and 22-35 lines match the issue's text, including the closing line-baseline/not-offered paragraph. No diff carries a no-newline-at-end marker. Limit: I read diffs, not full files, so for the unchanged context lines I checked only the line counts and the hunk offsets, which do agree with the issue.",
+        "Test meets the brief: test/hydraflow-declarations.test.js reads both YAML files as text with node:fs and needs no YAML dependency. It pins the purpose sentence and inherits: kernel. It checks the eleven articles.standards in order, using only the top-level articles block. It finds the eleven names under the layout's top-level standards: with an exact 'standards:' match, so roots.standards cannot be picked up by mistake, and compares them as a set. It checks that the unit and scenario rings start with test/. The purpose assertion fails against the old charter, so the test was red before the replacement.",
+        "Scope is clean: only the four paths the brief allows are touched, and no existing file under src/ or test/ changes. I found no construction defect."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
