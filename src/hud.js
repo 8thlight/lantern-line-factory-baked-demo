@@ -1,5 +1,6 @@
-// What the HUD shows, read from state and never written back. render.js draws only this.
-// Pure logic, no DOM: safe to import from tests.
+// What the HUD shows, read from state by hudModel and never written back: render.js draws only
+// that. Its two buttons' geometry, and the clicks and keys that press them. No DOM: safe to
+// import from tests.
 
 import { COLS, TILE } from './path.js';
 import { togglePause, toggleSpeed } from './game.js';
