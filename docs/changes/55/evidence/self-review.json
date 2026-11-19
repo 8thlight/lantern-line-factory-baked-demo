@@ -1,0 +1,11 @@
+{
+  "print_id": "55",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "test/boss.test.js"
+  ],
+  "said": "FOUND 2\n- `src/game.js:223`: no test covered the `bossLeft === 0` check that stops a wave ending before its boss arrives. When I took the check out, every test still passed. I added 'a boss wave cleared of its ghosts waits for its boss before it ends' to `test/boss.test.js`, and it fails without the check. fixed\n- `test/boss.test.js:107`: the \"waves 1 to 4 none\" check only asserted zero bosses, which would also pass if nothing had been recorded at all. It now also checks that the ordinary ghost count equals the total for waves 1 to 4. fixed\n- Left as is: `createSpawner` (`src/game.js:21`) doesn't carry the `boss: entry.boss ?? null` field the plan names. `spawnBoss` gets the boss from `waveEntry` directly, so the field isn't needed. Every planned file and every acceptance criterion is covered, and no file outside the ratified `touches:` was changed.\n- GATES green: `node --test` passes on the 10 test files the change touches or affects (100 tests), and `npm --prefix . run test` passes 158 of 158.",
+  "gates": "green",
+  "finding": null
+}

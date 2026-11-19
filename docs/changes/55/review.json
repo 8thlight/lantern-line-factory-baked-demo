@@ -1,0 +1,18 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "e719638bae5fb87139edc33f90a25b021a0c97962c0bbc15dafa1eb3ab38b887",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P2] structure: the brief's fix says 'The HUD model carries a boss-wave flag that render announces'. Instead, the diff adds a separate bossWarning({status, spawner}) in src/hud.js, which render calls next to hudModel(state). hudModel is unchanged and has no boss flag. The announcement still works and is tested, so the outcome is met, but it does not take the shape the brief described. Folding the flag into hudModel would keep all HUD state in one model.",
+        "[P2] edge: createSpawner sets bossLeft from the table entry 'whatever count the game was made with'. In a game created with waveSize: 0, waveDone holds from the start, so the boss would spawn while the wave-advance gate (count > 0) never opens. No real configuration reaches this today. A test pinning the boss/waveSize-override interaction would make that intent explicit."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
