@@ -21,10 +21,13 @@ export const START_BUTTON = Object.freeze({ x: WIDTH / 2 - 80, y: Math.round(0.6
 
 // The start screen's difficulty row: Easy, Normal, Hard, each 96 by 28 and 8 apart, centred
 // across the canvas with its bottom 8 above the canvas's bottom edge, below the start steps.
-const DIFFICULTY_ROW = 3 * 96 + 2 * 8;
+const DIFFICULTY_ORDER = ['easy', 'normal', 'hard'];
+const DIFFICULTY_WIDTH = 96;
+const DIFFICULTY_GAP = 8;
+const DIFFICULTY_ROW = DIFFICULTY_ORDER.length * (DIFFICULTY_WIDTH + DIFFICULTY_GAP) - DIFFICULTY_GAP;
 export const DIFFICULTY_BUTTONS = Object.freeze(
-  ['easy', 'normal', 'hard'].map((key, i) =>
-    Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (96 + 8), y: CANVAS_HEIGHT - 8 - 28, width: 96, height: 28 }),
+  DIFFICULTY_ORDER.map((key, i) =>
+    Object.freeze({ key, x: (WIDTH - DIFFICULTY_ROW) / 2 + i * (DIFFICULTY_WIDTH + DIFFICULTY_GAP), y: CANVAS_HEIGHT - 8 - 28, width: DIFFICULTY_WIDTH, height: 28 }),
   ),
 );
 
