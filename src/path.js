@@ -1,11 +1,11 @@
-// The map: a grid of square tiles and one fixed path across it.
+// The map: a grid of square tiles and the paths across it, one of five each round.
 // Pure logic, no DOM: safe to import from tests.
 
 export const TILE = 40;
 export const COLS = 16;
 export const ROWS = 10;
 
-// Corners of the path, in grid cells. The path runs straight between them.
+// Corners of path 1, in grid cells. The path runs straight between them.
 export const WAYPOINTS = [
   { col: 0, row: 2 },
   { col: 5, row: 2 },
@@ -14,6 +14,24 @@ export const WAYPOINTS = [
   { col: 10, row: 3 },
   { col: 15, row: 3 },
 ];
+
+// The five paths a round may run on, as corners in grid cells: each from column 0 to column 15
+// in straight segments, 24 to 26 tiles long, so a round takes about as long on any of them.
+// Path 1 is WAYPOINTS itself, the path a game made without waypoints runs on.
+const corners = (list) => list.map(([col, row]) => ({ col, row }));
+export const PATHS = [
+  WAYPOINTS,
+  corners([[0, 7], [4, 7], [4, 2], [11, 2], [11, 6], [15, 6]]),
+  corners([[0, 4], [3, 4], [3, 8], [8, 8], [8, 3], [15, 3]]),
+  corners([[0, 1], [7, 1], [7, 8], [12, 8], [12, 4], [15, 4]]),
+  corners([[0, 8], [6, 8], [6, 3], [13, 3], [13, 7], [15, 7]]),
+];
+
+// One of PATHS, each as likely, for a `random` returning 0 up to but not including 1, as
+// Math.random does.
+export function pickPath(random) {
+  return PATHS[Math.floor(random() * PATHS.length)];
+}
 
 export const cellKey = (col, row) => `${col},${row}`;
 

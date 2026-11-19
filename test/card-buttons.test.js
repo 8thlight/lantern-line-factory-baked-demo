@@ -111,6 +111,12 @@ test("drawing a selected tower's card draws Upgrade and Sell, Upgrade dimmed whe
 const savedGlobals = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
 after(() => Object.assign(globalThis, savedGlobals));
 
+// src/main.js picks each round's path with Math.random; 0 picks path 1, the path these clicks
+// and hovers were written on.
+const savedRandom = Math.random;
+Math.random = () => 0;
+after(() => (Math.random = savedRandom));
+
 async function bootMain() {
   const handlers = {};
   const keys = {};

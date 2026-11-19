@@ -1,6 +1,6 @@
 // Game state and the fixed-step update. No DOM: render.js draws what this holds.
 
-import { WAYPOINTS, cellCenter, pathCells } from './path.js';
+import { WAYPOINTS, cellCenter, pathCells, pickPath } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy, slowEnemy } from './enemy.js';
 import { LANTERN, MAX_LEVEL, canPlace, cellError, createTower, towerById, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
@@ -217,6 +217,12 @@ export function leakEnemies(state) {
 // A fresh game made with the options this one was made with.
 export function restart(state) {
   return createGame(state.options);
+}
+
+// A fresh game made with the options this one was made with, on a path picked again by `random`
+// (see pickPath), so each round may run on a different path.
+export function nextRound(state, random) {
+  return createGame({ ...state.options, waypoints: pickPath(random) });
 }
 
 // Begin a ready game's first wave; any other status is left as it is.
