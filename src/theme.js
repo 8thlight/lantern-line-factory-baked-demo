@@ -37,6 +37,9 @@ export const THEME = Object.freeze({
   healthHigh: '#7fd68a',
   healthMid: '#e9c75a',
   healthLow: '#e65a5a',
+  // range ring on hover (design/screens.html:204)
+  rangeRing: '#f2c14e',
+  rangeFill: 'rgba(242, 193, 78, 0.07)', // #f2c14e at 0.07
   // the rest: the placement hover, text, and the end card's veil
   hover: 'rgba(255, 244, 201, 0.25)',
   hoverBad: 'rgba(230, 90, 90, 0.35)',
