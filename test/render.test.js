@@ -161,3 +161,10 @@ test('drawPath draws the path as stones with an edge', () => {
   assert.ok(sets.some((s) => s.name === 'fillStyle' && s.value === THEME.pathStone));
   assert.ok(calls.length > 0);
 });
+
+test('drawGhost draws its hem as a wave of curves', () => {
+  const { ctx, calls } = fakeContext();
+  drawGhost(ctx, { x: 100, y: 100 });
+  assert.ok(named(calls, 'quadraticCurveTo').length >= 3);
+  assert.ok(named(calls, 'arc').length > 0);
+});

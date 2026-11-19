@@ -149,7 +149,7 @@ export function drawLantern(ctx, { x, y }) {
   ctx.restore();
 }
 
-// A ghost: a rounded head, a zig-zag hem, two eyes, and its health bar above it.
+// A ghost: a rounded head, a wavy hem, two eyes, and its health bar above it.
 // A ghost handed no health draws a full bar.
 export function drawGhost(ctx, ghost) {
   const { x, y } = ghost;
@@ -164,7 +164,8 @@ export function drawGhost(ctx, ghost) {
   ctx.lineTo(-12, -2);
   ctx.arc(0, -2, 12, Math.PI, 0);
   ctx.lineTo(12, 12);
-  for (const [hx, hy] of [[8, 8], [4, 13], [0, 8], [-4, 13], [-8, 8]]) ctx.lineTo(hx, hy);
+  // Three scallops from right to left, each dipping below the hem line.
+  for (const hx of [12, 4, -4]) ctx.quadraticCurveTo(hx - 4, 17, hx - 8, 12);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
