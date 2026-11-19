@@ -1,0 +1,15 @@
+{
+  "print_id": "42",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [
+    "src/game.js",
+    "src/hud.js",
+    "src/render.js",
+    "test/hud.test.js",
+    "test/pause-speed.test.js"
+  ],
+  "said": "FOUND 5\n- `src/game.js:132`: the check that stops a 2x `step` once the round ends had no test that failed without it. I added 'a round lost on the first tick of a 2x step runs no second tick' and watched it fail with the check removed. Fixed.\n- `src/hud.js:11` and `src/render.js`: the `--hud-pad` value of 8 was written in both files. It now lives once, as `HUD_PAD` exported from `src/hud.js`. Fixed.\n- `test/hud.test.js` and `test/pause-speed.test.js`: the new tests hard-coded '10', '50', '30' and '1 / 10' instead of using `START_LIVES`, `START_GOLD`, `LANTERN.cost` and `TOTAL_WAVES`. They now read those constants. Fixed.\n- `src/game.js:135`: a stray blank line at the top of `tick`. Fixed.\n- `src/main.js:63`: nothing tests that P and F do nothing once the round is over. Left as it is, because a test would have to play a whole round to its end through `main.js`. The plan only asks that P and F work during play, and the toggle and repeat paths are tested.\n\nGATES green: `node --test` on the 11 files from plan step 8 passed, 95 of 95. There is no Makefile or `check-build` target in this clone, so I ran `node --test` instead, and the attempt notes say so. The diff stays inside the paths the triage allows, adds no negative assertions, and is committed.",
+  "gates": "green",
+  "finding": null
+}
