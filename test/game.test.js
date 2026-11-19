@@ -126,8 +126,8 @@ test('a 3-health ghost beside a lantern survives the first shot and is gone afte
   assert.equal(game.lives, START_LIVES);
 });
 
-test('a tower kind with no damage of its own hits for 1, so its ghost still dies on the third beam', () => {
+test("a tower kind with no damage of its own hits for the lantern's damage, and one with its own keeps it", () => {
   const tower = createTower(1, 1, { range: LANTERN.range, cooldown: LANTERN.cooldown });
-  assert.equal(tower.damage, 1);
-  assert.equal(createTower(1, 1, { ...LANTERN, damage: 2 }).damage, 2);
+  assert.equal(tower.damage, LANTERN.damage);
+  assert.equal(createTower(1, 1, { ...LANTERN, damage: LANTERN.damage + 1 }).damage, LANTERN.damage + 1);
 });
