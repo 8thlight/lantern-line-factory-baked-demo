@@ -4,7 +4,7 @@
 import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
-import { rangePreview, towerPrice } from './game.js';
+import { rangePreview, sellValue, towerPrice } from './game.js';
 import { towerById } from './tower.js';
 import { CANVAS_HEIGHT, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
@@ -417,8 +417,8 @@ export function drawLevelMarks(ctx, tower) {
 
 // The selected tower's card, as the Main artboard's tower card (design/screens/Main.dc.html:49-52):
 // a dark panel edged in the ring's gold beside the tower, its name and level, its reach and
-// damage, and what U does. Fixed sizes, no text measured, kept CARD_INSET inside the board.
-const CARD = { width: 300, height: 54, radius: 6, pad: 10, line: 15 };
+// damage, and what U and S do. Fixed sizes, no text measured, kept CARD_INSET inside the board.
+const CARD = { width: 300, height: 69, radius: 6, pad: 10, line: 15 };
 const CARD_INSET = 4;
 const REFUSAL_INK = { gold: 'hudDanger', max: 'hudMuted', missing: 'hudMuted' };
 const clamp = (value, low, high) => Math.min(Math.max(value, low), high);
@@ -441,6 +441,7 @@ function drawTowerCard(ctx, tower, model, gold) {
     [`${model.name} · level ${model.level}`, THEME.hudAccent],
     [`Range ${model.range / TILE} tiles · ${model.damage} damage · targets ${model.mode}`, THEME.hudInk],
     [upgradeLine(model, gold), model.refusal ? THEME[REFUSAL_INK[model.refusal]] : THEME.hudAccent],
+    [`Press S to sell: ${sellValue(tower)} gold`, THEME.hudInk],
   ];
   lines.forEach(([text, colour], i) => {
     ctx.fillStyle = colour;

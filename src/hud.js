@@ -33,6 +33,12 @@ export const UPGRADE_REFUSALS = Object.freeze({
   missing: 'No tower to upgrade: click a placed tower first',
 });
 
+// What sellTower's refusals mean, by its reason, for a caller that reads them.
+export const SELL_REFUSALS = Object.freeze({
+  missing: 'No tower to sell: click a placed tower first',
+  over: 'The round is not in play: start a round before selling',
+});
+
 // What the selected tower's card shows, read from the state and never written to it; null when
 // no tower has the id. Its upgrade cost is null at the most. It carries the tower's targeting
 // mode, which a right-click toggles.
@@ -75,14 +81,15 @@ export function boardCellAt(x, y) {
   return { col: Math.floor(x / TILE), row: Math.floor((y - HUD_HEIGHT) / TILE) };
 }
 
-// The action a key reaches: P pauses, F changes speed, U upgrades the selected tower, either
-// case; Escape clears the selection; any other key, null.
+// The action a key reaches: P pauses, F changes speed, U upgrades the selected tower, S sells
+// the selected tower, either case; Escape clears the selection; any other key, null.
 export function hudKey(key) {
   if (key === 'Escape') return 'deselect';
   const lower = key.toLowerCase();
   if (lower === 'p') return 'pause';
   if (lower === 'f') return 'speed';
   if (lower === 'u') return 'upgrade';
+  if (lower === 's') return 'sell';
   return null;
 }
 

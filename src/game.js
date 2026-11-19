@@ -84,11 +84,13 @@ export function placementError(state, col, row, kind = LANTERN) {
   return cellError(state, col, row) ?? (state.gold < towerPrice(state, kind) ? 'gold' : null);
 }
 
-// Place a tower of `kind` and pay its price, unless placementError refuses it.
+// Place a tower of `kind` and pay its price, unless placementError refuses it. The tower
+// remembers the price it was placed for as `spent`.
 export function placeTower(state, col, row, kind = LANTERN) {
   if (placementError(state, col, row, kind) !== null) return false;
-  state.gold -= towerPrice(state, kind);
-  state.towers.push({ id: state.nextTowerId++, ...createTower(col, row, kind) });
+  const price = towerPrice(state, kind);
+  state.gold -= price;
+  state.towers.push({ id: state.nextTowerId++, ...createTower(col, row, kind), spent: price });
   return true;
 }
 
@@ -104,7 +106,7 @@ export function upgradeError(state, id) {
 }
 
 // Raise a tower one level by the damage and range its upgrade (copied from its kind) declares
-// and pay the upgrade's cost. Returns upgradeError's reason, having changed nothing, when it
+// and pay the upgrade's cost, counting it into the tower's `spent`. Returns upgradeError's reason, having changed nothing, when it
 // refuses; null when done.
 export function upgradeTower(state, id) {
   const reason = upgradeError(state, id);
@@ -115,6 +117,24 @@ export function upgradeTower(state, id) {
   tower.damage += damage;
   tower.range += range;
   state.gold -= cost;
+  tower.spent = (tower.spent ?? 0) + cost; // a tower built by hand with no `spent` counts from 0
+  return null;
+}
+
+// What selling a tower returns: half the gold spent on it, rounded down.
+export function sellValue(tower) {
+  return Math.floor((tower.spent ?? 0) / 2);
+}
+
+// Remove the tower with `id` and pay its sell value. Returns 'over', having changed nothing,
+// while the round is not playing, 'missing' when no tower has the id; null when sold. Its cell
+// is free again, and the next tower of its kind costs one price step less.
+export function sellTower(state, id) {
+  if (state.status !== 'playing') return 'over';
+  const tower = towerById(state, id);
+  if (!tower) return 'missing';
+  state.towers = state.towers.filter((t) => t !== tower);
+  state.gold += sellValue(tower);
   return null;
 }
 
