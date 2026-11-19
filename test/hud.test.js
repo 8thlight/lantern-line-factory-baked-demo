@@ -151,9 +151,9 @@ test('the bar shows each value in its token', () => {
   const textsWithFill = (ctx) => ctx.calls.filter((c) => c.name === 'fillText').map((c) => [c.args[0], c.fillStyle]);
   assert.deepEqual(textsWithFill(drawn(createGame())), [
     ['Lives', THEME.hudMuted],
-    ['10', THEME.hudInk],
+    [String(START_LIVES), THEME.hudInk],
     ['Gold', THEME.hudMuted],
-    ['50', THEME.hudAccent],
+    [String(START_GOLD), THEME.hudAccent],
     ['Wave', THEME.hudMuted],
     [`1 / ${TOTAL_WAVES}`, THEME.hudGhost],
     ['Pause', THEME.hudInk],

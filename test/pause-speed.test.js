@@ -1,6 +1,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { createGame, placeTower, spawnEnemy, step, togglePause, toggleSpeed } from '../src/game.js';
+import { START_GOLD, START_LIVES, TOTAL_WAVES, createGame, placeTower, spawnEnemy, step, togglePause, toggleSpeed } from '../src/game.js';
+import { LANTERN } from '../src/tower.js';
 import { HUD_HEIGHT, PAUSE_BUTTON, SPEED_BUTTON } from '../src/hud.js';
 import { ROWS, TILE } from '../src/path.js';
 import { THEME } from '../src/theme.js';
@@ -75,6 +76,22 @@ test('a long frame at 2x is two ticks, so no shot and no stretch of path is skip
   assert.deepEqual([ghost.maxHealth - ghost.health, game.towers[0].reload], [2, 0.6]);
 });
 
+test('a round lost on the first tick of a 2x step runs no second tick', () => {
+  // A ghost at the path's end on its last life, and a wave still spawning: a second tick
+  // would run the spawner on past the loss.
+  const lose = () => {
+    const game = createGame({ lives: 1 });
+    spawnEnemy(game).distance = 1e9;
+    return game;
+  };
+  const fast = toggleSpeed(lose());
+  const slow = lose();
+  step(fast, 0.05);
+  step(slow, 0.05);
+  assert.equal(fast.status, 'lost');
+  assert.deepEqual({ ...fast, speed: 1 }, slow);
+});
+
 // src/main.js against stand-ins for the DOM: a canvas that keeps its handlers and records
 // what each frame draws, a window that keeps its keydown handler, and a frame queue.
 function recordingContext() {
@@ -137,7 +154,7 @@ async function boot() {
 
 const textsOf = (calls) => calls.filter((c) => c.name === 'fillText').map((c) => c.args[0]);
 const fillsIn = (calls, colour) => calls.filter((c) => c.name.startsWith('fill') && c.fillStyle === colour);
-const hudAt = (gold, pause = 'Pause', speed = '1x') => ['Lives', '10', 'Gold', gold, 'Wave', '1 / 10', pause, speed];
+const hudAt = (gold, pause = 'Pause', speed = '1x') => ['Lives', String(START_LIVES), 'Gold', String(gold), 'Wave', `1 / ${TOTAL_WAVES}`, pause, speed];
 const centreOf = (rect) => [rect.x + rect.width / 2, rect.y + rect.height / 2];
 
 test('the canvas is tall enough for the bar and the whole board', async () => {
@@ -152,19 +169,19 @@ test('a click on the bar never places a tower', async () => {
   game.click(5, HUD_HEIGHT - 1);
   game.click(gap, HUD_HEIGHT / 2);
   const calls = game.frame();
-  assert.deepEqual(textsOf(calls), hudAt('50'));
+  assert.deepEqual(textsOf(calls), hudAt(START_GOLD));
   assert.deepEqual(fillsIn(calls, THEME.lanternPaper), []);
 
   game.click(5, HUD_HEIGHT + 5);
-  assert.deepEqual(textsOf(game.frame()), hudAt('30'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD - LANTERN.cost));
 });
 
 test('a click on Pause or 1x toggles them and places nothing', async () => {
   const game = await boot();
   game.click(...centreOf(PAUSE_BUTTON));
-  assert.deepEqual(textsOf(game.frame()), hudAt('50', 'Resume'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume'));
   game.click(...centreOf(SPEED_BUTTON));
-  assert.deepEqual(textsOf(game.frame()), hudAt('50', 'Resume', '2x'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume', '2x'));
 });
 
 test('the hover clears over the bar', async () => {
@@ -179,10 +196,10 @@ test('the hover clears over the bar', async () => {
 test('P and F reach the toggles while the round is playing', async () => {
   const game = await boot();
   game.key('p');
-  assert.deepEqual(textsOf(game.frame()), hudAt('50', 'Resume'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume'));
   game.key('F');
-  assert.deepEqual(textsOf(game.frame()), hudAt('50', 'Resume', '2x'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume', '2x'));
   game.key('p', true);
   game.key('f', true);
-  assert.deepEqual(textsOf(game.frame()), hudAt('50', 'Resume', '2x'));
+  assert.deepEqual(textsOf(game.frame()), hudAt(START_GOLD, 'Resume', '2x'));
 });
