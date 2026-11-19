@@ -3,9 +3,9 @@
   "stage": "build",
   "review_of_record": "review.json",
   "edited": [
-    "src/theme.js"
+    "test/range-preview.test.js"
   ],
-  "said": "FOUND 2\n- `src/theme.js:46`: `rangeRing` was `rgba(242, 193, 78, 0.7)`. The Board artboard's ring sets no stroke-opacity, so 0.7 was invented, and THEME's header says every opacity comes from the artboard. Fixed: it is now `#f2c14e`, and `rangeFill` has a `#f2c14e at 0.07` note like the other tokens (6a76be0).\n- `src/theme.js:45`: the comment said only \"a hovered lantern\" shows a ring, but `rangePreview` shows one for any hovered tower, braziers included. Fixed in the same commit.\n- I checked the rest and changed nothing: all four touches are handled and nothing outside them changed. The tests check `towerAt`, `rangePreview` on a tower, on grass, on a path cell, off the map and with no hover, and that `draw` strokes the ring in `THEME.rangeRing`. Each \"no ring\" check sits beside a \"ring drawn\" check.\n- The last gate finding came with no failed log, so I could not reproduce the red at the merge. I only confirmed the tests below pass on this head.\n\nGATES green: `npm --prefix . run test` passes 66 of 66. This clone has no Makefile, so there is no `make check-build` target to run.",
+  "said": "FOUND 1\n- `test/range-preview.test.js:67`: the test for `null` on a path cell, off the map, or with no hover had only negative assertions, so a `rangePreview` that always returned `null` would still pass it. It now first asserts that the same game shows a range for a grass cell. Fixed in 3eded0e.\nGATES green (`node --test test/range-preview.test.js` 8/8 after the fix. Before it, the other files that import `game.js` or `render.js` (`render.test.js`, `game.test.js`, `brazier.test.js`, `game-over.test.js`) passed 47/47; the fix only touched the test file. The clone has no Makefile, so I used `node --test`. I couldn't reproduce the earlier merge-red on hydraflow/verify, because the forge kept no failed log for it.)",
   "gates": "green",
   "finding": null
 }

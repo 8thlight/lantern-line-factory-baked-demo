@@ -1,16 +1,16 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "a36d634a2c564fb58145ca531212ee086b7d2c3edc22b2f8f0cf23ddc9f6a8cf",
+  "digest": "7be11f7e8a5a37accbf464ce61130b74f9e3850f713580083f266ba4379ee4c0",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] edge/coupling: rangePreview (src/game.js) decides whether empty grass gets a ring by calling canPlace. The brief only asks for null on a path cell or with no hover. If canPlace also checks anything else, such as gold or the tower kind, the grass preview will vanish whenever placement is blocked for that reason. Only the source diffs were rendered, so I could not check what canPlace actually tests, and no test covers grass that is free but blocked for some other reason. Consider an explicit path, bounds and occupancy check, or add a test that pins this behaviour down.",
-        "[P2] design: drawRange (src/render.js) fills the circle with THEME.rangeFill as well as stroking it dashed. The brief asks for a faint outline. The fill is very faint (alpha 0.07) and the comment says it follows the artboard, but the tests only check the stroke colour, so the fill is an untested extra beyond the brief.",
-        "[P2] structure: render.js now imports rangePreview from game.js, so the drawing layer depends on the game-logic module. There is no cycle today, but render could instead receive the ring precomputed by main.js, keeping render free of game imports."
+        "[P1] design fidelity: the brief asks for a 'faint range-ring colour token' and a 'faint outline', but THEME.rangeRing is '#f2c14e' at full opacity, stroked 1.5px dashed (src/theme.js, drawRange in src/render.js). That is a bold amber ring, not a faint one. I couldn't check it against design/screens/Main.png because the artboard isn't in this folder. Also, the drawRange comment cites the Board artboard, while the brief names the Main artboard as the reference for this ring.",
+        "[P2] scope: drawRange also fills the disc with a new THEME.rangeFill token. The brief only asks for the circle to be stroked 'as an outline'. The 0.07 fill is faint and harmless, but nothing asked for it, and the test now pins it as behaviour.",
+        "[P2] layering: render.js now imports rangePreview from game.js, so the draw-only module depends on the game-logic module. It works and there's no import cycle, but main.js could compute the preview and pass it in, which would keep render.js reading only state and the hover."
       ],
       "seat": "review",
       "verdict": "changes-required"
