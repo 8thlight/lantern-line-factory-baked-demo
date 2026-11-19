@@ -33,7 +33,7 @@ export function createGame({
   totalWaves = TOTAL_WAVES,
 } = {}) {
   const options = { waypoints, spawnInterval, waveSize, lives, gold, totalWaves };
-  const state = {
+  return {
     options,
     status: 'playing', // then 'won' or 'lost', and the round is over
     waypoints,
@@ -51,15 +51,6 @@ export function createGame({
     paused: false,
     speed: 1, // 1 or 2: the ticks each step runs
   };
-  // Seconds until the current wave's next ghost: the spawner's timer, so a test can hold spawning off
-  // with Infinity. Not enumerable, so a copy or comparison of the state sees the spawner alone.
-  Object.defineProperty(state, 'spawnTimer', {
-    get: () => state.spawner.timer,
-    set: (seconds) => {
-      state.spawner.timer = seconds;
-    },
-  });
-  return state;
 }
 
 // Why a tower of `kind` may not be placed on a cell: the cell's reason ('bounds', 'path' or

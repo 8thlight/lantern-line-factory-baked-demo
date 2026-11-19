@@ -6,12 +6,8 @@ import { WAYPOINTS } from '../src/path.js';
 import { FROST, LANTERN, createTower, kindForKey } from '../src/tower.js';
 import { SPRITES, draw } from '../src/render.js';
 
-// A game with no automatic spawning, so each test controls its enemies.
-function quietGame(options) {
-  const game = createGame(options);
-  game.spawnTimer = Infinity;
-  return game;
-}
+// A game whose waves hold no ghosts, so each test controls its enemies.
+const quietGame = (options) => createGame({ waveSize: 0, ...options });
 
 const ghost = () => createEnemy({ id: 1, waypoints: WAYPOINTS });
 
@@ -71,6 +67,19 @@ test('a frost tower in the game loop slows a ghost and does not kill it', () => 
   assert.equal(game.kills, 0);
   assert.equal(game.shots.length, 1);
   assert.equal(game.shots[0].frost, true);
+});
+
+test('a ghost a frost tower hits in step covers half the distance in the next second', () => {
+  const game = quietGame();
+  placeTower(game, 1, 1, FROST); // just above the first stretch of path
+  const hit = spawnEnemy(game);
+  step(game, 0.1);
+  const unhit = ghost();
+  unhit.distance = hit.distance; // the two start the second side by side
+  const [hitFrom, unhitFrom] = [hit.distance, unhit.distance];
+  advanceEnemy(hit, WAYPOINTS, 1);
+  advanceEnemy(unhit, WAYPOINTS, 1);
+  assert.equal(hit.distance - hitFrom, (unhit.distance - unhitFrom) / 2);
 });
 
 test('key 3 picks frost, key 1 the lantern, and another key keeps the kind', () => {
