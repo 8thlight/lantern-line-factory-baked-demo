@@ -1,16 +1,16 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "34de4ff139fcb74625b7f7962a76db3ac187600e17f865ee134bbfec7aedc343",
+  "digest": "47ab800c6d3db28d39e16e616fc8971ef161b5eca41decb30b1a70bd63c0660e",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] missing test: the only code that saves a run's result is the new line in src/main.js frame(), which writes the best when step() moves the status from 'playing' to 'won' or 'lost'. No test covers it. test/best.test.js tests readBest and writeBest directly and passes `best` to draw() by hand. If that check broke (for example a status renamed in game.js, or a run that ends outside step()), the best would silently stop being saved and every test would still pass. Moving the end-of-run check into a small pure helper, or into game.js, would let a test cover it.",
-        "[P1] edge case: writeBest(storage, wave) never checks that `wave` is a positive whole number. If game.js ever passed 0, NaN or a fraction as state.wave, writeBest would store it (for example 'NaN'). readBest then reads that as no best, so the next write would overwrite a real best instead of only ever raising it. game.js was not in the diff, so I could not confirm what state.wave can hold today. Validating `wave` inside writeBest, with the same check readBest uses, would close this.",
-        "[P2] note: the brief's outcome is met. src/best.js takes the storage as an argument. A best is only ever raised. Missing, non-numeric or throwing storage reads as no best, and a write still goes through. main.js saves state.wave once, on the step that ends the run. render.js draws 'Best: wave N' only on the 'ready' start screen, and no Best text when best is null. test/best.test.js covers the 7, 4/9, non-numeric text and start-screen criteria using a plain object as the storage."
+        "[P1] robustness: in src/main.js, `const storage = globalThis.localStorage` runs at module top level, outside any try. Some browsers throw a SecurityError just from reading the `localStorage` property when site data is blocked (for example Chrome with cookies disabled, or some sandboxed iframes). In that setting the whole game would fail to boot, which did not happen before this change. best.js says a storage that throws reads as no best, but it can only catch errors from getItem and setItem, not from this property read. Wrap the read in a try (for example `let storage; try { storage = globalThis.localStorage; } catch { storage = undefined; }`). No test covers this, and normal setups never hit it, so this is a follow-up, not a miss against the brief.",
+        "[P2] scope: best.js adds `bestAfterStep`, a function the brief did not ask for. It puts main.js's 'a run ends on the playing\u2192won/lost step' rule in best.js so it can be tested, which is reasonable. But best.js now encodes knowledge of the game's status values, which is more than the storage-only module the issue describes (`readBest`/`writeBest`).",
+        "[P2] test-structure: the end-to-end loss test (test/best.test.js:133-148) runs the real `step` for up to 2000 frames and assumes a game with 1 life is lost within 100 simulated seconds. If wave timing or the game's balance changes, the test could fail even though best.js is still correct."
       ],
       "seat": "review",
       "verdict": "changes-required"
