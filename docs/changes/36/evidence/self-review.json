@@ -1,0 +1,9 @@
+{
+  "print_id": "36",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 0\n\nI checked the build commits (829a9ef..HEAD) against the plan and the brief, leaving out the main merge that the base range also picks up:\n- **Planned files:** `src/enemy.js`, `src/game.js` and `test/gold.test.js` all match the plan. That covers `ENEMY_BOUNTY`, `START_GOLD`, `gold` in the game's options so `restart` brings it back, and gold paid once in the dead-ghost branch. `leakEnemies` is unchanged and `test/game.test.js` was not edited.\n- **Tests:** each assertion compares exact values, so it would fail if the code were wrong. Paying gold on every hit would give `[55,60,65]` instead of `[50,50,55]`. Paying a splash kill twice would push gold past 60. A leak that paid gold would fail the exact check for 50. No negative assertion was added, so the assertion baseline stays where it was.\n- **Comments:** the header and kill-branch comments describe what the code does.\n- **Scope:** the build commits touch only the three paths in triage `touches:`.\n- **Repeated facts:** the 50 and 5 in the tests are the issue's own acceptance values, checked against the constants once. They are not copies of the constants.\n\nGATES green: this clone has no Makefile, so there is no `check-build` target. `node --test` on `test/gold.test.js`, `test/game.test.js`, `test/game-over.test.js` and `test/brazier.test.js` passed 38 of 38. I did not run the whole suite (`npm test`), because the guardrails rule it out here; it runs on the pull request's required checks.",
+  "gates": "green",
+  "finding": null
+}
