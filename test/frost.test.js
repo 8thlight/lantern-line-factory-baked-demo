@@ -40,7 +40,15 @@ test('two frost hits in a row leave the slow factor, not its square', () => {
   assert.equal(enemy.slowLeft, FROST.slowFor);
   const before = enemy.distance;
   advanceEnemy(enemy, WAYPOINTS, 1);
-  assert.equal(enemy.distance - before, enemy.speed * 0.5);
+  assert.equal(enemy.distance - before, enemy.speed * FROST.slow);
+});
+
+test('a slow that runs out part way through a step ends there, and the rest of the step is at full speed', () => {
+  const enemy = ghost();
+  slowEnemy(enemy, FROST.slow, 0.5);
+  advanceEnemy(enemy, WAYPOINTS, 1);
+  assert.equal(enemy.distance, enemy.speed * (FROST.slow * 0.5 + 0.5));
+  assert.deepEqual([enemy.slow, enemy.slowLeft], [1, 0]);
 });
 
 test('a frost tower costs 40 gold and is refused when gold is short', () => {
