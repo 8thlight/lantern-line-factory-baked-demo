@@ -64,5 +64,9 @@ touches:
   - src/game.js
   - src/main.js
   - test/random-path.test.js
+  - test/card-buttons.test.js
+  - test/upgrade.test.js
+  - test/sell.test.js
+  - test/pause-speed.test.js
 
 Acceptance criterion: The new `test/random-path.test.js` proves each of the issue's criteria. `PATHS` holds five lists matching the table, the first deep-equal to `WAYPOINTS`. Each path starts in column 0, ends in column 15, stays on the 16 by 10 board, has only horizontal or vertical segments, and has a `pathLength` of 24 to 26 tiles. `pickPath` returns path 1 for a random of 0, path 3 for 0.5 and path 5 for 0.99. A game made with path 4 refuses a tower on a path-4 cell with `'path'`, accepts one on a cell that only path 1 covers, and spawns its first ghost at path 4's first corner. `nextRound` on a hard game with 3 lives left gives a `'hard'` game with 8 lives on the picked path. `chooseDifficulty` on a ready path-2 game keeps path 2. `npm --prefix . run test` passes with no existing test file edited.
