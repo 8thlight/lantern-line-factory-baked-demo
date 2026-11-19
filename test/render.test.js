@@ -166,8 +166,12 @@ test('draw on a fresh game draws the path once and no ghost', () => {
     drawPath: () => (counts.drawPath += 1),
     drawGhost: () => (counts.drawGhost += 1),
   };
-  draw(recordingContext(), createGame(), null, sprites);
+  const game = createGame();
+  draw(recordingContext(), game, null, sprites);
   assert.deepEqual(counts, { drawPath: 1, drawGhost: 0 });
+  spawnEnemy(game);
+  draw(recordingContext(), game, null, sprites);
+  assert.deepEqual(counts, { drawPath: 2, drawGhost: 1 });
 });
 
 test('a finished round draws its end card, and a round in play draws none', () => {
