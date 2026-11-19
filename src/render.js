@@ -5,9 +5,9 @@ import { COLS, ROWS, TILE, cellCenter } from './path.js';
 import { healthFraction } from './enemy.js';
 import { THEME } from './theme.js';
 import { DIFFICULTIES } from './difficulty.js';
-import { rangePreview, towerPrice } from './game.js';
+import { rangePreview, sellValue, towerPrice } from './game.js';
 import { towerById } from './tower.js';
-import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, sellLine, upgradeLine } from './hud.js';
+import { CANVAS_HEIGHT, DIFFICULTY_BUTTONS, HUD_HEIGHT, HUD_PAD, PAUSE_BUTTON, SPEED_BUTTON, START_BUTTON, hudModel, selectedModel, upgradeLine } from './hud.js';
 
 const WIDTH = COLS * TILE;
 const HEIGHT = ROWS * TILE;
@@ -45,7 +45,7 @@ export function draw(ctx, state, hover, sprites = SPRITES, kind = null, selected
   for (const tower of state.towers) drawLevelMarks(ctx, tower);
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const { from, to } of state.shots) sprites.drawBeam(ctx, from, to);
-  if (chosen) drawTowerCard(ctx, chosen, model, state);
+  if (chosen) drawTowerCard(ctx, chosen, model, state.gold);
   if (state.status === 'won' || state.status === 'lost') drawEndCard(ctx, state.status);
   ctx.restore();
   drawHud(ctx, hudModel(state), kind && (state.difficulty ? `${kind.name} ${towerPrice(state, kind)}` : kind.name));
@@ -424,7 +424,7 @@ const CARD_INSET = 4;
 const REFUSAL_INK = { gold: 'hudDanger', max: 'hudMuted', missing: 'hudMuted' };
 const clamp = (value, low, high) => Math.min(Math.max(value, low), high);
 
-function drawTowerCard(ctx, tower, model, { gold, status }) {
+function drawTowerCard(ctx, tower, model, gold) {
   const x = clamp(tower.x + TILE * 0.6, CARD_INSET, WIDTH - CARD_INSET - CARD.width);
   const y = clamp(tower.y - TILE - 14, CARD_INSET, HEIGHT - CARD_INSET - CARD.height);
   ctx.save();
@@ -442,7 +442,7 @@ function drawTowerCard(ctx, tower, model, { gold, status }) {
     [`${model.name} · level ${model.level}`, THEME.hudAccent],
     [`Range ${model.range / TILE} tiles · ${model.damage} damage · targets ${model.mode}`, THEME.hudInk],
     [upgradeLine(model, gold), model.refusal ? THEME[REFUSAL_INK[model.refusal]] : THEME.hudAccent],
-    [sellLine(tower, status), status === 'playing' ? THEME.hudInk : THEME.hudMuted],
+    [`Press S to sell: ${sellValue(tower)} gold`, THEME.hudInk],
   ];
   lines.forEach(([text, colour], i) => {
     ctx.fillStyle = colour;

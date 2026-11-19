@@ -2,7 +2,7 @@ import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createGame, placeTower, placementError, sellTower, sellValue, towerPrice, upgradeTower } from '../src/game.js';
 import { LANTERN, createTower, towerById } from '../src/tower.js';
-import { CANVAS_HEIGHT, HUD_HEIGHT, SELL_REFUSALS, hudKey } from '../src/hud.js';
+import { CANVAS_HEIGHT, HUD_HEIGHT, hudKey } from '../src/hud.js';
 import { SPRITES, draw } from '../src/render.js';
 import { THEME } from '../src/theme.js';
 import { COLS, ROWS, TILE } from '../src/path.js';
@@ -107,13 +107,6 @@ test('a won, lost or ready game is refused with over and nothing changes', () =>
   }
 });
 
-test('each refusal spells what to do next', () => {
-  assert.deepEqual(SELL_REFUSALS, {
-    missing: 'No tower to sell: click a placed tower first',
-    over: 'The round is not in play: start a round before selling',
-  });
-});
-
 test('hudKey returns sell for s and S', () => {
   assert.deepEqual(['s', 'S'].map(hudKey), ['sell', 'sell']);
 });
@@ -199,20 +192,4 @@ test('in the browser, S sells the selected tower once per press, paused or not, 
   assert.deepEqual(game.frame().slice(0, 4), ['Lives', '10', 'Gold', '40']);
   game.click(1, 1); // the cell is free: a lantern is placed there, not a tower selected
   assert.deepEqual(game.frame().slice(0, 4), ['Lives', '10', 'Gold', '20']);
-});
-
-test("on a won or lost game the card's last line says the round is not in play, since S sells nothing", () => {
-  for (const status of ['won', 'lost']) {
-    const game = createGame({ waveSize: 0 });
-    placeTower(game, 1, 1, LANTERN);
-    game.status = status;
-    const ctx = recordingContext();
-    draw(ctx, game, null, SPRITES, null, 1);
-    assert.deepEqual(texts(ctx).slice(0, 4).map((c) => [c.args[0], c.fillStyle]), [
-      ['Lantern · level 1', THEME.hudAccent],
-      ['Range 2.5 tiles · 1 damage · targets nearest', THEME.hudInk],
-      ['Press U to upgrade: 25 gold', THEME.hudAccent],
-      [SELL_REFUSALS.over, THEME.hudMuted],
-    ], status);
-  }
 });

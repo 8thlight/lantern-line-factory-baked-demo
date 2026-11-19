@@ -6,7 +6,7 @@
 import { COLS, ROWS, TILE } from './path.js';
 import { MAX_LEVEL, towerById } from './tower.js';
 import { DIFFICULTIES } from './difficulty.js';
-import { sellValue, upgradeError } from './game.js';
+import { upgradeError } from './game.js';
 
 export const HUD_HEIGHT = 40; // design/hud.md --hud-height; the board is drawn below the bar
 export const HUD_PAD = 8; // design/hud.md --hud-pad: the bar's inset from the canvas edge
@@ -48,13 +48,6 @@ export const UPGRADE_REFUSALS = Object.freeze({
   missing: 'No tower to upgrade: click a placed tower first',
 });
 
-// What sellTower's refusals mean, by its reason. The card says the 'over' one in place of the
-// sell line, since S sells nothing while the round is not in play.
-export const SELL_REFUSALS = Object.freeze({
-  missing: 'No tower to sell: click a placed tower first',
-  over: 'The round is not in play: start a round before selling',
-});
-
 // What the selected tower's card shows, read from the state and never written to it; null when
 // no tower has the id. Its upgrade cost is null at the most. It carries the tower's targeting
 // mode, which a right-click toggles.
@@ -74,13 +67,6 @@ export function upgradeLine({ upgradeCost, refusal }, gold) {
     .replace('{cost}', String(upgradeCost))
     .replace('{gold}', String(gold))
     .replace('{max}', String(MAX_LEVEL));
-}
-
-// The card's sell line: what S returns for `tower`, or SELL_REFUSALS.over while `status` is not
-// 'playing'.
-export function sellLine(tower, status) {
-  if (status !== 'playing') return SELL_REFUSALS.over;
-  return `Press S to sell: ${sellValue(tower)} gold`;
 }
 
 const inside = (rect, x, y) => x >= rect.x && x < rect.x + rect.width && y >= rect.y && y < rect.y + rect.height;
