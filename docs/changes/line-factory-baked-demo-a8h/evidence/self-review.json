@@ -2,10 +2,8 @@
   "print_id": "line-factory-baked-demo-a8h",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [
-    "test/wave.test.js"
-  ],
-  "said": "- `FOUND 1`\n- `test/wave.test.js:24`: the `waveDone` test checked `false` after each of the first four ticks but never checked that those ticks spawned anything, so a wave that spawned nothing would still have passed those four checks. Each tick now has to return 1 as well. fixed (commit c37d3d6)\n- `GATES green`: `node --test test/enemy.test.js test/wave.test.js test/game.test.js` passed 15 of 15, and `npm --prefix . run test` passed 24 of 24. The tree is committed and clean.",
+  "edited": [],
+  "said": "FOUND 0\n\n- I found nothing to fix, so I made no commits. Both beads cover everything in the plan and every acceptance criterion in the triage.\n- Every changed source and test file is in the triage's `touches:` list. The other files in the range are not from build: `.github/workflows/ci.yml` came in with the main merge (`6656e5f`), and `docs/changes/\u2026` came from the chain commits.\n- The two checks in `step()` that decide when the next wave starts are each covered by a test. Removing `state.spawner.count > 0` makes \"a wave of no ghosts keeps the wave number where it is\" fail. Removing `waveDone(state.spawner)` makes \"the wave number moves from 1 to 2 only when the lanterns banish the last ghost of wave 1\" fail.\n- The last gate finding had no failed log to read. The current head, `463de98`, runs the same `npm test` that CI runs and passes 26 of 26.\n- This clone has no Makefile, so there is no `make check-build`. I checked with `npm --prefix . run test` instead and wrote that in the attempt notes.\n\nGATES green",
   "gates": "green",
   "finding": null
 }

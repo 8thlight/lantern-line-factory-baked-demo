@@ -1,17 +1,17 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "12bd52d41aff257f11a01525af2ccd56d7ac60ab6d5f40702978cb555f7cdd8c",
+  "digest": "712ae09919d9cd54b8968dfbb8cf29b76d94c6ccb17331783e41f1540d9687b2",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] fragile test fixture: quietGame now sets waveSize 0. A zero-count wave is waveDone from the start, so in src/game.js step() every tick with an empty board adds 1 to state.wave and builds a new empty wave. The quiet game's wave number keeps climbing for no reason. No test checks wave in a quiet game today, but any future test that steps an empty quiet board and reads state.wave will get a wrong number. Either make the next-wave check require count > 0, or suppress spawning in quietGame some other way.",
-        "[P1] missing test: the wave-advance game test only clears the board by leaking ghosts. No test covers the other way the board clears, with wave 1's last ghost killed by lanterns, to show state.wave goes to 2 only then and not on an earlier kill.",
-        "[P2] edge case: healthFraction divides health by maxHealth. createEnemy({ health: 0 }) makes that 0/0, so the bar gets NaN for its width. Nothing creates a 0-health ghost today. Guard maxHealth <= 0 or reject it in createEnemy.",
-        "[P2] no test for render: drawHealthBar's colour thresholds (above 2/3 green, above 1/3 yellow, else red) and the bar shortening have no tests. Pulling the colour choice into a small pure function would make it testable without a canvas."
+        "[P1] design gap: src/game.js starts the next wave as soon as wave N has spawned out and the board is clear, and createWave gives it timer 0, so wave N+1's first ghost spawns on the very next step. Issue #2 gives a breather between waves as its reason, but its What and the acceptance criterion never ask for a gap between waves, so this is not an outcome miss. Adding an inter-wave delay would be a good follow-up.",
+        "[P1] missing test: nothing checks the drawGhost health bar in src/render.js. A stubbed-ctx test that records each fillRect width and fillStyle would cover the length and colour at full health, at 2/3 and at 1/3. Today a regression in the Board artboard bar would pass CI.",
+        "[P2] edge: healthFraction in src/enemy.js divides health by maxHealth without a guard. createEnemy({ health: 0 }) gives NaN, which drawHealthBar then passes to fillRect as a width. No caller does this today.",
+        "[P2] fragile test: test/game.test.js 'the wave number moves from 1 to 2 only when the lanterns banish the last ghost of wave 1' depends on lanterns at cells (0,1), (1,1) and (0,3) all being in range of the spawn point on the current WAYPOINTS. Changing the path would break it for reasons that have nothing to do with waves."
       ],
       "seat": "review",
       "verdict": "changes-required"
