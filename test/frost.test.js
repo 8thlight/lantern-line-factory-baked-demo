@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { advanceEnemy, createEnemy, slowEnemy } from '../src/enemy.js';
 import { createGame, placeTower, placementError, spawnEnemy, step } from '../src/game.js';
@@ -92,4 +92,37 @@ test('draw names the kind it is handed, by name and cost, and names none when ha
   texts.length = 0;
   draw(ctx, game, null);
   assert.deepEqual(named, [...texts, `${FROST.name} (${FROST.cost})`]);
+});
+
+// src/main.js against stand-ins for the DOM: a canvas whose context keeps the text each
+// frame draws, a window that keeps its keydown handler, and a frame queue.
+async function bootMain() {
+  const keys = {};
+  const frames = [];
+  let texts = [];
+  const ctx = new Proxy({}, { get: (target, name) => (name === 'fillText' ? (text) => texts.push(text) : () => ctx), set: () => true });
+  const canvas = { addEventListener() {}, getContext: () => ctx };
+  const saved = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
+  after(() => Object.assign(globalThis, saved));
+  globalThis.document = { getElementById: () => canvas };
+  globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
+  globalThis.requestAnimationFrame = (frame) => frames.push(frame);
+  await import('../src/main.js?frost');
+  return {
+    key: (key) => keys.keydown({ key, repeat: false }),
+    frame() {
+      texts = [];
+      frames.shift()(performance.now());
+      return texts;
+    },
+  };
+}
+
+test('the running game names the kind a key picks in the HUD, and names none before a pick', async () => {
+  const game = await bootMain();
+  const bar = game.frame();
+  game.key('3');
+  assert.deepEqual(game.frame(), [...bar, `${FROST.name} (${FROST.cost})`]);
+  game.key('1');
+  assert.deepEqual(game.frame(), [...bar, `${LANTERN.name} (${LANTERN.cost})`]);
 });
