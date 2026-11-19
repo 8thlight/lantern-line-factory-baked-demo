@@ -1,0 +1,17 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "632ac0982cb4cedde0fed694f2bbf808b45889bac5bc440f3dc039fa28be4124",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "[P2] structure: drawStartScreen in src/render.js derives the title's y (0.35 \u00d7 canvas height) and START_BUTTON's y (0.6 \u00d7 canvas height) from the canvas size, but hard-codes the tagline at y=190, the hint at y=302 and the steps at 340+22i. If HUD_HEIGHT or ROWS changes, those lines will drift away from the title and button. Derive them from canvasHeight or from START_BUTTON as well."
+      ],
+      "seat": "review",
+      "verdict": "changes-required"
+    }
+  ]
+}
