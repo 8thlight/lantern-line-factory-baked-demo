@@ -62,7 +62,7 @@ test('every kind declares its upgrade, and the most is level 3', () => {
   );
 });
 
-test('a placed tower starts at level 1, knows its kind and has its own id', () => {
+test("a placed tower starts at level 1, carries its kind's name and has its own id", () => {
   const game = createGame({ waveSize: 0 });
   placeTower(game, 1, 1, LANTERN);
   placeTower(game, 3, 1, LANTERN);
@@ -79,7 +79,7 @@ test('upgrading a level-1 lantern with enough gold', () => {
     2,
     LANTERN.damage + LANTERN.upgradeDamage,
     LANTERN.range + LANTERN.upgradeRange,
-    80 - LANTERN.upgradeCost,
+    100 - LANTERN.cost - LANTERN.upgradeCost,
   ]);
 });
 
@@ -117,7 +117,7 @@ test('a cloned game still upgrades, because a tower holds its upgrade as plain d
     2,
     LANTERN.damage + LANTERN.upgradeDamage,
     LANTERN.range + LANTERN.upgradeRange,
-    80 - LANTERN.upgradeCost,
+    100 - LANTERN.cost - LANTERN.upgradeCost,
   ]);
 });
 
@@ -141,7 +141,7 @@ test('each kind rises by its own amounts', () => {
 test('a click on a tower selects it and places nothing; a click elsewhere places and selects nothing', () => {
   const game = withLantern(100);
   assert.equal(clickCell(game, 1, 1, LANTERN), 1);
-  assert.deepEqual([game.gold, game.towers.length], [80, 1]);
+  assert.deepEqual([game.gold, game.towers.length], [100 - LANTERN.cost, 1]);
   assert.equal(clickCell(game, 3, 1, LANTERN), null);
   assert.deepEqual([game.gold, game.towers.length], [60, 2]);
   assert.equal(clickCell(game, 2, 2, LANTERN), null); // the path
