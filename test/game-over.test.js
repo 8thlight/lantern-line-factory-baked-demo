@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createGame, placeTower, restart, spawnEnemy, step } from '../src/game.js';
+import { ENEMY_SPEED, createEnemy } from '../src/enemy.js';
 import { WAYPOINTS, pathLength } from '../src/path.js';
 
-const WALK = pathLength(WAYPOINTS) / 60 + 0.1; // seconds for a ghost to reach the gate
+const WALK = pathLength(WAYPOINTS) / ENEMY_SPEED + 0.1; // seconds for a ghost to reach the gate
 
 // A game with no automatic spawning, so the test controls its ghosts.
 function quietGame(options) {
@@ -56,8 +57,8 @@ for (const [label, make] of [
   test(`step on a ${label} game leaves enemies, lives and towers unchanged`, () => {
     const game = make();
     assert.equal(game.status, label);
-    placeTower(game, 1, 0);
-    game.enemies.push({ id: 99, x: 10, y: 10, distance: 0, speed: 60, reachedEnd: false });
+    assert.equal(placeTower(game, 1, 0), true);
+    game.enemies.push(createEnemy({ id: 99, waypoints: WAYPOINTS }));
     const before = structuredClone({ enemies: game.enemies, lives: game.lives, towers: game.towers });
     const returned = step(game, 1000);
     assert.equal(returned, game);
@@ -68,8 +69,8 @@ for (const [label, make] of [
 
 test('restart returns full lives, no towers, no enemies, wave 1 and status playing', () => {
   const game = lostGame({ lives: 4, totalWaves: 3 });
-  placeTower(game, 1, 0);
-  game.enemies.push({ id: 99, x: 10, y: 10, distance: 0, speed: 60, reachedEnd: false });
+  assert.equal(placeTower(game, 1, 0), true);
+  game.enemies.push(createEnemy({ id: 99, waypoints: WAYPOINTS }));
   assert.equal(game.status, 'lost');
   const fresh = restart(game);
   assert.equal(fresh.lives, 4);
