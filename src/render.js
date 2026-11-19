@@ -23,7 +23,7 @@ export function draw(ctx, state, hover, sprites = SPRITES) {
   for (const enemy of state.enemies) sprites.drawGhost(ctx, enemy);
   for (const shot of state.shots) sprites.drawBeam(ctx, shot);
   drawLives(ctx, state.lives);
-  if (state.status === 'lost' || state.status === 'won') drawRoundOver(ctx, state.status);
+  if (state.status in HEADLINE) drawRoundOver(ctx, state.status);
 }
 
 function drawGrass(ctx) {
