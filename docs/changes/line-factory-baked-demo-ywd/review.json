@@ -1,16 +1,16 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "e361c6df6726c0fd3d46e86ca4146133bc08cfd33cf43df6ffc534e32654d7ef",
+  "digest": "16b539c105e8db4d1db6bf70564b4dfbd60626109f60f73cde639a31572f88ce",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P0] outcome: src/main.js never passes the selected kind to draw. Its diff (+2 -2) only edits two comments, and the draw call is unchanged. draw's new `kind` parameter therefore keeps its null default in the running game, so drawKind never runs and the HUD never names the selected kind. The brief requires 'main.js passes the selected kind to draw' and the issue requires 'the selected kind shows in the HUD'. The render test in test/frost.test.js calls draw with FROST directly, so it cannot catch this.",
-        "[P1] test coverage: the first three acceptance tests in test/frost.test.js apply the slow by calling slowEnemy directly. None of them puts a ghost through a real frost hit in step before measuring distance. The game-loop test checks that enemy.slow is set after a hit, but not the half-distance-in-the-next-second criterion end to end. A regression in how step applies tower.slow or tower.slowFor (for example, passing undefined slowFor) would still pass the distance tests.",
-        "[P2] scope: src/game.js adds a non-enumerable spawnTimer accessor on the game state just so tests can stop spawning. The brief did not ask for it, and it adds a second public way into spawner.timer that only affects the current wave's spawner."
+        "[P1] outcome/HUD: src/main.js passes `picked` to draw, not the selected `kind`. `picked` starts as null, so at boot the HUD names no kind even though clicks already place a Lantern. The issue asks that the selected kind shows in the HUD, and the brief says main.js passes the selected kind to draw. The kind only appears after the player presses 1, 2 or 3. The brief's 'only when draw is handed a kind' guard exists to keep the existing render.js test expectations, and it does not need main.js to hide the kind at boot. Passing `kind` fixes this; the bootMain test in test/frost.test.js that asserts no kind name before a pick would need updating to match.",
+        "[P2] structure: createTower now stores `kind` on the tower and also copies range, cooldown, damage, splash, slow and slowFor from it. That is two sources for the same values. Lantern and brazier towers also get `slow: undefined` and `slowFor: undefined`, while splash defaults to 0. Defaulting slow to 0 or 1 would be consistent with splash and make the `tower.slow > 0` checks less dependent on undefined.",
+        "[P2] test: the first acceptance test ('covers half the distance in the next second') calls slowEnemy directly instead of using a frost hit. The later step-based test covers the real path, so the first one partly repeats it. Both compare floats with exact equality, which passes today but is fragile if speeds or dt change."
       ],
       "seat": "review",
       "verdict": "changes-required"
