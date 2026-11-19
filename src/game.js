@@ -2,7 +2,7 @@
 
 import { WAYPOINTS, cellCenter, pathCells } from './path.js';
 import { advanceEnemy, createEnemy, damageEnemy, slowEnemy } from './enemy.js';
-import { LANTERN, canPlace, cellError, createTower, updateTower } from './tower.js';
+import { LANTERN, MAX_LEVEL, canPlace, cellError, createTower, towerById, updateTower } from './tower.js';
 import { splashTargets } from './targeting.js';
 import { createWave, updateWave, waveDone } from './wave.js';
 import { WAVES } from './waves.js';
@@ -42,6 +42,7 @@ export function createGame({
     totalWaves,
     spawner: createSpawner(options, 1),
     nextEnemyId: 1,
+    nextTowerId: 1,
     enemies: [],
     towers: [],
     shots: [],
@@ -64,8 +65,43 @@ export function placementError(state, col, row, kind = LANTERN) {
 export function placeTower(state, col, row, kind = LANTERN) {
   if (placementError(state, col, row, kind) !== null) return false;
   state.gold -= kind.cost ?? 0;
-  state.towers.push(createTower(col, row, kind));
+  state.towers.push({ id: state.nextTowerId++, ...createTower(col, row, kind) });
   return true;
+}
+
+// Why the tower with `id` may not be upgraded: 'missing' when no tower has it, then 'max' at
+// MAX_LEVEL or when its kind declared no upgrade, then 'gold' when the gold held is below the
+// upgrade's cost; null when it may.
+export function upgradeError(state, id) {
+  const tower = towerById(state, id);
+  if (!tower) return 'missing';
+  if (tower.level >= MAX_LEVEL || tower.upgrade === null) return 'max';
+  if (state.gold < tower.upgrade.cost) return 'gold';
+  return null;
+}
+
+// Raise a tower one level by the damage and range its upgrade (copied from its kind) declares
+// and pay the upgrade's cost. Returns upgradeError's reason, having changed nothing, when it
+// refuses; null when done.
+export function upgradeTower(state, id) {
+  const reason = upgradeError(state, id);
+  if (reason !== null) return reason;
+  const tower = towerById(state, id);
+  const { cost, damage, range } = tower.upgrade;
+  tower.level += 1;
+  tower.damage += damage;
+  tower.range += range;
+  state.gold -= cost;
+  return null;
+}
+
+// A left click on a board cell: a tower standing there is selected, its id returned and nothing
+// placed; any other cell is handed to placeTower and the click selects nothing (null).
+export function clickCell(state, col, row, kind = LANTERN) {
+  const tower = towerAt(state, col, row);
+  if (tower) return tower.id ?? null;
+  placeTower(state, col, row, kind);
+  return null;
 }
 
 // The hover the pointer shows on a cell: `ok` when a tower of `kind` may be placed there now.

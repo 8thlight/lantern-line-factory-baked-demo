@@ -1,7 +1,7 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
 import { COLS, ROWS, TILE } from './path.js';
-import { createGame, hoverAt, placeTower, restart, step, togglePause, toggleSpeed } from './game.js';
+import { clickCell, createGame, hoverAt, restart, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
 import { HUD_HEIGHT, boardCellAt, hudButtonAt, hudKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt } from './tower.js';
 import { SPRITES, draw } from './render.js';
@@ -14,6 +14,7 @@ const ctx = canvas.getContext('2d');
 let state = createGame();
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
+let selected = null; // the id of the tower the card shows, chosen by a click on it
 
 const TOGGLES = { pause: togglePause, speed: toggleSpeed };
 
@@ -32,9 +33,12 @@ const cellAt = (event) => {
 
 // Once the round is over, a click starts a fresh one rather than placing a lantern.
 // A click on a HUD button toggles it; anywhere else on the bar does nothing.
+// On the board, a click on a placed tower selects it for its card; anywhere else places a tower
+// and clears the selection.
 canvas.addEventListener('click', (event) => {
   if (state.status !== 'playing') {
     state = restart(state);
+    selected = null;
     return;
   }
   const { x, y } = pointAt(event);
@@ -44,7 +48,7 @@ canvas.addEventListener('click', (event) => {
     return;
   }
   const cell = boardCellAt(x, y);
-  if (cell) placeTower(state, cell.col, cell.row, kind);
+  if (cell) selected = clickCell(state, cell.col, cell.row, kind);
 });
 
 // A right-click switches the tower under the cursor between nearest and first;
@@ -55,11 +59,21 @@ canvas.addEventListener('contextmenu', (event) => {
   if (cell) toggleModeAt(state, cell.col, cell.row);
 });
 
-// 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses and F changes speed, once per press.
+// 1, 2 and 3 choose lantern, brazier and frost; while the round is playing, P pauses, F changes
+// speed and U upgrades the selected tower (paused or not), once per press. Escape clears the selection.
 window.addEventListener('keydown', (event) => {
   kind = kindForKey(event.key, kind);
-  const toggle = hudKey(event.key);
-  if (toggle && state.status === 'playing' && !event.repeat) TOGGLES[toggle](state);
+  const action = hudKey(event.key);
+  if (action === 'deselect') {
+    selected = null;
+    return;
+  }
+  if (!action || state.status !== 'playing' || event.repeat) return;
+  if (action === 'upgrade') {
+    if (selected !== null) upgradeTower(state, selected);
+    return;
+  }
+  TOGGLES[action](state);
 });
 
 // Over the bar there is no cell, so no hover.
@@ -78,7 +92,7 @@ function frame(now) {
   last = now;
   step(state, dt);
   if (hover) hover = hoverAt(state, hover.col, hover.row, kind); // turns as gold is spent and earned
-  draw(ctx, state, hover, SPRITES, kind);
+  draw(ctx, state, hover, SPRITES, kind, selected);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
