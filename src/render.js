@@ -8,6 +8,7 @@ import { rangePreview } from './game.js';
 import { HUD_BUTTONS, HUD_GAP, HUD_HEIGHT, HUD_PAD, hudModel } from './hud.js';
 
 const WIDTH = COLS * TILE;
+const FONT = 'Inter, system-ui, sans-serif'; // the HUD's and the end card's text
 const HEIGHT = ROWS * TILE;
 
 // A whole frame: the board, then the HUD bar over it, then the end card's veil over both
@@ -295,7 +296,6 @@ export function drawBeam(ctx, from, to) {
 
 // The HUD bar across the top, drawn from hudModel alone (design/screens/Main.dc.html, and
 // HudStates.dc.html for danger lives, Resume and 2x): three pills on the left, Pause and Speed on the right.
-const HUD_FONT = 'Inter, system-ui, sans-serif';
 const PILL_HEIGHT = 26;
 const PILL_TOP = (HUD_HEIGHT - PILL_HEIGHT) / 2;
 const HUD_MID = HUD_HEIGHT / 2;
@@ -325,7 +325,7 @@ function textWidth(ctx, text, size) {
 }
 
 function hudText(ctx, text, x, colour, font, size) {
-  ctx.font = `${font} ${size}px ${HUD_FONT}`;
+  ctx.font = `${font} ${size}px ${FONT}`;
   ctx.fillStyle = colour;
   ctx.fillText(text, x, HUD_MID);
   return x + textWidth(ctx, text, size);
@@ -480,7 +480,7 @@ function drawPauseButton(ctx, button, paused) {
 function drawSpeedControl(ctx, button, speed) {
   outlineButton(ctx, button, null, THEME.hudButtonEdge);
   const half = button.width / 2;
-  ctx.font = `600 12px ${HUD_FONT}`;
+  ctx.font = `600 12px ${FONT}`;
   ctx.textAlign = 'center';
   for (const [i, value] of [1, 2].entries()) {
     const active = speed === value;
@@ -507,9 +507,9 @@ function drawEndCard(ctx, status) {
   ctx.fillStyle = THEME.text;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = '800 30px Inter, system-ui, sans-serif';
+  ctx.font = `800 30px ${FONT}`;
   ctx.fillText(END_TITLES[status], WIDTH / 2, HEIGHT / 2 - 18);
-  ctx.font = '600 15px Inter, system-ui, sans-serif';
+  ctx.font = `600 15px ${FONT}`;
   ctx.fillText('Click to play again', WIDTH / 2, HEIGHT / 2 + 22);
   ctx.restore();
 }
