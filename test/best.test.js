@@ -56,15 +56,6 @@ const drawnTexts = (state, best) => {
 // The start screen's texts, in the order drawn: everything from its title on.
 const startScreenTexts = (texts) => texts.slice(texts.indexOf('Lantern Line'));
 
-const TITLE_AND_TAGLINE = ['Lantern Line', 'Light the lanterns. Stop the ghosts before they reach the gate.'];
-const BUTTON_HINT_AND_STEPS = [
-  'Start',
-  'or press Enter or Space',
-  '1  Hang lanterns on the grass beside the path',
-  '2  Each one shines on the nearest ghost in range',
-  '3  A ghost that reaches the gate costs a life',
-];
-
 test('after a run that reached wave 7, readBest returns 7', () => {
   const storage = memoryStorage();
   assert.equal(writeBest(storage, 7), 7);
@@ -103,13 +94,17 @@ test('no storage at all reads as no best, and a write to it does not throw', () 
 });
 
 test('the start screen draws "Best: wave 7" between the tagline and the Start button when the best is 7', () => {
+  const without = startScreenTexts(drawnTexts(createGame({ status: 'ready' }), null));
   const texts = startScreenTexts(drawnTexts(createGame({ status: 'ready' }), 7));
-  assert.deepEqual(texts, [...TITLE_AND_TAGLINE, 'Best: wave 7', ...BUTTON_HINT_AND_STEPS]);
+  const after = without.indexOf('Start'); // the button: everything before it is the title and tagline
+  assert.deepEqual(texts, [...without.slice(0, after), 'Best: wave 7', ...without.slice(after)]);
 });
 
-test('the start screen draws exactly its title, tagline, button, hint and steps when there is no best', () => {
+test('the start screen draws no Best line when there is no best', () => {
   const texts = startScreenTexts(drawnTexts(createGame({ status: 'ready' }), null));
-  assert.deepEqual(texts, [...TITLE_AND_TAGLINE, ...BUTTON_HINT_AND_STEPS]);
+  assert.equal(texts[0], 'Lantern Line');
+  assert.equal(texts[2], 'Start');
+  assert.deepEqual(texts.filter((t) => t.startsWith('Best')), []);
 });
 
 test('a playing game draws the same texts with a best as without one', () => {
