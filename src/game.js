@@ -184,9 +184,9 @@ export function toggleSpeed(state) {
 }
 
 // Advance the whole game by `dt` seconds of play, `speed` times over. A ready game stays as it
-// is until started, a finished round as it ended, and a paused one as it was. 2x is two ticks of the frame's `dt`, never one tick
-// of twice the `dt`, so a long frame cannot carry a ghost past a tower's reach or fold two
-// reloads into one shot.
+// is until started, a finished round as it ended, and a paused one as it was. 2x is two ticks
+// of the frame's `dt`, never one tick of twice the `dt`, so a long frame cannot carry a ghost
+// past a tower's reach or fold two reloads into one shot.
 export function step(state, dt) {
   if (state.status !== 'playing' || state.paused) return state;
   for (let i = 0; i < state.speed && state.status === 'playing'; i++) tick(state, dt);
