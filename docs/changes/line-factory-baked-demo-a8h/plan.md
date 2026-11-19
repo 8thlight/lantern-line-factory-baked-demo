@@ -27,10 +27,7 @@ lantern-line-factory-baked-demo-7r8 (issue #2, waves), taken together because bo
 
 ## Refusals
 
-- none: this change adds no refusal. It refuses no input or action a player or agent can take;
-  `damageEnemy` clamps health at 0 rather than refusing an overkill, and `updateWave` caps a
-  long tick at `count` rather than refusing it. Tower placement keeps its existing refusals
-  unchanged.
+- none: this change adds no refusal; it refuses no input or action a player or agent can take, since `damageEnemy` clamps health at 0 rather than refusing an overkill and `updateWave` caps a long tick at `count` rather than refusing it, and tower placement keeps its existing refusals unchanged.
 
 ## Touches
 
