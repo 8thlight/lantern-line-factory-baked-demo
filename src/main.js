@@ -1,7 +1,7 @@
 // Browser entry point: wires the canvas, the mouse and the frame loop to the game.
 
-import { COLS, ROWS, TILE } from './path.js';
-import { chooseDifficulty, clickCell, createGame, hoverAt, restart, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
+import { COLS, ROWS, TILE, pickPath } from './path.js';
+import { chooseDifficulty, clickCell, createGame, hoverAt, nextRound, sellTower, start, step, togglePause, toggleSpeed, upgradeTower } from './game.js';
 import { HUD_HEIGHT, boardCellAt, cardButtonAt, difficultyButtonAt, difficultyKey, hudButtonAt, hudKey, startButtonAt, startKey } from './hud.js';
 import { LANTERN, kindForKey, toggleModeAt, towerById } from './tower.js';
 import { SPRITES, draw } from './render.js';
@@ -12,7 +12,7 @@ canvas.width = COLS * TILE;
 canvas.height = HUD_HEIGHT + ROWS * TILE; // the HUD bar, then the whole board below it
 const ctx = canvas.getContext('2d');
 
-let state = createGame({ status: 'ready', difficulty: 'normal' }); // the start screen, on normal, until Start, Enter or Space
+let state = createGame({ status: 'ready', difficulty: 'normal', waypoints: pickPath(Math.random) }); // the start screen, on normal and on a path drawn at random, until Start, Enter or Space
 let hover = null;
 let kind = LANTERN; // the kind a click places, named in the HUD from boot: 1 a lantern, 2 a brazier, 3 frost
 let selected = null; // the id of the tower the card shows, chosen by a click on it
@@ -36,8 +36,8 @@ const cellAt = (event) => {
 
 // On the start screen, a click on Start begins wave 1 and a click on a difficulty button
 // chooses that difficulty; anywhere else does nothing.
-// Once the round is over, a click starts a fresh one, back on the start screen, rather than
-// placing a lantern.
+// Once the round is over, a click starts a fresh one on a newly drawn path, back on the start
+// screen, rather than placing a lantern.
 // A click on a HUD button toggles it; anywhere else on the bar does nothing.
 // A click on the selected tower's Upgrade or Sell button does what U or S does, before the board,
 // so it never lands on the cell beneath; Sell clears the selection.
@@ -55,7 +55,7 @@ canvas.addEventListener('click', (event) => {
     return;
   }
   if (state.status === 'won' || state.status === 'lost') {
-    state = restart(state);
+    state = nextRound(state, Math.random);
     selected = null;
     return;
   }

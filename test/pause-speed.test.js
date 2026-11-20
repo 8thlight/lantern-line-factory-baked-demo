@@ -136,7 +136,10 @@ async function boot() {
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   instance += 1;
+  const random = Math.random;
+  Math.random = () => 0; // main.js draws path 1, the path these cells are laid out for
   await import(`../src/main.js?case=${instance}`);
+  Math.random = random;
   keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
 
   const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, preventDefault() {}, ...extra });
