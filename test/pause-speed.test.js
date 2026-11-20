@@ -136,7 +136,13 @@ async function boot() {
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   instance += 1;
-  await import(`../src/main.js?case=${instance}`);
+  const random = Math.random;
+  Math.random = () => 0; // main.js draws path 1: 'the hover clears over the bar' hovers (3, 1), which path 4 covers
+  try {
+    await import(`../src/main.js?case=${instance}`);
+  } finally {
+    Math.random = random;
+  }
   keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
 
   const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, preventDefault() {}, ...extra });

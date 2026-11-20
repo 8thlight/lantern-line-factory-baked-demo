@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-4h2-r2",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 0\n\nI found nothing to fix, so this pass made no commits.\n\n- **Planned files:** all eight files in the signed `touches:` list are handled, and nothing outside it changed.\n- **Acceptance criteria:** `test/random-paths.test.js` covers each one with exact, positive `deepEqual`/`equal` checks. It has no negative or substring assertions, so the assertion baseline stays at 0.\n- **The four test files that pin the path:** each changes only by the pin around its boot of `src/main.js`. The `try/finally` that restores `Math.random` is a deliberate review fix from commit 5fe2a1e, not drift from the plan.\n- **No fact twice:** `pickPath` uses `PATHS.length` rather than repeating the 5.\n- **Comments:** they match what the code does.\n\nGATES green: `node --test` on the reproducer, path, game, the four edited files and the three other files that boot `main.js` passed 101/101. All seven files that boot `main.js` also passed 80/80 with the path draw forced to each of the five paths. The repo has no Makefile, so I ran `node --test` directly. CI runs `npm test` on Node 22. The forge kept no log of the merge-time red, so I couldn't reproduce it here.",
+  "gates": "green",
+  "finding": null
+}
