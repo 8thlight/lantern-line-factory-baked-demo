@@ -1,4 +1,3 @@
-# This repository's layout, drafted by hydraflow init: where its code, tests and documents live, and the standards it is held to.
 schema_version: 1
 roots:
   source: src
@@ -26,43 +25,369 @@ rings:
   e2e: e2e/{slug}.spec.js
 standards:
   adr_enforcement:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    reads:
+    - adrs
+    not_applicable_rules:
+      article-tier-count-rose: 'not run on this line: each reads the factory''s charter,
+        plans, article tiers or exemption baseline, or resolves an enforcing test
+        in the factory''s tree, so here an Enforced-by or Planned-enforcement entry
+        is held to naming something in backticks and what it names is not looked up'
+      article-tier-is-not-declared: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      article-tier-is-not-stated: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      enforcement-names-a-planned-standard: 'not run on this line: each reads the
+        factory''s charter, plans, article tiers or exemption baseline, or resolves
+        an enforcing test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      enforcing-test-does-not-exist: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      enforcing-test-is-disabled: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      exemption-baseline-is-stale: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      exemption-count-rose: 'not run on this line: each reads the factory''s charter,
+        plans, article tiers or exemption baseline, or resolves an enforcing test
+        in the factory''s tree, so here an Enforced-by or Planned-enforcement entry
+        is held to naming something in backticks and what it names is not looked up'
+      plan-source-not-readable: 'not run on this line: each reads the factory''s charter,
+        plans, article tiers or exemption baseline, or resolves an enforcing test
+        in the factory''s tree, so here an Enforced-by or Planned-enforcement entry
+        is held to naming something in backticks and what it names is not looked up'
+      planned-enforcement-has-landed: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      planned-enforcement-outlived-its-milestone: 'not run on this line: each reads
+        the factory''s charter, plans, article tiers or exemption baseline, or resolves
+        an enforcing test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      readme-standard-drift: adr_enforcement/standard.yaml marks this rule the kernel's
+        own, and this line is not the kernel
+      sequence-number-reserved-elsewhere: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
+      standard-in-force-is-uncited: 'not run on this line: each reads the factory''s
+        charter, plans, article tiers or exemption baseline, or resolves an enforcing
+        test in the factory''s tree, so here an Enforced-by or Planned-enforcement
+        entry is held to naming something in backticks and what it names is not looked
+        up'
   ci_is_configured:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares
+      the roots this standard reads'
   code_craft:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    reads:
+    - checkout
+    not_applicable_rules:
+      backtick-in-comment: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      baseline-count-rose: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      baseline-does-not-name-every-ratcheted-finding: 'switched on by hydraflow init:
+        each reads the factory''s own declarations or its Python surface across modules,
+        and a line runs only the rules the code_craft standard''s line block names'
+      baseline-is-stale: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      citation-exemption-names-no-citation: 'switched on by hydraflow init: each reads
+        the factory''s own declarations or its Python surface across modules, and
+        a line runs only the rules the code_craft standard''s line block names'
+      citation-not-classifiable: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      class-does-two-things: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      class-hoards-state: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      class-too-large: 'switched on by hydraflow init: each reads the factory''s own
+        declarations or its Python surface across modules, and a line runs only the
+        rules the code_craft standard''s line block names'
+      closed-set-spelled-twice: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      cohesion-not-classifiable: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      control-literal-boundary-not-classifiable: 'switched on by hydraflow init: each
+        reads the factory''s own declarations or its Python surface across modules,
+        and a line runs only the rules the code_craft standard''s line block names'
+      deferred-surface-names-no-orphan: 'switched on by hydraflow init: each reads
+        the factory''s own declarations or its Python surface across modules, and
+        a line runs only the rules the code_craft standard''s line block names'
+      magic-control-literal: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      module-does-two-things: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      module-too-large: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      number-restated-in-prose: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      orphan-without-declared-deferral: 'switched on by hydraflow init: each reads
+        the factory''s own declarations or its Python surface across modules, and
+        a line runs only the rules the code_craft standard''s line block names'
+      path-citation-does-not-resolve: 'switched on by hydraflow init: each reads the
+        factory''s own declarations or its Python surface across modules, and a line
+        runs only the rules the code_craft standard''s line block names'
+      private-name-reached-across-modules: 'switched on by hydraflow init: each reads
+        the factory''s own declarations or its Python surface across modules, and
+        a line runs only the rules the code_craft standard''s line block names'
+      public-symbol-with-no-caller: 'switched on by hydraflow init: each reads the
+        factory''s own declarations or its Python surface across modules, and a line
+        runs only the rules the code_craft standard''s line block names'
+      readme-standard-drift: code_craft/standard.yaml marks this rule the kernel's
+        own, and this line is not the kernel
+      scope-reaches-the-witness: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      simplicity-baseline-differs: 'switched on by hydraflow init: each reads the
+        factory''s own declarations or its Python surface across modules, and a line
+        runs only the rules the code_craft standard''s line block names'
+      simplicity-count-rose: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      surface-not-classifiable: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
+      threshold-not-an-integer: 'switched on by hydraflow init: each reads the factory''s
+        own declarations or its Python surface across modules, and a line runs only
+        the rules the code_craft standard''s line block names'
   domain_entities:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    reads:
+    - checkout
+    not_applicable_rules:
+      baseline-names-a-module-that-is-gone: 'not run on a line: it reads the factory''s
+        declared bounded contexts, aggregate repositories, durable queues, test-support
+        layers or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      context-import-opaque: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      context-inventory-incomplete: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      context-outbound-unowned: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      domain-verification-underclassified: 'not run on a line: it reads the factory''s
+        declared bounded contexts, aggregate repositories, durable queues, test-support
+        layers or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      durable-work-unbound: 'not run on a line: it reads the factory''s declared bounded
+        contexts, aggregate repositories, durable queues, test-support layers or shared
+        addresses, which a line declares none of, or it asks a recorded count to be
+        taken out by hand, where a line''s count is written once and a module gone
+        is a fall'
+      entity-imports-shared-address: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      private-context-import: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      repository-owner-bypassed: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      shared-vocabulary-coupled: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
+      test-support-cycle: 'not run on a line: it reads the factory''s declared bounded
+        contexts, aggregate repositories, durable queues, test-support layers or shared
+        addresses, which a line declares none of, or it asks a recorded count to be
+        taken out by hand, where a line''s count is written once and a module gone
+        is a fall'
+      test-support-layer-inverted: 'not run on a line: it reads the factory''s declared
+        bounded contexts, aggregate repositories, durable queues, test-support layers
+        or shared addresses, which a line declares none of, or it asks a recorded
+        count to be taken out by hand, where a line''s count is written once and a
+        module gone is a fall'
   fail_closed:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    reads:
+    - checkout
+    not_applicable_rules:
+      admitted-key-has-no-reader: 'not run on this line: each reads the factory''s
+        own declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      baseline-count-rose: 'not run on this line: each reads the factory''s own declarations,
+        refusal sites or schemas, or judges a Python shape (a chain over a closed
+        set, a soft read of a key) no line reader reads in every language yet, and
+        a line runs only the rules the fail_closed standard''s line block names'
+      baseline-does-not-name-every-ratcheted-finding: 'not run on this line: each
+        reads the factory''s own declarations, refusal sites or schemas, or judges
+        a Python shape (a chain over a closed set, a soft read of a key) no line reader
+        reads in every language yet, and a line runs only the rules the fail_closed
+        standard''s line block names'
+      baseline-is-stale: 'not run on this line: each reads the factory''s own declarations,
+        refusal sites or schemas, or judges a Python shape (a chain over a closed
+        set, a soft read of a key) no line reader reads in every language yet, and
+        a line runs only the rules the fail_closed standard''s line block names'
+      baseline-rose-against-base: 'not run on this line: each reads the factory''s
+        own declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      declaration-missing: 'not run on this line: each reads the factory''s own declarations,
+        refusal sites or schemas, or judges a Python shape (a chain over a closed
+        set, a soft read of a key) no line reader reads in every language yet, and
+        a line runs only the rules the fail_closed standard''s line block names'
+      declaration-read-softly: 'not run on this line: each reads the factory''s own
+        declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      exemption-names-no-refusal: 'not run on this line: each reads the factory''s
+        own declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      fire-without-an-id: 'not run on this line: each reads the factory''s own declarations,
+        refusal sites or schemas, or judges a Python shape (a chain over a closed
+        set, a soft read of a key) no line reader reads in every language yet, and
+        a line runs only the rules the fail_closed standard''s line block names'
+      readme-standard-drift: fail_closed/standard.yaml marks this rule the kernel's
+        own, and this line is not the kernel
+      rule-claims-no-refusal-site: 'not run on this line: each reads the factory''s
+        own declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      scope-reaches-out-of-scope: 'not run on this line: each reads the factory''s
+        own declarations, refusal sites or schemas, or judges a Python shape (a chain
+        over a closed set, a soft read of a key) no line reader reads in every language
+        yet, and a line runs only the rules the fail_closed standard''s line block
+        names'
+      unclosed-set: 'not run on this line: each reads the factory''s own declarations,
+        refusal sites or schemas, or judges a Python shape (a chain over a closed
+        set, a soft read of a key) no line reader reads in every language yet, and
+        a line runs only the rules the fail_closed standard''s line block names'
   hygiene:
     reads:
     - checkout
     not_applicable_rules:
-      credential-baseline-is-stale: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-baseline-rose: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-bearer-value: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-jwt-shaped: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-private-key-armour: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-scan-reaches-the-witness: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-shaped-literal: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-source-not-parseable: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-uri-with-password: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      credential-vendor-prefix: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      marker-spelled-in-prose: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
-      readme-standard-drift: 'switched on by hydraflow init: hygiene/standard.yaml marks this rule the kernel''s own, and this line is not the kernel'
-      suppression-guard-is-not-configured: 'switched on by hydraflow init: this rule reads python, which this line does not hold'
+      credential-baseline-is-stale: 'switched on by hydraflow init: this rule reads
+        python, which this line does not hold'
+      credential-baseline-rose: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      credential-bearer-value: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      credential-jwt-shaped: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      credential-private-key-armour: 'switched on by hydraflow init: this rule reads
+        python, which this line does not hold'
+      credential-scan-reaches-the-witness: 'switched on by hydraflow init: this rule
+        reads python, which this line does not hold'
+      credential-shaped-literal: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      credential-source-not-parseable: 'switched on by hydraflow init: this rule reads
+        python, which this line does not hold'
+      credential-uri-with-password: 'switched on by hydraflow init: this rule reads
+        python, which this line does not hold'
+      credential-vendor-prefix: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      marker-spelled-in-prose: 'switched on by hydraflow init: this rule reads python,
+        which this line does not hold'
+      readme-standard-drift: 'switched on by hydraflow init: hygiene/standard.yaml
+        marks this rule the kernel''s own, and this line is not the kernel'
+      suppression-guard-is-not-configured: 'switched on by hydraflow init: this rule
+        reads python, which this line does not hold'
   line_contract:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares
+      the roots this standard reads'
   no_second_copy:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares
+      the roots this standard reads'
   ports_and_adapters:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    reads:
+    - checkout
+    not_applicable_rules:
+      adapter-imported-outside-composition-root: 'not run on a line: it reads the
+        factory''s own ports package, fakes, composition roots or contract tests,
+        which a line declares none of'
+      composition-root-does-not-construct-port: 'not run on a line: it reads the factory''s
+        own ports package, fakes, composition roots or contract tests, which a line
+        declares none of'
+      contract-corpus-reaches-out-of-scope: 'not run on a line: it reads the factory''s
+        own ports package, fakes, composition roots or contract tests, which a line
+        declares none of'
+      contract-does-not-cover-the-method: 'not run on a line: it reads the factory''s
+        own ports package, fakes, composition roots or contract tests, which a line
+        declares none of'
+      contract-does-not-exercise-a-refusal: 'not run on a line: it reads the factory''s
+        own ports package, fakes, composition roots or contract tests, which a line
+        declares none of'
+      fake-does-not-satisfy-port: 'not run on a line: it reads the factory''s own
+        ports package, fakes, composition roots or contract tests, which a line declares
+        none of'
+      no-fake-survives-power-on: 'not run on a line: it reads the factory''s own ports
+        package, fakes, composition roots or contract tests, which a line declares
+        none of'
+      port-has-no-fake: 'not run on a line: it reads the factory''s own ports package,
+        fakes, composition roots or contract tests, which a line declares none of'
+      port-has-two-implementations-and-no-contract: 'not run on a line: it reads the
+        factory''s own ports package, fakes, composition roots or contract tests,
+        which a line declares none of'
+      port-is-not-runtime-checkable: 'not run on a line: it reads the factory''s own
+        ports package, fakes, composition roots or contract tests, which a line declares
+        none of'
+      readme-port-table-drift: 'not run on a line: it reads the factory''s own ports
+        package, fakes, composition roots or contract tests, which a line declares
+        none of'
+      readme-standard-drift: ports_and_adapters/standard.yaml marks this rule the
+        kernel's own, and this line is not the kernel
   testing:
     reads:
     - checkout
     not_applicable_rules:
-      readme-standard-drift: 'switched on by hydraflow init: testing/standard.yaml marks this rule the kernel''s own, and this line is not the kernel'
-      substring-binding: 'switched on by hydraflow init: the line keeps no checks that bind one declaration to another'
+      readme-standard-drift: 'switched on by hydraflow init: testing/standard.yaml
+        marks this rule the kernel''s own, and this line is not the kernel'
+      substring-binding: 'switched on by hydraflow init: the line keeps no checks
+        that bind one declaration to another'
   ubiquitous_language:
-    not_applicable: 'drafted by hydraflow init: not run on this line until it declares the roots this standard reads'
+    not_applicable: 'drafted by hydraflow init: not run on this line until it declares
+      the roots this standard reads'
+adapters:
+- src/main.js
