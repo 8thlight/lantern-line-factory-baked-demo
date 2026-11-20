@@ -159,7 +159,7 @@ async function bootMain() {
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   // src/main.js picks the opening round's path with Math.random; 0 picks path 1, the path these
-  // clicks and hovers were written on. The real Math.random is back once main.js has booted.
+  // clicks were written on. The real Math.random is back once main.js has booted.
   const savedRandom = Math.random;
   Math.random = () => 0;
   try {
