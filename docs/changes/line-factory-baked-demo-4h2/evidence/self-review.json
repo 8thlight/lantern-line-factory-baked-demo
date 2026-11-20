@@ -2,8 +2,12 @@
   "print_id": "line-factory-baked-demo-4h2",
   "stage": "build",
   "review_of_record": "review.json",
-  "edited": [],
-  "said": "FOUND 1\n- `docs/changes/line-factory-baked-demo-4h2/plan.md` (\"## Refusals\"): the plan says the change refuses nothing, but since 8a67dd0, `pickPath` in `src/path.js:33` throws a RangeError when `random` gives a number outside 0 up to but not including 1. That guard answers P2 in the review of record, and `test/random-path.test.js` covers it: removing the guard turns the test red. I left this unfixed because plan.md belongs to the plan stage and this stage may not commit to it. Plan or fail-forward should update that section, and also the P1 conflict: the brief says no test file is edited, but the signed `touches:` list includes four existing test files.\n\nI checked the rest and found nothing to change. All eight paths in `touches:` are handled and nothing outside them changed. All six acceptance criteria have tests that could fail. The comments match what the code does. No list or number is written twice. There are no commits since the last pass, and the tree is clean.\n\nGATES green: this tree has no Makefile or `check-build` target, so I ran `node --test` on the reproducer, the four edited test files, every other file that boots `src/main.js`, and `path.test.js` and `game.test.js`. All 102 tests passed.",
+  "edited": [
+    "test/card-buttons.test.js",
+    "test/sell.test.js",
+    "test/upgrade.test.js"
+  ],
+  "said": "FOUND 1\n- `test/card-buttons.test.js:128`, `test/upgrade.test.js:279`, `test/sell.test.js:162`: the new boot comment said the pin covers \"clicks and hovers\", but these three files only click (only `pause-speed` also hovers). Fixed in adce165; the change is to the comment only.\n- Checked with nothing to fix:\n  - Every file the plan names is in the diff.\n  - Each acceptance criterion has an exact `assert.equal`/`assert.deepEqual` in `test/random-path.test.js`.\n  - The `pickPath` range guard has a test that fails if the guard is removed.\n  - The diff stays inside the ratified `touches:`, and no stray files are left in the tree.\n  - The three files that start `main.js` without pinning `Math.random` (`start-screen`, `difficulty-choice`, `best`) pass on all five paths. I forced each path with a preload in /scratch: 37 of 37 each time.\n  - The four pinned files pass even when the random source picks path 4 for the whole test run: 43 of 43.\n- I could not find what turned the merge check red: the forge kept no log, and nothing failed when I ran the touched files. The CI job runs `npm test` (`node --test`).\n- This repo has no Makefile, so there is no `make check-build`. I ran `node --test` on the ten files this change touches or that start `main.js`.\n\nGATES green (102 of 102 pass)",
   "gates": "green",
   "finding": null
 }

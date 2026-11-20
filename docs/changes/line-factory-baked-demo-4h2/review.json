@@ -1,16 +1,15 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "dc1e87e051c2c743f0a46b5b6e5785db8759b8a31cf99451f19d5d59f44f129e",
+  "digest": "d84eeb402af5407246a50e66d10bfa880027775c8e9135c331626d6538bb8cae",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] brief contradiction: the signed acceptance criterion says `npm test` must pass \"with no existing test file edited\", but the diff edits four existing test files: test/card-buttons.test.js, test/pause-speed.test.js, test/sell.test.js and test/upgrade.test.js. Each edit adds a file-level stub, `Math.random = () => 0`, and restores the real function in `after`. The edits are needed: src/main.js must now open with `pickPath(Math.random)` and use `nextRound(state, Math.random)` after a round ends, and these four files boot main.js and click cells laid out for path 1. Without the stub they would land on a random path and fail at random. The brief's own touches list names these four files, so the edits look allowed. Still, the criterion's wording ('no existing test file edited') is not literally met, and the brief should be corrected so it no longer contradicts itself.",
-        "[P2] scope: `pickPath` throws a RangeError for any random outside [0,1), including NaN, and the new test file pins this behaviour. The brief did not ask for it. It does no harm and stops a bad random from quietly falling back to path 1, but it widens the function's contract beyond `PATHS[Math.floor(random() * 5)]`.",
-        "[P2] test fragility: in the four edited test files, `Math.random` is stubbed when the module loads, not inside each boot helper. This only holds because `node --test` runs each file in its own process. Every test in those files, including ones that never boot main.js, sees the stub."
+        "[P1] brief-conflict: The acceptance criterion says the full suite passes \"with no existing test file edited\". The diff does edit four existing test files: test/card-buttons.test.js, test/pause-speed.test.js, test/sell.test.js and test/upgrade.test.js. Each edit only pins Math.random to 0 while it imports src/main.js, so the opening round runs on path 1, the path their hard-coded clicks were written for. The edits look unavoidable: the brief requires main.js to open with pickPath(Math.random), so tests that boot main.js and click fixed cells must pin the random draw. The brief's touches list names exactly these files, which suggests the edits were expected. They are minimal and restore the real Math.random in a finally block. I am not counting this as an outcome miss, but the brief contradicts itself here, and someone who owns the brief should accept these edits explicitly.",
+        "[P2] scope: pickPath throws a RangeError when random returns a value outside [0, 1). The brief did not ask for this. It is a reasonable guard, since without it createGame would quietly fall back to path 1, and it is tested. It is still extra behaviour beyond the requested PATHS[Math.floor(random() * 5)]."
       ],
       "seat": "review",
       "verdict": "changes-required"
