@@ -121,12 +121,6 @@ function recordingContext() {
 const saved = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
 after(() => Object.assign(globalThis, saved));
 
-// src/main.js picks each round's path with Math.random; 0 picks path 1, the path these clicks
-// and hovers were written on.
-const savedRandom = Math.random;
-Math.random = () => 0;
-after(() => (Math.random = savedRandom));
-
 let instance = 0;
 async function boot() {
   const handlers = {};
@@ -142,7 +136,15 @@ async function boot() {
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   instance += 1;
-  await import(`../src/main.js?case=${instance}`);
+  // src/main.js picks the opening round's path with Math.random; 0 picks path 1, the path these
+  // clicks and hovers were written on. The real Math.random is back once main.js has booted.
+  const savedRandom = Math.random;
+  Math.random = () => 0;
+  try {
+    await import(`../src/main.js?case=${instance}`);
+  } finally {
+    Math.random = savedRandom;
+  }
   keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
 
   const event = (x, y, extra = {}) => ({ clientX: x, clientY: y, preventDefault() {}, ...extra });

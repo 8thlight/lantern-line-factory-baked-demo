@@ -261,12 +261,6 @@ test("the selected tower's card stays on the board", () => {
 const savedGlobals = { document: globalThis.document, window: globalThis.window, requestAnimationFrame: globalThis.requestAnimationFrame };
 after(() => Object.assign(globalThis, savedGlobals));
 
-// src/main.js picks each round's path with Math.random; 0 picks path 1, the path these clicks
-// and hovers were written on.
-const savedRandom = Math.random;
-Math.random = () => 0;
-after(() => (Math.random = savedRandom));
-
 let boots = 0;
 async function bootMain() {
   const handlers = {};
@@ -281,7 +275,15 @@ async function bootMain() {
   globalThis.document = { getElementById: () => canvas };
   globalThis.window = { addEventListener: (type, handler) => (keys[type] = handler) };
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
-  await import(`../src/main.js?upgrade=${++boots}`);
+  // src/main.js picks the opening round's path with Math.random; 0 picks path 1, the path these
+  // clicks and hovers were written on. The real Math.random is back once main.js has booted.
+  const savedRandom = Math.random;
+  Math.random = () => 0;
+  try {
+    await import(`../src/main.js?upgrade=${++boots}`);
+  } finally {
+    Math.random = savedRandom;
+  }
   keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
   return {
     click: (col, row) => handlers.click({ clientX: col * TILE + TILE / 2, clientY: HUD_HEIGHT + row * TILE + TILE / 2 }),
