@@ -1,0 +1,23 @@
+{
+  "_producer": "printer.line_baselines:record_starting_count",
+  "_note": "This line's starting count for the standard, measured over its own tree when the line switched it on (ADR-0053, step 5). It may fall and never rise; nothing rewrites it.",
+  "_measured_at": "fef9983ab5ff435c7a2f239f05f939f31ff1717c",
+  "accepted-without-enforcement": 2,
+  "consequence-is-empty": 1,
+  "enforcement-is-not-specific": 0,
+  "exemption-is-not-stated": 0,
+  "planned-enforcement-is-not-planned": 0,
+  "retired-gate-catch-is-unstated": 0,
+  "retired-gate-is-unnamed": 0,
+  "status-is-not-declared": 0,
+  "supersedes-names-a-missing-record": 0,
+  "by_file": {
+    "docs/adr/0001-record-architecture-decisions.md": {
+      "accepted-without-enforcement": 1
+    },
+    "docs/adr/0002-the-architecture-as-found.md": {
+      "accepted-without-enforcement": 1,
+      "consequence-is-empty": 1
+    }
+  }
+}

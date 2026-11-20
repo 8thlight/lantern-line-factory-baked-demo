@@ -1,0 +1,16 @@
+{
+  "_producer": "printer.line_baselines:record_starting_count",
+  "_note": "This line's starting count for the standard, measured over its own tree when the line switched it on (ADR-0053, step 5). It may fall and never rise; nothing rewrites it.",
+  "_measured_at": "fef9983ab5ff435c7a2f239f05f939f31ff1717c",
+  "control-nested-too-deep": 0,
+  "file-not-parseable": 0,
+  "function-too-many-lines": 0,
+  "module-too-long": 1,
+  "too-many-parameters": 4,
+  "by_file": {
+    "src/render.js": {
+      "module-too-long": 1,
+      "too-many-parameters": 4
+    }
+  }
+}
