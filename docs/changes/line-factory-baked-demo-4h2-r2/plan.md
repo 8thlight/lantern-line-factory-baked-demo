@@ -59,8 +59,9 @@ GitHub issue #81, opened again as issue #89, bead lantern-line-factory-baked-dem
 
 ## Who meets it
 
-- person: a player starting a round, on the board every screen sits on
-  (design/screens/Board.dc.html:16, the stone path that winds from the left edge to the right).
+- person: the player, starting a round on the board drawn at design/screens/Board.png (source
+  design/screens/Board.dc.html, listed in design/screens.yaml as the board every screen sits
+  on, with its stone path winding from the left edge to the right).
   Each time the game opens, and each time they press Play again or Try again after a round ends,
   the path is one of five, each equally likely, so the ghosts walk a different road and the
   good tower spots move. Choosing a difficulty on the start screen keeps the path already drawn.
