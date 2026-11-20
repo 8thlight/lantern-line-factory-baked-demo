@@ -1,5 +1,7 @@
 # Lantern Line
 
+![A round of Lantern Line in play: lit lanterns beside the garden path and ghosts walking it](docs/images/gameplay.png)
+
 A small browser tower-defence game. Ghosts drift down a garden path; you hang
 lanterns beside it, and each lantern throws a beam at the nearest ghost in reach.
 Every ghost that reaches the far end costs a life.
