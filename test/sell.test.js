@@ -160,8 +160,11 @@ async function bootMain() {
   globalThis.requestAnimationFrame = (frame) => frames.push(frame);
   const random = Math.random;
   Math.random = () => 0; // main.js draws path 1, the path these cells are laid out for
-  await import('../src/main.js?sell=1');
-  Math.random = random;
+  try {
+    await import('../src/main.js?sell=1');
+  } finally {
+    Math.random = random;
+  }
   keys.keydown({ key: 'Enter', repeat: false }); // past the start screen, into the round
   return {
     click: (col, row) => handlers.click({ clientX: col * TILE + TILE / 2, clientY: HUD_HEIGHT + row * TILE + TILE / 2 }),
