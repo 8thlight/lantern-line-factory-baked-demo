@@ -1,15 +1,16 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "d84eeb402af5407246a50e66d10bfa880027775c8e9135c331626d6538bb8cae",
+  "digest": "99c934d16ee7eb6f6369b26bc41909164f1c86c741712c0864bb34dcdbd0776d",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] brief-conflict: The acceptance criterion says the full suite passes \"with no existing test file edited\". The diff does edit four existing test files: test/card-buttons.test.js, test/pause-speed.test.js, test/sell.test.js and test/upgrade.test.js. Each edit only pins Math.random to 0 while it imports src/main.js, so the opening round runs on path 1, the path their hard-coded clicks were written for. The edits look unavoidable: the brief requires main.js to open with pickPath(Math.random), so tests that boot main.js and click fixed cells must pin the random draw. The brief's touches list names exactly these files, which suggests the edits were expected. They are minimal and restore the real Math.random in a finally block. I am not counting this as an outcome miss, but the brief contradicts itself here, and someone who owns the brief should accept these edits explicitly.",
-        "[P2] scope: pickPath throws a RangeError when random returns a value outside [0, 1). The brief did not ask for this. It is a reasonable guard, since without it createGame would quietly fall back to path 1, and it is tested. It is still extra behaviour beyond the requested PATHS[Math.floor(random() * 5)]."
+        "[P1] outcome/brief-conflict: the acceptance criterion says `npm test` passes \"with no existing test file edited\", but the diff edits test/card-buttons.test.js, test/pause-speed.test.js, test/sell.test.js and test/upgrade.test.js. Each now sets Math.random to return 0 while it imports src/main.js, so the opening round lands on path 1. The edits cannot be avoided: the brief also requires src/main.js to open with pickPath(Math.random), and these four tests boot main.js and click cells laid out for path 1. Without the edits they would pass or fail depending on the random path. The brief's own touches list names all four files, so the signer expected these edits. Each edit is small and puts Math.random back in a finally block. I am filing this as a follow-up for the brief's internal conflict, not as a defect in the diff.",
+        "[P2] test-coverage: random-path.test.js checks nextRound and pickPath on their own, but no test drives src/main.js through a won or lost round to confirm that a click calls nextRound with Math.random (rather than restart) and redraws the path. That wiring is only checked by reading the code.",
+        "[P2] robustness: pickPath trusts `random` to return a value in [0, 1). A value of 1 or more, or below 0, makes it return undefined, and createGame then fails later and further from the cause. Math.random never does this and the brief defines the contract this way, so this is a nice-to-have guard only."
       ],
       "seat": "review",
       "verdict": "changes-required"
