@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-4h2-r2",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "FOUND 0\n\nI found nothing to fix, so this pass changed nothing:\n- **Plan:** every planned file is in the diff and matches the plan's steps 1 to 5. The reproducer was committed alone, before the fix (49b8576), and the fix followed in 9238a31.\n- **Acceptance criteria:** each of the six is asserted exactly in `test/random-paths.test.js`. Beside the true/false checks for each path, the path lengths are pinned to `[24, 24, 24, 26, 24]`. The test also checks positively that (5, 5) is on path 1 and checks (5, 5) against path 4, so the \"accepts one on a cell only path 1 covers\" claim cannot pass on a wrong cell.\n- **Comments:** the ones in `src/path.js`, `src/game.js` and `src/main.js` say what the code does.\n- **Scope:** the diff touches only the eight paths in the ratified `touches:`, and nothing under `docs/changes`.\n- **No fact twice:** `pickPath` uses `PATHS.length` rather than writing 5 again. The table of paths appears once in the source and once in the test, which is what the test checks against.\n\nGATES green (`node --test` on the reproducer, `path`, `game`, the four edited test files, and `difficulty-choice`, `best` and `start-screen`: 101 of 101 pass, tree clean. This clone has no Makefile, so I ran `node --test` directly.)",
+  "gates": "green",
+  "finding": null
+}
