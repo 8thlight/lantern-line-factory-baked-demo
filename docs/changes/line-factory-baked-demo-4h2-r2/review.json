@@ -1,20 +1,20 @@
 {
   "billing": "subscription",
   "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
-  "digest": "717e49e0c5db4ea60f8a7f10e928112a5278cdc3c1271a5c275f3583fa06a159",
+  "digest": "d0dc684b7e6a0e26ec9a348a842ad864257a0d6738d2f95dd013685448facc66",
   "fallback_reason": "codex-model-refused",
   "family": "anthropic",
   "model": "claude-opus-5-5",
   "readings": [
     {
       "notes": [
-        "[P1] scope: test/pause-speed.test.js now fixes Math.random to path 1 while it boots src/main.js. The brief's 'touches' list includes this file, but its prose names only card-buttons, sell and upgrade and says 'no other existing test is edited'. The diff hunk does not show that this suite clicks cells laid out for path 1, which is the operator-accepted reason for such an edit. Either confirm that it does and record why, or revert the edit.",
-        "[P1] test fragility: the four boot helpers stub Math.random only during the import of src/main.js. If any of these suites ends a round and clicks to start the next one, main.js calls nextRound(state, Math.random) with the real random. A later click on (1,1) would then fail about 1 run in 5, when path 4 is drawn. The visible hunks don't show whether any suite does this, so it needs checking. Otherwise the flakiness only shows up intermittently, and CI won't catch it reliably.",
-        "[P2] test hygiene: Math.random is restored without try/finally around the await import(...). If the import throws, the stub stays in place for the rest of the test process.",
-        "[P2] outcome confirmed: PATHS matches the five-row table with PATHS[0] === WAYPOINTS. Lengths are 24/24/24/26/24. pickPath uses Math.floor(random()*5). nextRound spreads state.options and replaces only waypoints. restart and the createGame default are unchanged. main.js opens with pickPath(Math.random) and calls nextRound where it called restart. test/random-paths.test.js covers each acceptance criterion."
+        "src/path.js exports PATHS with the five corner lists from the table, and the first entry is WAYPOINTS itself, so it is trivially deep-equal. pickPath returns PATHS[Math.floor(random() * PATHS.length)], which gives path 1 for 0, path 3 for 0.5 and path 5 for 0.99. Summing the segments gives lengths of 24, 24, 24, 26 and 24 tiles. All paths start in column 0, end in column 15, stay on the board and run only horizontally or vertically.",
+        "src/game.js adds nextRound(state, random) as createGame({ ...state.options, waypoints: pickPath(random) }). restart and the createGame default are unchanged, so a game made without waypoints still uses path 1. src/main.js opens with waypoints: pickPath(Math.random) and calls nextRound(state, Math.random) where it used to call restart.",
+        "test/random-paths.test.js covers every acceptance criterion. It checks the exact PATHS contents and that the first is WAYPOINTS, and it checks the geometry and length bounds. It checks pickPath at 0, 0.5 and 0.99. On a path 4 game it checks that (3,1) is refused with 'path', that (5,5) is accepted and is covered only by path 1, and that the first ghost starts at (20,60), the centre of (0,1). It checks that nextRound on a hard game with 3 lives gives a hard game with 8 lives on PATHS[3] for random 0.7. It checks that chooseDifficulty keeps path 2.",
+        "The edits to existing tests only fix Math.random to 0 while src/main.js boots, and restore it in a finally block. They are limited to suites that boot main.js against path 1 cells. That includes test/pause-speed.test.js, which hovers over (3,1), a cell path 4 covers. The brief's prose names only three suites, but its signed touches list includes pause-speed.test.js, so this edit is within scope. No assertions were changed."
       ],
       "seat": "review",
-      "verdict": "changes-required"
+      "verdict": "approved"
     }
   ]
 }
