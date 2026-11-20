@@ -1,0 +1,9 @@
+{
+  "print_id": "line-factory-baked-demo-hqr",
+  "stage": "build",
+  "review_of_record": "review.json",
+  "edited": [],
+  "said": "I found nothing to fix, so I changed nothing.\n\nThe three declaration files match the blocks quoted from issue #76 byte for byte; I extracted each block from `triage.md` by script and compared it to the committed file. The diff touches only the four paths on the signed touches list plus the print's own chain files, and no existing file under `src/` or `test/` changed. The new test reads each list exactly, so it fails if a standard is missing, added or out of order. Four of its five tests failed before the replacement. The fifth, the rings check, passed before it too, as the plan expected.\n\nThis clone has no Makefile, so there is no `make check-build` target. I ran `node --test` on the new test file and `npm --prefix . run test` instead.\n\nFOUND 0\nGATES green",
+  "gates": "green",
+  "finding": null
+}

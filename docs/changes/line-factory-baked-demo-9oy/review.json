@@ -1,0 +1,22 @@
+{
+  "billing": "subscription",
+  "configuration": "891aa7eda6739ebcf47e1611a8ea3b23daec0f8b93233ba858759ac3158f3118",
+  "digest": "ef0baa3b02e532715de649ad7c3d3cb4572196343831ad0776541ef1ca887d90",
+  "fallback_reason": "codex-model-refused",
+  "family": "anthropic",
+  "model": "claude-opus-5-5",
+  "readings": [
+    {
+      "notes": [
+        "The diff meets the brief. src/difficulty.js exports a frozen DIFFICULTIES object with exactly easy {Easy,1,50,10}, normal {Normal,1.5,50,10} and hard {Hard,2,60,8}.",
+        "createGame now takes a difficulty option, stores it as state.difficulty (null when left out) and also keeps it in options. Starting gold and lives are chosen in the order the brief asks: an explicit option first, then the entry's value, then START_GOLD/START_LIVES. The check is `=== undefined`, so an explicit null or 0 still counts as given, which matches the old default-parameter behaviour.",
+        "options keeps lives and gold exactly as passed, so a defaulted value is not saved. restart(state) calls createGame(state.options), which works the hard defaults out again (60 gold, 8 lives) and keeps an explicit gold: 200 through a restart.",
+        "spawnEnemy and spawnBoss scale only health, by Math.ceil(health * multiplier), with a multiplier of 1 when there is no difficulty. Speed, bounty, count and interval are unchanged. Wave 1 works out to 3/5/6 (ceil of 4.5 is 5) and the wave-5 boss to 40/60/80, which matches the acceptance figures.",
+        "The new test/difficulty.test.js covers every acceptance criterion: the table, the hard start, the gold override, wave-1 ghost health with speed and bounty, wave-5 boss health, the no-difficulty game and restarting a hard game. No existing test file is in the diff.",
+        "An unknown key such as 'toString' is rejected with a RangeError. The lookup uses Object.hasOwn, so prototype keys cannot slip through."
+      ],
+      "seat": "review",
+      "verdict": "approved"
+    }
+  ]
+}
